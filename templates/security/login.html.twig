@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ 'title.usuario.autentificar' | trans }}{% endblock %}
+
+{% block titular %}{% endblock %}
+
+{% block contenido %}
+
+<form id="autentificar" action="{{ path('app_login') }}" method="post">
+    <h1 class="centrado">{{ 'title.usuario.autentificar' | trans}}</h1>
+    <div>
+        <label for="username">{{ 'usuario.campo.usuario' | trans }}</label>
+        <input type="text" id="username" name="_username" value="{{ last_username }}" />
+    </div>
+    <div>
+        <label for="password">{{ 'usuario.campo.password' | trans }}</label>
+        <input type="password" id="password" name="_password" />
+    </div>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <div class="buttons">
+        <label>&nbsp;</label><button type="submit"><img src="{{ asset('img/icon/ok.png') }}" /> {{ 'formulario.enviar' | trans }}</button>
+    </div>
+</form>
+
+{% if error %}
+    <div class="error">{{ error.message|trans({},'messages') }}</div>
+{% endif %}
+{% endblock %}

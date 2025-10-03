@@ -1,0 +1,49 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='usuario' %}
+
+{% block title %}{{ 'title.usuario.ver' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.usuario.ver' | trans }}{% endblock %}
+
+{% block contenido %}
+    {% for flashMessage in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage | trans }}
+        </div>
+    {% endfor %}
+
+	<fieldset>
+		<legend>{{ 'usuario.campo.grupo_acceso' | trans }}</legend>
+		<ul>
+			<li><span class="campo">{{ 'usuario.campo.usuario' | trans }}:</span> {{ usuario.usuario }}</li>
+			<li><span class="campo">{{ 'usuario.campo.tipo' | trans }}:</span> {{ ('usuario.tipo.' ~ usuario.tipoString) | trans }}</li>
+			<li><span class="campo">{{ 'usuario.campo.activado' | trans }}:</span> {{ usuario.activado ? ('usuario.activado.activado' | trans) : ('usuario.activado.desactivado' | trans) }}</li>
+		</ul>
+	</fieldset>
+	<fieldset>
+		<legend>{{ 'usuario.campo.grupo_datos' | trans }}</legend>
+		<ul>
+			<li><span class="campo">{{ 'usuario.campo.nombre' | trans }}:</span> {{ usuario.nombre }}</li>
+			<li><span class="campo">{{ 'usuario.campo.organizacion' | trans }}:</span> {{ usuario.organizacion }}</li>
+			<li><span class="campo">{{ 'usuario.campo.email' | trans }}:</span> {{ usuario.email }}</li>
+		</ul>
+	</fieldset>
+	<fieldset>
+		<legend>{{ 'usuario.campo.grupo_captura' | trans }}</legend>
+		<ul>
+			<li><span class="campo">{{ 'captura.campo.lugarCaptura' | trans }}: </span>{{ usuario.lugarDefecto }}</li>
+			<li><span class="campo">{{ 'captura.campo.geoLongCaptura' | trans }}: </span>{{ usuario.geoLongDefecto }}</li>
+			<li><span class="campo">{{ 'captura.campo.geoLatCaptura' | trans }}: </span>{{ usuario.geoLatDefecto }}</li>
+		</ul>
+	</fieldset>
+	<div class="opciones">
+		<div class="buttons">
+			{% if is_granted('ROLE_ADMIN') %}
+			<a href="{{ path('usuario_editar', {id: usuario.id}) }}">{% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans}}</a>
+			<a href="{{ path('usuario_eliminar', {id: usuario.id}) }}" class="negative">{% include 'icon.html.twig' with {icono: 'borrar'} %} {{ 'varios.borrar' | trans }}</a>
+			{% endif %}
+			<a href="javascript:window.history.back()">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans}}</a>
+		</div>
+	</div>
+{% endblock %}

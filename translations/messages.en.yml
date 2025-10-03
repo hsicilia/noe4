@@ -1,0 +1,318 @@
+# \PITMAR\WebBundle\Resources\translations\messages.en.yml
+# Traducción inglés (en)
+menu:
+    inicio:
+        base:          Home
+    usuarios:
+        base:          Users
+        crear:         Add new user
+        buscar:        Search for user
+    informes:
+        base:          Reports
+        ejemplares:    Individuals
+    especies:
+        base:          Species
+        crear:         Add new species
+        listar:        Show species
+        buscar:        Search species
+    ejemplares:
+        base:          Individuals
+        buscar_id:     Search for individual using identifier
+        buscar_mapa:   Search specimen by location
+        crear:         Add new individual
+
+title:
+    defecto: NOE
+    inicio:  Home
+    usuario:
+        buscar:             Search for user
+        crear:              Add new user
+        editar:             Modify existing user
+        eliminar:           Delete user
+        ver:                See user data
+        perfil:             Modify user profile
+        resultadosBusqueda: User search results
+        autentificar:       Authenticaction form
+    especie:
+        editar:             Modify species data
+        crear:              Add new species
+        ver:                Show species data
+        eliminar:           Delete specie
+        buscar:             Search species
+        resultadosBusqueda: Species search results
+    ejemplar:
+        indice:             Search individuals
+        crear:              Add new individual
+        editar:             Modify individual data
+        eliminar:           Delete specimen
+        resultadosBusqueda: Individual search results
+        ver:                Show individual data
+    captura:
+        crear:              Add new sighting
+        editar:             Modify a sighting
+        eliminar:           Delete sighting
+        listadoCapturas:    Individual sightings
+        ver:                Show a sighting
+    busquedamapa:
+        indice:             Search by information and location
+        resultadosBusqueda: Search results
+
+usuario:
+    campo:
+        grupo_acceso:   Access data
+        grupo_datos:    Personal data
+        grupo_captura:  Default capture data
+        usuario:        User
+        password:       Password
+        password_rep:   Repeat Password
+        tipo:           User type
+        email:          Email
+        activado:       Activated
+        nombre:         Name
+        organizacion:   Organization
+
+    mensaje:
+        busqueda_sin_resultados: Incorrect data, user not found
+        usuario_creado:          User correctly generated
+        usuario_modificado:      User correctly modified
+        usuarios_encontrados:    Found users
+
+    login:
+        acceder: Log in
+        salir:   Exit
+        perfil:  Profile
+
+    tipo:
+        administrador:            Administrator
+        operador_propio:          Own operator
+        operador_externo:         External operator
+        operador_externo_pruebas: External operator in practice
+        visitante:                Visitor
+
+    activado:
+        activado:    Activated user
+        desactivado: Deactivated user
+
+especie:
+    campo:
+        comun: Nombre común (TRADUCIR)
+        nombre: Species name
+
+    listar: Species List
+
+    mensaje:
+        especie_creada:     Species correctly generated
+        especie_modificada: Species correctly modified
+        desea_eliminar:       ¿Está seguro de eliminar la especie? CUIDADO, SE BORRARÁN TODOS LOS EJEMPLARES DE ESTA ESPECIE (TRADUCIR)
+        especie_borrada:    La especie se ha eliminado correctamente (TRADUCIR)
+        busqueda_sin_resultados: No se han encontrado especies con estos datos (TRADUCIR)
+
+ejemplar:
+    buscar: Search for individual
+
+    campo:
+        id:                    Identifier
+        fechaRegistro:         Record add date
+        especie:               Species - Scientific name
+        especieComun:          Species - Common name
+        idMicrochip:           Transponder Identifer
+        idAnilla:              Ring Identifier
+        idOtro:                Other Identifiers (1)
+        idOtro2:               Other Identifiers (2)
+        sexo:                  Gender
+        lugar:                 Location name
+        geoLat:                Latitude
+        geoLong:               Longitude
+        origen:                Origen (TRADUCIR)
+        documentacion:         Documentación (TRADUCIR)
+        progenitores:          Progenitores (TRADUCIR)
+        deposito:              Información de depósito (TRADUCIR)
+        invasora:              Especie Exótica Invasora (TRADUCIR)
+        cites:                 CITES (TRADUCIR)
+        peligroso:             Animal potencialmente peligroso (TRADUCIR)
+        observaciones:         Observations
+        imagen1:               Picture 1
+        imagen2:               Picture 2
+        imagen3:               Picture 3
+        fechaBaja:             Fecha de baja (TRADUCIR)
+        causaBaja:             Causa de la baja (TRADUCIR)
+        creado_por:            Generated by
+        creado_el:             Generation date
+        modificado_por :       Edited by
+        modificado_el :        Edition date
+        otroId:                Search by Other Identifiers
+        borrarImagen1: Delete Image?
+        borrarImagen2:   Delete Image?
+
+    mensaje:
+        busqueda_sin_resultados: No individual found with those criteria.
+        capturas:                Sightings
+        captura_nueva:           New sighting
+        captura_modificar:       Edit sighting
+        captura_ver:             Show sighting
+        datos:                   Data
+        datos_generales:         General Data
+        datos_posicion:
+        datos_primera_captura:   First sighting data
+        datos_ultima_captura:    Last sighting data
+        datos_unica_captura:     Single sighting data
+        desea_eliminar:          Are you sure you want to delete specimen?
+        imagenes:                Images
+        imagenes_faciales:       Lateral Images
+        sin_imagenes:            No images
+        no_capturas:             No recorded sightings for this individual.
+        ejemplar_creado:         Individual correctly recorded
+        ejemplar_eliminado:      The specimen has been successfully deleted
+        ejemplar_modificado:     Individual correctly modified
+        ejemplares_encontrados:  Found individuals
+        facial_editar:           Edit image
+        imagen_procesada:        Processed image
+        imagen_no_procesada:     Not processed image
+        no_imagen:               No image
+
+    nombre: Individual
+
+    sexo:
+        desconocido: Unknown
+        macho:       Male
+        hembra:      Female
+
+    origen:
+        desconocido':                   Desconocido (TRADUCIR)
+        adquisicion':                   Adquisición (TRADUCIR)
+        captura_directa':               Captura directa (TRADUCIR)
+        deposito_aduanas':              Depósito aduanas (TRADUCIR)
+        deposito_ayuntamiento':         Depósito ayuntamiento (TRADUCIR)
+        deposito_cabildo':              Depósito Cabildo (TRADUCIR)
+        deposito_policia_canaria':      Depósito CG Policía Canaria (TRADUCIR)
+        deposito_guardia_civil':        Depósito Guardia Civil / SEPRONA (TRADUCIR)
+        deposito_particulares':         Depósito Particulares (TRADUCIR)
+        deposito_policia_municipal':    Depósito Policía Municipañ (TRADUCIR)
+        deposito_policia_nacional':     Depósito Policía Nacional (TRADUCIR)
+        deposito_proteccion_civil':     Depósito Protección Civil (TRADUCIR)
+        deposito_otra_administracion:   Depósito Otra administración (TRADUCIR)
+        deposito_santuario':            Depósito Santuario / CRF / Zoo (TRADUCIR)
+        nacimiento':                    Nacimiento (TRADUCIR)
+
+    documentacion:
+        desconocida:                    Desconocida (TRADUCIR)
+        acta_cabildo_lagomera:          Acta depósito / autorización Cabildo de La Gomera (TRADUCIR)
+        acta_cabildo_elhierro:          Acta depósito / autorización Cabildo de El Hierro (TRADUCIR)
+        acta_cabildo_fuerteventura:     Acta depósito / autorización Cabildo de Fuerteventura (TRADUCIR)
+        acta_cabildo_grancanaria:       Acta depósito / autorización Cabildo de Gran Canaria (TRADUCIR)
+        acta_cabildo_lapalma:           Acta depósito / autorización Cabildo de La Palma (TRADUCIR)
+        acta_cabildo_lanzarote:         Acta depósito / autorización Cabildo de Lanzarote (TRADUCIR)
+        acta_cabildo_tenerife:          Acta depósito / autorización Cabildo de Tenerife (TRADUCIR)
+        acta_gobierno_canarias:         Acta depósito / autorización Gobierno de Canarias (TRADUCIR)
+        acta_aduanas:                   Acta depósito Aduanas (TRADUCIR)
+        acta_ayuntamiento:              Acta depósito Ayuntamiento (TRADUCIR)
+        acta_policia_canaria:           Acta depósito CG Policía Canaria (TRADUCIR)
+        acta_policia_municipal:         Acta depósito Policía Municipal (TRADUCIR)
+        acta_policia_nacional:          Acta depósito Policía Nacional (TRADUCIR)
+        acta_policia_seprona:           Acta depósito SEPRONA (TRADUCIR)
+        cites:                          CITES (TRADUCIR)
+        declaracion_jurada:             Declaración jurada / Cesión particulares (TRADUCIR)
+        factura:                        Factura (TRADUCIR)
+
+    cites:
+        no:  No
+        A:   A
+        B:   B
+        C:   C
+        D:   D
+
+    causa_baja:
+        devolucion:  Devolución (traducir)
+        liberacion:  Liberación (traducir)
+        muerte:      Muerte (traducir)
+        robo:        Robo (traducir)
+        traslado:    Traslado (traducir)
+
+    error:
+        no_permiso_edicion: ERROR. YOU ARE NOT ALLOWED TO EDIT THIS INDIVIDUAL.
+
+captura:
+    campo:
+        grupo_captura:          Sighting data
+        tipoCaptura:            Kind of sighting
+        tipoCapturaCorto:       Kind
+        fechaCaptura:           Date
+        horaCaptura:            Hour
+        lugarCaptura:           Location name
+        geoLatCaptura:          Latitude
+        geoLongCaptura:         Longitude
+        grupo_imagenes:         Images
+        imagen:                 Image
+        fotosURL:               Url picture address
+        observaciones:          Observations
+        creado_por:             Generated by
+        creado_el:              Generation data
+        modificado_por:         Modified by
+        modificado_el:          Modification date
+        borrarImagen:           Delete image?
+
+    extremidad:
+        desconocido: Unknown
+        si:          Flipper present
+        no:          Flipper absent
+
+    mensaje:
+        anadir:             Add new sightings
+        listado:            Sightings list
+        datos_captura:      Sighting data
+        datos_fisicos:      Biometric data
+        datos_suelta:       Release data
+        datos_imagenes:     Images
+        desea_eliminar:     Are you sure you want to delete sighting?
+        captura_creada:     The sighting was successfully generated
+        captura_modificada: The sighting was successfully generated
+        captura_eliminada:  The sighting has been successfully deleted
+
+    error:
+        no_permiso_edicion: ERROR. YOU ARE NOT ALLOWED TO MODIFY THIS DATA.
+
+busquedamapa:
+    campo:
+        distancia:        Distance
+        fechaInicial:     From
+        fechaFinal:       Until
+        ejemplaresUnicos: A single sighting by specimen?
+    descripcion:
+        distancia:   Radius of search in Km
+    mensaje:
+        capturasEncontradas: Total number of sightings
+        ejemplaresEncontrados: Number of single specimens
+
+formulario:
+    enviar:  Send
+    buscar:  Search
+    guardar: Save
+    cualquiera: All
+
+varios:
+    borrar:      Delete
+    buscar:      Search
+    crear:       Generate
+    cancelar:    Cancel
+    editar:      Edit
+    enviar:      Send
+    menu:        Menu
+    reiniciar:   Restart
+    ver:         Show
+    volver:      Back
+    no_indicado: Value not entered
+
+pagina:
+    inicial: >
+        <p>You are in the application for classification from <strong>Fundación Neotrópico</strong>.</p>
+        <ul>
+        <li>If you alredy have a username, please click on <a href="/app.php/en/usuario/autentificar">Log in</a>
+        in the upper right section of the screen to log on to the application.</li>
+        </ul>
+
+# Errores de autentificación.
+# Se traducen usando como clave el mensaje que muestra la autentificación de Symfony
+The presented password cannot be empty.: The password cannot be empty
+The presented password is invalid.: The user or password are invalid
+Bad credentials.: The user or password are invalid
+User account is disabled.: User account is disabled

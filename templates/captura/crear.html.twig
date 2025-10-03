@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.captura.crear' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.captura.crear' | trans }}{% endblock %}
+
+{% block contenido %}
+{% set submenu = 'captura_nueva' %}
+{% include 'captura/includes/cabecera.html.twig' %}
+<div id="subtabs">
+    {{ form_start(formulario) }}
+
+        {{ form_errors(formulario) }}
+    <fieldset>
+        <legend>{{ 'captura.mensaje.datos_captura' | trans }}</legend>
+        {{ form_row(formulario.tipoCaptura) }}
+        <div>
+            {{ form_label(formulario.fechaCaptura) }}
+            {{ form_widget(formulario.fechaCaptura, {'attr': {'class': 'corto'}}) }} <em>(dd/mm/aaaa)</em>
+            {{ form_errors(formulario.fechaCaptura) }}
+        </div>
+        <div>
+            {{ form_label(formulario.horaCaptura) }}
+            {{ form_widget(formulario.horaCaptura, {'attr': {'class': 'corto'}}) }} <em>(hh:mm)</em>
+            {{ form_errors(formulario.horaCaptura) }}
+        </div>
+        {{ form_row(formulario.lugarCaptura, {'attr': {'class': 'largo'}}) }}
+        {{ form_row(formulario.observaciones, {'attr': {'class': 'largo'}}) }}
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ 'captura.mensaje.datos_imagenes' | trans }}</legend>
+            {{ form_row(formulario.imagen, {'attr': {'class': 'largo'}}) }}
+            {{ form_row(formulario.fotosURL, {'attr': {'class': 'largo'}}) }}
+    </fieldset>
+
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+</div>
+{% endblock %}

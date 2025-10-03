@@ -1,0 +1,26 @@
+{# src/NOE/EspecieBundle/Resources/views/editar.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% set menu='especie' %}
+
+{% block title %}{{ 'title.especie.editar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.especie.editar' | trans }}{% endblock %}
+
+{% block contenido %}
+    {{ form_start(formulario) }}
+    <fieldset>
+
+        {{ form_errors(formulario) }}
+
+        {{ form_row(formulario.nombre) }}
+        {{ form_row(formulario.comun) }}
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+    </fieldset>
+<span class="buttons">
+    <a href="{{ path('especie_buscar') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+</span>
+
+{% endblock %}

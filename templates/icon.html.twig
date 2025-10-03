@@ -1,0 +1,6 @@
+{# /NOE/WebBundle/Resources/views/inc/icon.html.twig #}
+{% if icono is not defined %}
+	{% set icono = 'ok' %}
+{% endif %}
+{% set url= 'img/icon/' ~ icono ~ '.png' %}
+<img src="{{ asset(url) }}" />

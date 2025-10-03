@@ -1,0 +1,330 @@
+# \PITMAR\WebBundle\Resources\translations\messages.es.yml
+# Traducción español (es)
+menu:
+    inicio:
+        base:          Inicio
+    usuarios:
+        base:          Usuarios
+        crear:         Añadir un usuario
+        buscar:        Buscar usuarios
+    informes:
+        base:          Informes
+        ejemplares:    Ejemplares
+    especies:
+        base:          Especies
+        crear:         Añadir una especie
+        listar:        Mostrar especies
+        buscar:        Buscar especies
+    ejemplares:
+        base:          Ejemplares
+        buscar_id:     Buscar ejemplar por identificador
+        buscar_mapa:   Buscar ejemplar por características
+        crear:         Añadir ejemplar
+
+title:
+    defecto: NOE
+    inicio:  Inicio
+    usuario:
+        buscar:             Buscar usuarios
+        crear:              Añadir un usuario
+        editar:             Modificar un usuario
+        eliminar:           Eliminar usuario
+        ver:                Ver datos de usuario
+        resultadosBusqueda: Resultados de la búsqueda de usuarios
+        perfil:             Modificar perfil del usuario
+        autentificar:       Formulario de autentificación
+    especie:
+        buscar:             Buscar especies
+        crear:              Añadir una especie
+        editar:             Modificar datos de la especie
+        eliminar:           Eliminar especie
+        ver:                Ver datos de especie
+        resultadosBusqueda: Resultados de la búsqueda de especies
+    ejemplar:
+        buscar:             Buscar ejemplares
+        crear:              Añadir un ejemplar
+        editar:             Modificar datos de un ejemplar
+        eliminar:           Eliminar ejemplar
+        ver:                Ver datos del ejemplar
+        resultadosBusqueda: Resultado de la búsqueda de ejemplares
+    captura:
+        crear:              Añadir una incidencia
+        editar:             Modificar una incidencia
+        eliminar:           Eliminar incidencia
+        ver:                Ver una incidencia
+        listadoCapturas:    Incidenciass del ejemplar
+    busquedamapa:
+        buscar:                Buscar por información y localización
+        resultadosBusqueda:    Resultados de la búsqueda
+    informe:
+        ejemplares:            Informe de ejemplares
+
+usuario:
+    campo:
+        grupo_acceso:   Datos de acceso
+        grupo_datos:    Datos personales
+        grupo_captura:  Datos por defecto para capturas
+        usuario:        Usuario
+        password:       Contraseña
+        password_rep:   Repetir contraseña
+        tipo:           Tipo de usuario
+        email:          Email
+        activado:       Activado
+        nombre:         Nombre
+        organizacion:   Organización
+
+    mensaje:
+        busqueda_sin_resultados: No se han encontrado usuarios con estos datos
+        usuario_creado:          El usuario se ha creado correctamente
+        usuario_modificado:      El usuario se ha modificado correctamente
+        usuarios_encontrados:    Usuarios encontrados
+        desea_eliminar:          ¿Está seguro de eliminar el usuario?
+        usuario_eliminado:       El usuario se ha eliminado correctamente
+
+    login:
+        acceder: Acceder
+        salir:   Salir
+        perfil:  Perfil
+
+    tipo:
+        administrador:            Administrador
+        operador_propio:          Operador propio
+        operador_externo:         Operador externo
+        operador_externo_pruebas: Operador externo en pruebas
+        visitante:                Visitante
+
+    activado:
+        activado:    Usuario activado
+        desactivado: Usuario desactivado
+
+especie:
+    campo:
+        comun: Nombre común
+        nombre: Nombre científico
+
+    listar: Listado de especies
+
+    mensaje:
+        especie_creada:     La especie se ha creado correctamente
+        especie_modificada: La especie se ha modificado correctamente
+        especies_encontradas: Especies encontradas
+        desea_eliminar:       ¿Está seguro de eliminar la especie? CUIDADO, SE BORRARÁN TODOS LOS EJEMPLARES DE ESTA ESPECIE
+        especie_eliminada:    La especie se ha eliminado correctamente
+        busqueda_sin_resultados: No se han encontrado especies con estos datos
+
+ejemplar:
+    campo:
+        id:                    Identificador
+        fechaRegistro:         Fecha de ingreso
+        especie:               Especie - Nombre científico
+        especieComun:          Especie - Nombre común
+        idMicrochip:           Identificador en microchip
+        idAnilla:              Identificador en anilla
+        idOtro:                Otros identificadores (1)
+        idOtro2:               Otros identificadores (2)
+        sexo:                  Sexo
+        recinto:               Recinto
+        lugar:                 Nombre del lugar
+        geoLat:                Latitud
+        geoLong:               Longitud
+        origen:                Origen
+        documentacion:         Documentación
+        progenitor1:           Progenitor 1
+        progenitor2:           Progenitor 2
+        depositoNombre:        Nombre del depositante
+        depositoDNI:           DNI / CIF del depositante
+        deposito:              Información de depósito
+        invasora:              Especie Exótica Invasora
+        invasora_RD:           (RD 630/2013 y RD 216/2019)
+        cites:                 CITES
+        peligroso:             Animal potencialmente peligroso
+        peligroso_RD:          (RD 30/2018)
+        observaciones:         Observaciones
+        imagen1:               Imagen 1
+        imagen2:               Imagen 2
+        imagen3:               Imagen 3
+        fechaBaja:             Fecha de baja
+        causaBaja:             Causa de la baja
+        creado_por:            Creado por
+        creado_el:             Fecha creación
+        modificado_por :       Modificado por
+        modificado_el :        Fecha modificación
+        otroId:                Buscar por otros identificadores
+        borrarImagen1: ¿Borrar imagen?
+        borrarImagen2:   ¿Borrar imagen?
+        borrarImagen3:  ¿Borrar imagen?
+
+    mensaje:
+        busqueda_sin_resultados: No hay ningún ejemplar con esas características.
+        capturas:                Incidencias
+        captura_nueva:           Nueva incidencia
+        captura_modificar:       Modificar incidencia
+        captura_ver:             Ver incidencia
+        datos:                   Datos
+        datos_generales:         Datos generales
+        datos_posicion:          Posición de recogida
+        datos_primera_captura:   Datos de la primera incidencia
+        datos_ultima_captura:    Datos de la última incidencia
+        datos_unica_captura:     Datos de la única incidencia
+        desea_eliminar:          ¿Está seguro de eliminar el ejemplar?
+        imagenes:                Imágenes
+        sin_imagenes:            No hay imágenes
+        no_capturas:             No se ha registrado ninguna incidencia de este ejemplar.
+        ejemplar_creado:         El ejemplar se ha dado de alta correctamente
+        ejemplar_eliminado:      El ejemplar ha sido eliminado correctamente
+        ejemplar_modificado:     El ejemplar se ha modificado correctamente
+        ejemplares_encontrados:  Ejemplares encontrados
+        facial_editar:           Editar imagen
+        imagen_procesada:        Imagen procesada
+        imagen_no_procesada:     Imagen no procesada
+        no_imagen:               No hay imagen
+
+    nombre: Ejemplar
+
+    sexo:
+        desconocido: Desconocido
+        macho:       Macho
+        hembra:      Hembra
+
+    origen:
+        desconocido:                   Desconocido
+        adquisicion:                   Adquisición
+        captura_directa:               Captura directa
+        deposito_aduanas:              Depósito aduanas
+        deposito_ayuntamiento:         Depósito Ayuntamiento
+        deposito_cabildo:              Depósito Cabildo
+        deposito_policia_canaria:      Depósito CG Policía Canaria
+        deposito_guardia_civil:        Depósito Guardia Civil / SEPRONA
+        deposito_particulares:         Depósito Particulares
+        deposito_policia_municipal:    Depósito Policía Municipal
+        deposito_policia_nacional:     Depósito Policía Nacional
+        deposito_proteccion_civil:     Depósito Protección Civil
+        deposito_otra_administracion:  Depósito Otra administración
+        deposito_santuario:            Depósito Santuario / CRF / Zoo
+        nacimiento:                    Nacimiento
+
+    documentacion:
+        desconocida:                    Desconocida
+        acta_cabildo_lagomera:          Acta depósito / autorización Cabildo de La Gomera
+        acta_cabildo_elhierro:          Acta depósito / autorización Cabildo de El Hierro
+        acta_cabildo_fuerteventura:     Acta depósito / autorización Cabildo de Fuerteventura
+        acta_cabildo_grancanaria:       Acta depósito / autorización Cabildo de Gran Canaria
+        acta_cabildo_lapalma:           Acta depósito / autorización Cabildo de La Palma
+        acta_cabildo_lanzarote:         Acta depósito / autorización Cabildo de Lanzarote
+        acta_cabildo_tenerife:          Acta depósito / autorización Cabildo de Tenerife
+        acta_gobierno_canarias:         Acta depósito / autorización Gobierno de Canarias
+        acta_aduanas:                   Acta depósito Aduanas
+        acta_ayuntamiento:              Acta depósito Ayuntamiento
+        acta_policia_canaria:           Acta depósito CG Policía Canaria
+        acta_policia_municipal:         Acta depósito Policía Municipal
+        acta_policia_nacional:          Acta depósito Policía Nacional
+        acta_policia_seprona:           Acta depósito SEPRONA
+        cites:                          CITES
+        declaracion_jurada:             Declaración jurada / Cesión particulares
+        factura:                        Factura
+
+    cites:
+        no:  No
+        A:   A
+        B:   B
+        C:   C
+        D:   D
+
+    causa_baja:
+        devolucion:  Devolución
+        liberacion:  Liberación
+        muerte:      Muerte
+        robo:        Robo
+        traslado:    Traslado
+
+    error:
+        no_permiso_edicion: ERROR. NO TIENE PERMISO PARA MODIFICAR ESTE EJEMPLAR.
+
+captura:
+    campo:
+        grupo_captura:          Datos de incidencias
+        tipoCaptura:            Tipo de incidencia
+        tipoCapturaCorto:       Tipo
+        fechaCaptura:           Fecha
+        horaCaptura:            Hora
+        lugarCaptura:           Nombre del lugar
+        geoLatCaptura:          Latitud
+        geoLongCaptura:         Longitud
+        grupo_imagenes:         Imágenes
+        imagen:                 Imagen
+        fotosURL:               Dirección web con fotos
+        observaciones:          Observaciones
+        creado_por:             Creada por
+        creado_el:              Fecha creación
+        modificado_por:         Modificada por
+        modificado_el:          Fecha modificación
+        borrarImagen:           ¿Borrar imagen?
+
+    extremidad:
+        desconocido: Desconocido
+        si:          Posee la extremidad
+        no:          No posee la extremidad
+
+    mensaje:
+        anadir:             Añadir una nueva incidencia
+        listado:            Listado de incidencias
+        datos_captura:      Datos de incidencia
+        datos_fisicos:      Datos físicos
+        datos_suelta:       Datos de suelta
+        datos_imagenes:     Imágenes
+        desea_eliminar:     ¿Está seguro de eliminar la incidencia?
+        captura_creada:     La incidencia se ha creado correctamente
+        captura_modificada: La incidencia se ha modificado correctamente
+        captura_eliminada:  La incidencia ha sido eliminado correctamente
+
+    error:
+        no_permiso_edicion: ERROR. NO TIENE PERMISO PARA MODIFICAR ESTA INCIDENCIA.
+
+busquedamapa:
+    campo:
+        distancia:        Distancia
+        fechaInicial:     Registrado desde
+        fechaFinal:       Registrado hasta
+        fechaBajaInicial: Baja desde
+        fechaBajaFinal:   Baja hasta
+        progenitor:       Progenitor
+    descripcion:
+        distancia:    Km. del radio de búsqueda
+    mensaje:
+        capturasEncontradas:   Número de indidencias totales
+        ejemplaresEncontrados: Número de ejemplares únicos
+        datosBusqueda:         Datos para la búsqueda
+
+formulario:
+    enviar:  Enviar
+    buscar:  Buscar
+    guardar: Guardar
+    cualquiera:  Cualquiera
+
+varios:
+    borrar:      borrar
+    buscar:      buscar
+    crear:       crear
+    cancelar:    cancelar
+    editar:      editar
+    enviar:      enviar
+    menu:        menú
+    reiniciar:   reiniciar
+    ver:         ver
+    volver:      volver
+    no_indicado: Valor no indicado
+
+pagina:
+    inicial: >
+        <p>Programa de registro de ejemplares de la <strong>Fundación Neotrópico</strong>.</p>
+        <ul>
+        <li>Si ya tiene usted un usuario pulse sobre el enlace <a href="/app.php/es/usuario/autentificar">Acceder</a>
+        en la parte superior derecha de la pantalla para iniciar sesión en la aplicación.</li>
+        </ul>
+
+# Errores de autentificación.
+# Se traducen usando como clave el mensaje que muestra la autentificación de Symfony
+The presented password cannot be empty.: El campo contraseña no debe estar vacío
+The presented password is invalid.: Los datos suministrados son incorrectos
+Bad credentials.: Los datos suministrados son incorrectos
+User account is disabled.: El usuario indicado está deshabilitado

@@ -1,0 +1,118 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.ejemplar.crear' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.ejemplar.crear' | trans }}{% endblock %}
+
+{% block contenido %}
+<fieldset>
+    {{ form_start(formulario) }}
+
+        {{ form_errors(formulario) }}
+
+        {{ form_row(formulario.fechaRegistro, {'attr': {'class': 'corto'}}) }}
+        {{ form_row(formulario.especie) }}
+        {{ form_row(formulario.idMicrochip) }}
+        {{ form_row(formulario.idAnilla) }}
+        {{ form_row(formulario.idOtro) }}
+        {{ form_row(formulario.idOtro2) }}
+        {{ form_row(formulario.sexo) }}
+        {{ form_row(formulario.recinto) }}
+        <fieldset>
+            <legend>{{ 'ejemplar.mensaje.datos_posicion' | trans }}</legend>
+            {{ form_row(formulario.lugar) }}
+            {{ form_row(formulario.geoLong, {'attr': {'class': 'no_cambiar corto'}}) }}
+            {{ form_row(formulario.geoLat, {'attr': {'class': 'no_cambiar corto'}}) }}
+            <div id="mapa_canvas" style="width: 500px; height: 300px; margin: 10px 0;"></div>
+        </fieldset>
+
+        {{ form_row(formulario.origen) }}
+        {{ form_row(formulario.documentacion) }}
+        {{ form_row(formulario.progenitor1) }}
+        {{ form_row(formulario.progenitor2) }}
+        <div class="separador">
+            {{ form_row(formulario.depositoNombre) }}
+            {{ form_row(formulario.depositoDNI) }}
+            {{ form_row(formulario.deposito) }}
+        </div>
+        <div class="separador">
+            <div>
+                {{ form_label(formulario.invasora) }}
+                {{ form_widget(formulario.invasora) }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>
+                {{ form_errors(formulario.invasora) }}
+            </div>
+            <div>
+                {{ form_label(formulario.peligroso) }}
+                {{ form_widget(formulario.peligroso) }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>
+                {{ form_errors(formulario.peligroso) }}
+            </div>
+            {{ form_row(formulario.cites) }}
+        </div>
+        <div class="separador">
+            {{ form_row(formulario.fechaBaja, {'attr': {'class': 'corto'}}) }}
+            {{ form_row(formulario.causaBaja) }}
+        </div>
+        <div class="separador separador-bajo">
+            {{ form_row(formulario.observaciones) }}
+        </div>
+        {{ form_row(formulario.imagen1, {'attr': {'class': 'largo'}}) }}
+        {{ form_row(formulario.imagen2, {'attr': {'class': 'largo'}}) }}
+        {{ form_row(formulario.imagen3, {'attr': {'class': 'largo'}}) }}
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+</fieldset>
+<div class="opciones">
+    <span class="buttons">
+        <a href="{{ path('ejemplar_buscar_id') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+    </span>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let map;
+        let marker;
+        const formName = '{{ formulario.vars.name }}';
+
+        function initMap() {
+            const latField = document.getElementById(formName + '_geoLat');
+            const lngField = document.getElementById(formName + '_geoLong');
+            const initialLat = parseFloat(latField.value) || 0;
+            const initialLng = parseFloat(lngField.value) || 0;
+            const center = { lat: initialLat, lng: initialLng };
+
+            map = new google.maps.Map(document.getElementById("mapa_canvas"), {
+                zoom: 7,
+                center: center,
+                mapTypeId: 'terrain',
+                disableDefaultUI: false,
+                disableDoubleClickZoom: true,
+            });
+
+            marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                clickable: false,
+                flat: true,
+            });
+
+            // Evento de clic en el mapa para actualizar la posición
+            map.addListener('click', function(event) {
+                marker.setPosition(event.latLng);
+                latField.value = event.latLng.lat();
+                lngField.value = event.latLng.lng();
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+    {# TODO: Replace with actual Google Maps API key #}
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+    </script>
+{% endblock %}

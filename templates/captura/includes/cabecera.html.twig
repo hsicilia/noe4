@@ -1,0 +1,21 @@
+{# templates/captura/includes/cabecera.html.twig #}
+<h2>{{ 'ejemplar.nombre' | trans}}: <em>{{ ejemplar.id }}</em></h2>
+
+<div id="tabs">
+	<ul>
+		<li {% if (submenu == 'datos') %}class="activa"{% endif %}><a href="{{ url('ejemplar_ver', {'id': ejemplar.id}) }}">
+		{{ 'ejemplar.mensaje.datos' | trans }}</a></li>
+		<li {% if (submenu == 'capturas') %}class="activa"{% endif %}><a href="{{ url('captura_listar', {'id': ejemplar.id}) }}">
+		{{ 'ejemplar.mensaje.capturas' | trans }} ({{ num_capturas }})</a></li>
+		{% if (submenu == 'captura_nueva') %}
+		<li class="activa"><a href="{{ url('captura_crear', {'id': ejemplar.id}) }}">
+		{{ 'ejemplar.mensaje.captura_nueva' | trans }}</a></li>
+		{% elseif (submenu == 'captura_modificar') %}
+		<li class="activa"><a href="{{ url('captura_editar', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">
+		{{ 'ejemplar.mensaje.captura_modificar' | trans }}</a></li>
+		{% elseif (submenu == 'captura_ver') %}
+		<li class="activa"><a href="{{ url('captura_ver', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">
+		{{ 'ejemplar.mensaje.captura_ver' | trans }}</a></li>
+		{% endif %}
+	</ul>
+</div>

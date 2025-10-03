@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplares' %}
+
+{% block title %}{{ 'title.ejemplar.resultadosBusqueda' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.ejemplar.resultadosBusqueda' | trans }}{% endblock %}
+
+{% block contenido %}
+
+<div class="total">
+    {{ 'ejemplar.mensaje.ejemplares_encontrados' | trans }}: {{ paginacion.getTotalItemCount }}
+</div>
+<fieldset>
+    <table class="completa centrado">
+        <thead class="titulo">
+            <tr>
+                <th>{{ 'ejemplar.campo.id' | trans }}</th>
+                <th>{{ 'ejemplar.campo.especie' | trans }}</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for ejemplar in paginacion %}
+            <tr class="{{ cycle(['impar','par'], loop.index) }}">
+                <td>
+                    <a href="{{ path('ejemplar_ver', {'id': ejemplar.id}) }}">{{ ejemplar.id }}</a>
+                </td>
+                <td>
+                    {{ ejemplar.especie.nombre | nombreEspecie | raw }}
+                </td>
+                <td class="botones">
+                    <span class="buttons">
+                        {% if is_granted('ROLE_OPERADOR_PROPIO') or
+                             (is_granted('ROLE_OPERADOR_EXTERNO') and ejemplar.creadoPor and (ejemplar.creadoPor.id == app.user.id)) %}
+                        <a href="{{ path('ejemplar_editar', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans }}</a>
+                        {% else %}
+                        <a href="{{ path('ejemplar_ver', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'ver'} %} {{ 'varios.ver' | trans }}</a>
+                        {% endif %}
+                    </span>
+                </td>
+            </tr>
+        {% else %}
+            <tr class="impar"><td colspan="3">{{ 'ejemplar.mensaje.busqueda_sin_resultados' | trans }}</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</fieldset>
+<div class="paginacion">
+    {{ knp_pagination_render(paginacion) }}
+</div>
+<div class="opciones">
+    <span class="buttons">
+        <a href="{{ path('ejemplar_buscar_id') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+    </span>
+</div>
+{% endblock %}

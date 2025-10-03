@@ -1,0 +1,36 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='usuario' %}
+
+{% block title %}{{ 'title.usuario.editar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.usuario.editar' | trans }}{% endblock %}
+
+{% block contenido %}
+    {{ form_start(formulario) }}
+
+        {{ form_errors(formulario) }}
+
+        <fieldset>
+            <legend>{{ 'usuario.campo.grupo_acceso' | trans }}</legend>
+            {{ form_row(formulario.usuario) }}
+            {{ form_row(formulario.password) }}
+            {{ form_row(formulario.tipo) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'usuario.campo.grupo_datos' | trans }}</legend>
+            {{ form_row(formulario.nombre) }}
+            {{ form_row(formulario.organizacion) }}
+            {{ form_row(formulario.email) }}
+            {{ form_row(formulario.activado) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'usuario.campo.grupo_captura' | trans }}</legend>
+            {{ form_row(formulario.lugarDefecto, {'attr': {'class': 'largo'}}) }}
+            {{ form_row(formulario.geoLongDefecto, {'attr': {'class': 'no_cambiar corto'}}) }}
+            {{ form_row(formulario.geoLatDefecto, {'attr': {'class': 'no_cambiar corto'}}) }}
+        </fieldset>
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='especie' %}
+
+{% block title %}{{ 'title.especie.ver' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.especie.ver' | trans }}{% endblock %}
+
+{% block contenido %}
+    {% for flashMessage in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage | trans }}
+        </div>
+    {% endfor %}
+
+    <fieldset>
+        <ul>
+            <li><span class="campo">{{ 'especie.campo.nombre' | trans }}: </span>{{ especie.nombre | nombreEspecie | raw }}</li>
+            <li><span class="campo">{{ 'especie.campo.comun' | trans }}: </span>{{ especie.comun }}</li>
+        </ul>
+    </fieldset>
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ path('especie_editar', {id: especie.id}) }}">{% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans}}</a>
+            <a href="{{ path('especie_eliminar', {id: especie.id}) }}" class="negative">{% include 'icon.html.twig' with {icono: 'borrar'} %}  {{ 'varios.borrar' | trans }}</a>
+            <a href="{{ path('especie_buscar') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+        </span>
+    </div>
+{% endblock %}

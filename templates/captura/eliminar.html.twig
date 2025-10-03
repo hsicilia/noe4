@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.captura.eliminar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.captura.eliminar' | trans }}{% endblock %}
+
+{% block contenido %}
+
+<fieldset>
+    <h3>{{ 'captura.mensaje.desea_eliminar' | trans }}</h3>
+
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ url('captura_listar', {'id' : id_ejemplar }) }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+            <a href="{{ url('captura_eliminar_final', { 'id_ejemplar' : id_ejemplar, 'id_captura' : id_captura }) }}">{% include 'icon.html.twig' with {icono: 'borrar'} %} {{ 'varios.borrar' | trans }}</a>
+        </span>
+    </div>
+</fieldset>
+{% endblock %}

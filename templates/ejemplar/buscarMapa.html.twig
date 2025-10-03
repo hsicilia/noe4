@@ -1,0 +1,127 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.busquedamapa.indice' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.busquedamapa.indice' | trans }}{% endblock %}
+
+{% block contenido %}
+    {{ form_start(formulario) }}
+
+        {{ form_errors(formulario) }}
+    <fieldset>
+        <legend>{{ 'busquedamapa.mensaje.datosBusqueda' | trans }}</legend>
+        {{ form_row(formulario.especie) }}
+        {{ form_row(formulario.sexo) }}
+        {{ form_row(formulario.recinto) }}
+        <div>
+            {{ form_label(formulario.fechaInicial) }}
+            {{ form_widget(formulario.fechaInicial, {'attr': {'class': 'corto'}}) }}
+            {{ form_errors(formulario.fechaInicial) }}
+        </div>
+        <div>
+            {{ form_label(formulario.fechaFinal) }}
+            {{ form_widget(formulario.fechaFinal, {'attr': {'class': 'corto'}}) }}
+            {{ form_errors(formulario.fechaFinal) }}
+        </div>
+        <div class="separador">
+            {{ form_row(formulario.lugar) }}
+            <div>
+                {{ form_label(formulario.distancia) }}
+                {{ form_widget(formulario.distancia, {'attr': {'class': 'corto'}}) }} <em>Km.</em>
+                {{ form_errors(formulario.distancia) }}
+            </div>
+
+            {{ form_row(formulario.geoLong, {'attr': {'class': 'no_cambiar corto'}}) }}
+            {{ form_row(formulario.geoLat, {'attr': {'class': 'no_cambiar corto'}}) }}
+
+            <div id="mapa_canvas" style="width: 500px; height: 300px; margin: 10px 0;"></div>
+        </div>
+
+        <div class="separador">
+            {{ form_row(formulario.origen) }}
+            {{ form_row(formulario.documentacion) }}
+            {{ form_row(formulario.progenitor1) }}
+        </div>
+
+        <div class="separador">
+            {{ form_row(formulario.depositoNombre) }}
+            {{ form_row(formulario.depositoDNI) }}
+        </div>
+
+        <div class="separador">
+            <div>
+                {{ form_label(formulario.invasora) }}
+                {{ form_widget(formulario.invasora) }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>
+                {{ form_errors(formulario.invasora) }}
+            </div>
+            <div>
+                {{ form_label(formulario.peligroso) }}
+                {{ form_widget(formulario.peligroso) }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>
+                {{ form_errors(formulario.peligroso) }}
+            </div>
+            {{ form_row(formulario.cites) }}
+        </div>
+        <div class="separador">
+        <div>
+            {{ form_label(formulario.fechaBajaInicial) }}
+            {{ form_widget(formulario.fechaBajaInicial, {'attr': {'class': 'corto'}}) }}
+            {{ form_errors(formulario.fechaBajaInicial) }}
+        </div>
+        <div>
+            {{ form_label(formulario.fechaBajaFinal) }}
+            {{ form_widget(formulario.fechaBajaFinal, {'attr': {'class': 'corto'}}) }}
+            {{ form_errors(formulario.fechaBajaFinal) }}
+        </div>
+            {{ form_row(formulario.causaBaja) }}
+        </div>
+    </fieldset>
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script>
+        let map;
+        let marker;
+        const formName = '{{ formulario.vars.name }}';
+
+        function initMap() {
+            const initialLat = {{ lat ?? 0 }};
+            const initialLng = {{ long ?? 0 }};
+            const center = { lat: initialLat, lng: initialLng };
+
+            map = new google.maps.Map(document.getElementById("mapa_canvas"), {
+                zoom: 7,
+                center: center,
+                mapTypeId: 'terrain',
+                disableDefaultUI: false,
+                disableDoubleClickZoom: true,
+            });
+
+            marker = new google.maps.Marker({
+                position: center,
+                map: map,
+                animation: google.maps.Animation.DROP,
+                clickable: false,
+                flat: true,
+            });
+
+            // Evento de clic en el mapa para actualizar la posición
+            map.addListener('click', function(event) {
+                marker.setPosition(event.latLng);
+                document.getElementById(formName + '_geoLat').value = event.latLng.lat();
+                document.getElementById(formName + '_geoLong').value = event.latLng.lng();
+            });
+        }
+
+        window.initMap = initMap;
+    </script>
+    {# TODO: Replace with actual Google Maps API key #}
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+    </script>
+{% endblock %}

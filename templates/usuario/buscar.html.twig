@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='usuario' %}
+
+{% block title %}{{ 'title.usuario.buscar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.usuario.buscar' | trans }}{% endblock %}
+
+{% block contenido %}
+    {% for flashMessage in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage | trans }}
+        </div>
+    {% endfor %}
+
+    <fieldset>
+        {{ form_start(formulario) }}
+
+            {{ form_errors(formulario) }}
+
+            {{ form_row(formulario.usuario) }}
+            {{ form_row(formulario.nombre) }}
+            {{ form_row(formulario.organizacion) }}
+            {{ form_row(formulario.email) }}
+            {{ form_row(formulario.enviar) }}
+            {{ form_rest(formulario) }}
+        {{ form_end(formulario) }}
+    </fieldset>
+{% endblock %}

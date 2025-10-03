@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='usuario' %}
+
+{% block title %}{{ 'title.usuario.perfil' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.usuario.perfil' | trans }}{% endblock %}
+
+{% block contenido %}
+    {% for flashMessage in app.flashes('notice') %}
+        <div class="flash-notice">
+            {{ flashMessage | trans }}
+        </div>
+    {% endfor %}
+
+    {{ form_start(formulario) }}
+
+        {{ form_errors(formulario) }}
+
+        <fieldset>
+            <legend>{{ 'usuario.campo.grupo_acceso' | trans }}</legend>
+            <div>
+                <label>{{ 'usuario.campo.usuario' | trans }}</label>
+                <strong>{{ usuario.usuario }}</strong>
+            </div>
+            {{ form_row(formulario.password) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'usuario.campo.grupo_datos' | trans }}</legend>
+            {{ form_row(formulario.nombre) }}
+            {{ form_row(formulario.organizacion) }}
+            {{ form_row(formulario.email) }}
+        </fieldset>
+        <fieldset>
+            <legend>{{ 'usuario.campo.grupo_captura' | trans }}</legend>
+            {{ form_row(formulario.lugarDefecto, {'attr': {'class': 'largo'}}) }}
+            {{ form_row(formulario.geoLongDefecto, {'attr': {'class': 'no_cambiar corto'}}) }}
+            {{ form_row(formulario.geoLatDefecto, {'attr': {'class': 'no_cambiar corto'}}) }}
+        </fieldset>
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+{% endblock %}

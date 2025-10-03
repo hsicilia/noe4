@@ -1,20 +1,40 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+        # Plain text password hasher for legacy noe2 compatibility
+        # TODO: Change to 'auto' after migration and rehash all passwords
+        App\Entity\Usuario:
+            id: App\Security\PlainPasswordHasher
+
+    # Role hierarchy from noe2
+    role_hierarchy:
+        ROLE_OPERADOR_EXTERNO_PRUEBAS: [ROLE_VISITANTE]
+        ROLE_OPERADOR_EXTERNO: [ROLE_OPERADOR_EXTERNO_PRUEBAS, ROLE_VISITANTE]
+        ROLE_OPERADOR_PROPIO: [ROLE_OPERADOR_EXTERNO, ROLE_OPERADOR_EXTERNO_PRUEBAS, ROLE_VISITANTE]
+        ROLE_ADMIN: [ROLE_OPERADOR_PROPIO, ROLE_OPERADOR_EXTERNO, ROLE_OPERADOR_EXTERNO_PRUEBAS, ROLE_VISITANTE, ROLE_ALLOWED_TO_SWITCH]
+
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
-        users_in_memory: { memory: null }
+        app_user_provider:
+            entity:
+                class: App\Entity\Usuario
+                property: usuario
+
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
-
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+            provider: app_user_provider
+            form_login:
+                login_path: app_login
+                check_path: app_login
+                enable_csrf: true
+                default_target_path: app_home
+            logout:
+                path: app_logout
+                target: app_login
 
             # https://symfony.com/doc/current/security/impersonating_user.html
             # switch_user: true
@@ -22,8 +42,20 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/logout, roles: PUBLIC_ACCESS }
+        - { path: ^/$, roles: PUBLIC_ACCESS }
+        - { path: ^/usuario/perfil, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/usuario, roles: ROLE_ADMIN }
+        - { path: ^/especie, roles: ROLE_ADMIN }
+        - { path: ^/ejemplar/eliminar, roles: ROLE_ADMIN }
+        - { path: ^/ejemplar/crear, roles: ROLE_OPERADOR_PROPIO }
+        - { path: ^/ejemplar/editar, roles: ROLE_OPERADOR_EXTERNO }
+        - { path: ^/ejemplar/[0-9]+/captura/eliminar, roles: ROLE_ADMIN }
+        - { path: ^/ejemplar/[0-9]+/captura/crear, roles: ROLE_OPERADOR_EXTERNO_PRUEBAS }
+        - { path: ^/ejemplar/[0-9]+/captura/editar, roles: ROLE_OPERADOR_EXTERNO_PRUEBAS }
+        - { path: ^/ejemplar, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/, roles: PUBLIC_ACCESS }
 
 when@test:
     security:

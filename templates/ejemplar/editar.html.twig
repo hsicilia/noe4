@@ -1,0 +1,276 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.ejemplar.editar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.ejemplar.editar' | trans }}{% endblock %}
+
+{% block contenido %}
+
+{% if not (is_granted('ROLE_OPERADOR_PROPIO') or
+           (is_granted('ROLE_OPERADOR_EXTERNO') and ejemplar.creadoPor and (ejemplar.creadoPor.id == app.user.id))) %}
+    <strong>{{ 'ejemplar.error.no_permiso_edicion' | trans }}</strong>
+{% else %}
+
+{% set submenu = 'datos' %}
+{% include 'captura/includes/cabecera.html.twig' %}
+<div id="subtabs">
+    {{ form_start(formulario) }}
+    {{ form_errors(formulario) }}
+    <fieldset>
+        {{ form_row(formulario.fechaRegistro, {'attr': {'class': 'corto'}}) }}
+        {{ form_row(formulario.especie) }}
+        {{ form_row(formulario.idMicrochip) }}
+        {{ form_row(formulario.idAnilla) }}
+        {{ form_row(formulario.idOtro) }}
+        {{ form_row(formulario.idOtro2) }}
+        {{ form_row(formulario.sexo) }}
+        {{ form_row(formulario.recinto) }}
+
+        <fieldset>
+            <legend>{{ 'ejemplar.mensaje.datos_posicion' | trans }}</legend>
+            {{ form_row(formulario.lugar) }}
+            {{ form_row(formulario.geoLong, {'attr': {'class': 'no_cambiar corto'}}) }}
+            {{ form_row(formulario.geoLat, {'attr': {'class': 'no_cambiar corto'}}) }}
+            <div id="mapa_canvas" style="width: 500px; height: 300px; margin: 10px 0;"></div>
+        </fieldset>
+
+        {{ form_row(formulario.origen) }}
+        {{ form_row(formulario.documentacion) }}
+        {{ form_row(formulario.progenitor1) }}
+        {{ form_row(formulario.progenitor2) }}
+        <div class="separador">
+            {{ form_row(formulario.depositoNombre) }}
+            {{ form_row(formulario.depositoDNI) }}
+            {{ form_row(formulario.deposito) }}
+        </div>
+        <div class="separador">
+            <div>
+                {{ form_label(formulario.invasora) }}
+                {{ form_widget(formulario.invasora) }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>
+                {{ form_errors(formulario.invasora) }}
+            </div>
+            <div>
+                {{ form_label(formulario.peligroso) }}
+                {{ form_widget(formulario.peligroso) }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>
+                {{ form_errors(formulario.peligroso) }}
+            </div>
+            {{ form_row(formulario.cites) }}
+        </div>
+        <div class="separador">
+            {{ form_row(formulario.fechaBaja, {'attr': {'class': 'corto'}}) }}
+            {{ form_row(formulario.causaBaja) }}
+        </div>
+        <div class="separador separador-bajo">
+            {{ form_row(formulario.observaciones) }}
+        </div>
+        {{ form_row(formulario.imagen1, {'attr': {'class': 'largo'}}) }}
+        {% if ejemplar.path1 is not null %}
+            {{ form_row(formulario.borrarImagen1, {'attr': {'class': 'corto'}}) }}
+        {% else %}
+            {{ form_row(formulario.borrarImagen1, {'attr': {'disabled': 'disabled', 'class': 'corto'}}) }}
+        {% endif %}
+        {{ form_row(formulario.imagen2, {'attr': {'class': 'largo'}}) }}
+        {% if ejemplar.path2 is not null %}
+            {{ form_row(formulario.borrarImagen2, {'attr': {'class': 'corto'}}) }}
+        {% else %}
+            {{ form_row(formulario.borrarImagen2, {'attr': {'disabled': 'disabled', 'class': 'corto'}}) }}
+        {% endif %}
+        {{ form_row(formulario.imagen3, {'attr': {'class': 'largo'}}) }}
+        {% if ejemplar.path3 is not null %}
+            {{ form_row(formulario.borrarImagen3, {'attr': {'class': 'corto'}}) }}
+        {% else %}
+            {{ form_row(formulario.borrarImagen3, {'attr': {'disabled': 'disabled', 'class': 'corto'}}) }}
+        {% endif %}
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+    </fieldset>
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ path('ejemplar_ver', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+        </span>
+    </div>
+
+    <fieldset>
+        <legend>
+            {% if (primera_captura is not null) and (ultima_captura is null) %}
+                {{ 'ejemplar.mensaje.datos_unica_captura' | trans}}
+            {% else %}
+                {{ 'ejemplar.mensaje.datos_primera_captura' | trans}}
+            {% endif %}
+        </legend>
+            {% if (primera_captura is null) %}
+                <div>{{ 'ejemplar.mensaje.no_capturas' | trans}}</div>
+                <div class="buttons">
+                    <a href="{{ url('captura_crear', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'crear'} %} {{ 'captura.mensaje.anadir' | trans }}</a>
+                </div>
+            {% else %}
+                <div><strong>{{ 'captura.campo.fechaCaptura' | trans }}:</strong> {{ primera_captura.fechaCaptura | date("d/m/Y") }}</div>
+                <div><strong>{{ 'captura.campo.tipoCaptura' | trans }}:</strong> {{ primera_captura.tipoCaptura }}</div>
+                <div><strong>{{ 'captura.campo.lugarCaptura' | trans }}:</strong> {{ primera_captura.lugarCaptura }}</div>
+            {% endif %}
+    </fieldset>
+
+    {% if (ultima_captura is not null) %}
+    <fieldset>
+        <legend>{{ 'ejemplar.mensaje.datos_ultima_captura' | trans}}</legend>
+            <div><strong>{{ 'captura.campo.fechaCaptura' | trans }}:</strong> {{ ultima_captura.fechaCaptura | date("d/m/Y") }}</div>
+            <div><strong>{{ 'captura.campo.tipoCaptura' | trans }}:</strong> {{ ultima_captura.tipoCaptura }}</div>
+            <div><strong>{{ 'captura.campo.lugarCaptura' | trans }}:</strong> {{ ultima_captura.lugarCaptura }}</div>
+    </fieldset>
+    {% endif %}
+
+    <div id="cortinilla" class="cortinilla"></div>
+
+    {% if ejemplar.path1 %}
+    <div id="superpuesto-1" class="superpuesto"><img src="{{ asset('uploads/ejemplares/I1-' ~ ejemplar.id ~ '.' ~ ejemplar.path1) }}" /></div>
+    {% endif %}
+    {% if ejemplar.path2 %}
+    <div id="superpuesto-2" class="superpuesto"><img src="{{ asset('uploads/ejemplares/I2-' ~ ejemplar.id ~ '.' ~ ejemplar.path2) }}" /></div>
+    {% endif %}
+    {% if ejemplar.path3 %}
+    <div id="superpuesto-3" class="superpuesto"><img src="{{ asset('uploads/ejemplares/I3-' ~ ejemplar.id ~ '.' ~ ejemplar.path3) }}" /></div>
+    {% endif %}
+
+    <fieldset class="imagenes_faciales">
+        <legend>{{ 'ejemplar.mensaje.imagenes' | trans }}</legend>
+
+        <div class="lanzador_facial{% if ejemplar.path1 %}_activo{% endif %}" id="1">
+            <div class="cabecera">{{ 'ejemplar.campo.imagen1' | trans }}</div>
+            <div class="imagen">
+                {% if ejemplar.path1 %}
+                <img src="{{ ('uploads/ejemplares/I1-' ~ ejemplar.id ~ '.' ~ ejemplar.path1) | imagine_filter('thumbnail') }}" />
+                {% else %}
+                {{ 'ejemplar.mensaje.no_imagen' | trans }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="lanzador_facial{% if ejemplar.path2 %}_activo{% endif %}" id="2">
+            <div class="cabecera">{{ 'ejemplar.campo.imagen2' | trans }}</div>
+            <div class="imagen">
+                {% if ejemplar.path2 %}
+                <img src="{{ ('uploads/ejemplares/I2-' ~ ejemplar.id ~ '.' ~ ejemplar.path2) | imagine_filter('thumbnail') }}" />
+                {% else %}
+                {{ 'ejemplar.mensaje.no_imagen' | trans }}
+                {% endif %}
+            </div>
+        </div>
+        <div class="lanzador_facial{% if ejemplar.path3 %}_activo{% endif %}" id="3">
+            <div class="cabecera">{{ 'ejemplar.campo.imagen3' | trans }}</div>
+            <div class="imagen">
+                {% if ejemplar.path3 %}
+                <img src="{{ ('uploads/ejemplares/I3-' ~ ejemplar.id ~ '.' ~ ejemplar.path3) | imagine_filter('thumbnail') }}" />
+                {% else %}
+                {{ 'ejemplar.mensaje.no_imagen' | trans }}
+                {% endif %}
+            </div>
+        </div>
+    </fieldset>
+
+    <fieldset>
+        <div><strong>{{ 'ejemplar.campo.creado_por' | trans}}:</strong> <em>{% if creado_por %}{{ creado_por }}{% endif %}</em>{% if creado_el is not null %} - {{ creado_el | date("d/m/Y H:i") }}{% endif %}</div>
+        <div><strong>{{ 'ejemplar.campo.modificado_por' | trans}}:</strong> <em>{% if modificado_por %}{{ modificado_por }}{% endif %}</em>{% if modificado_el is not null %} - {{ modificado_el | date("d/m/Y H:i") }}{% endif %}</div>
+    </fieldset>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Mostrar imágenes centradas en pantalla
+    const lanzadores = document.querySelectorAll('.lanzador_facial_activo');
+    const cortinilla = document.getElementById('cortinilla');
+    const superpuestos = document.querySelectorAll('.superpuesto');
+
+    function mostrarImagen(id) {
+        const superpuestoId = document.getElementById('superpuesto-' + id);
+        const imagen = superpuestoId.querySelector('img');
+
+        cortinilla.style.display = 'block';
+        cortinilla.style.opacity = '1';
+        superpuestoId.style.display = 'block';
+        superpuestoId.style.opacity = '1';
+
+        const ancho = imagen.width;
+        const alto = imagen.height;
+        superpuestoId.style.width = ancho + 'px';
+        superpuestoId.style.height = alto + 'px';
+        superpuestoId.style.marginLeft = -Math.floor(ancho / 2) + 'px';
+        superpuestoId.style.marginTop = -Math.floor(alto / 2) + 'px';
+    }
+
+    function ocultarSuperpuesto() {
+        cortinilla.style.display = 'none';
+        cortinilla.style.opacity = '0';
+        superpuestos.forEach(function(superpuesto) {
+            superpuesto.style.display = 'none';
+            superpuesto.style.opacity = '0';
+        });
+    }
+
+    lanzadores.forEach(function(lanzador) {
+        lanzador.addEventListener('click', function(e) {
+            e.preventDefault();
+            const numero = this.getAttribute('id');
+            mostrarImagen(numero);
+        });
+    });
+
+    cortinilla.addEventListener('click', function(e) {
+        e.preventDefault();
+        ocultarSuperpuesto();
+    });
+
+    // Inicializar el mapa
+    if (typeof initMap === 'function') {
+        initMap();
+    }
+});
+
+// Mapa de Google
+let map;
+let marker;
+const formName = '{{ formulario.vars.name }}';
+
+function initMap() {
+    const latField = document.getElementById(formName + '_geoLat');
+    const lngField = document.getElementById(formName + '_geoLong');
+    const initialLat = parseFloat(latField.value) || 0;
+    const initialLng = parseFloat(lngField.value) || 0;
+    const center = { lat: initialLat, lng: initialLng };
+
+    map = new google.maps.Map(document.getElementById("mapa_canvas"), {
+        zoom: 7,
+        center: center,
+        mapTypeId: 'terrain',
+        disableDefaultUI: false,
+        disableDoubleClickZoom: true,
+    });
+
+    marker = new google.maps.Marker({
+        position: center,
+        map: map,
+        animation: google.maps.Animation.DROP,
+        clickable: false,
+        flat: true,
+    });
+
+    // Evento de clic en el mapa para actualizar la posición
+    map.addListener('click', function(event) {
+        marker.setPosition(event.latLng);
+        latField.value = event.latLng.lat();
+        lngField.value = event.latLng.lng();
+    });
+}
+
+window.initMap = initMap;
+</script>
+{# TODO: Replace with actual Google Maps API key #}
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+</script>
+{% endblock %}

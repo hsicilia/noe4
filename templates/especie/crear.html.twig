@@ -1,0 +1,28 @@
+{# src/NOE/EspecieBundle/Resources/views/crear.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% set menu='especie' %}
+
+{% block title %}{{ 'title.especie.crear' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.especie.crear' | trans }}{% endblock %}
+
+{% block contenido %}
+    <fieldset>
+    {{ form_start(formulario) }}
+
+        {{ form_errors(formulario) }}
+
+        {{ form_row(formulario.nombre) }}
+        {{ form_row(formulario.comun) }}
+        {{ form_row(formulario.enviar) }}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
+    </fieldset>
+<div class="opciones">
+    <span class="buttons">
+        <a href="{{ path('especie_buscar') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+    </span>
+</div>
+
+{% endblock %}

@@ -1,0 +1,51 @@
+{# templates/cabecera.html.twig #}
+<div id="header_superior">
+    <img id="logo" class="izquierda" src="{{ asset('img/logo_Neotrópico_circular.png') }}"
+        width="175" height="205" title="Logo NOE" />
+    <nav>
+        <ul id="menu" class="sf-menu">
+            <li><a href="{{ path('app_home') }}">{{ 'menu.inicio.base' | trans }}</a></li>
+        {% if is_granted('ROLE_ADMIN') %}
+            <li><a href="#">{{ 'menu.usuarios.base' | trans }}</a>
+                <ul>
+                    <li><a href="{{ path('usuario_buscar') }}">{{ 'menu.usuarios.buscar' | trans }}</a></li>
+                    <li><a href="{{ path('usuario_crear') }}">{{ 'menu.usuarios.crear' | trans }}</a></li>
+                </ul>
+            </li>
+            <li><a href="#">{{ 'menu.informes.base' | trans }}</a>
+                <ul>
+                    <li><a href="{{ path('informe_ejemplares_menu') }}">{{ 'menu.informes.ejemplares' | trans }}</a></li>
+                </ul>
+            </li>
+            <li><a href="#">{{ 'menu.especies.base' | trans }}</a>
+                <ul>
+                    <li><a href="{{ path('especie_buscar') }}">{{ 'menu.especies.buscar' | trans }}</a></li>
+                    <li><a href="{{ path('especie_crear') }}">{{ 'menu.especies.crear' | trans }}</a></li>
+                </ul>
+            </li>
+        {% endif %}
+            <li><a href="#">{{ 'menu.ejemplares.base' | trans }}</a>
+                <ul>
+                    <li><a href="{{ path('ejemplar_buscar_id') }}">{{ 'menu.ejemplares.buscar_id' | trans }}</a></li>
+                    <li><a href="{{ path('ejemplar_buscar_mapa') }}">{{ 'menu.ejemplares.buscar_mapa' | trans }}</a></li>
+                    {% if is_granted('ROLE_OPERADOR_PROPIO') %}
+                    <li><a href="{{ path('ejemplar_crear') }}">{{ 'menu.ejemplares.crear' | trans }}</a></li>
+                    {% endif %}
+                </ul>
+            </li>
+        </ul>
+    </nav>
+</div>
+<div id="header_inferior">
+    {% if app.user %}
+        <div id="login">
+            <strong>{{ app.user.nombre }}</strong> ({{ app.user.organizacion }}) |
+            <a href="{{ path('app_logout') }}">{{ 'usuario.login.salir' | trans }}</a> |
+            <a href="{{ path('usuario_perfil') }}">{{ 'usuario.login.perfil' | trans }}</a>
+        </div>
+    {% else %}
+        <div id="login">
+            <a href="{{ path('app_login') }}">{{ 'usuario.login.acceder' | trans }}</a>
+        </div>
+    {% endif %}
+</div>

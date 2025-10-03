@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='usuario' %}
+
+{% block title %}{{ 'title.usuario.eliminar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.usuario.eliminar' | trans }}{% endblock %}
+
+{% block contenido %}
+
+<fieldset>
+    <h3>{{ 'usuario.mensaje.desea_eliminar' | trans }}</h3>
+
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ url('usuario_ver', {'id' : id}) }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+            <a href="{{ url('usuario_eliminar_final', { 'id' : id }) }}">{% include 'icon.html.twig' with {icono: 'borrar'} %} {{ 'varios.borrar' | trans }}</a>
+        </span>
+    </div>
+</fieldset>
+
+{% endblock %}

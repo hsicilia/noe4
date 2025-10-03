@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.captura.ver' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.captura.ver' | trans }}{% endblock %}
+
+{% block contenido %}
+{% set submenu = 'captura_ver' %}
+{% include 'captura/includes/cabecera.html.twig' %}
+<div id="subtabs">
+    <fieldset>
+        <legend>{{ 'captura.mensaje.datos_captura' | trans }}</legend>
+        <ul>
+            <li><span class="campo">{{ 'captura.campo.tipoCaptura' | trans }}: </span>{{ captura.tipoCaptura }}</li>
+            <li><span class="campo">{{ 'captura.campo.fechaCaptura' | trans }}: </span>{{ captura.fechaCaptura | date("d/m/Y") }}</li>
+            <li><span class="campo">{{ 'captura.campo.horaCaptura' | trans }}: </span>{{ captura.horaCaptura | hora }}</li>
+            <li><span class="campo">{{ 'captura.campo.lugarCaptura' | trans }}: </span>{{ captura.lugarCaptura }}</li>
+            <li><span class="campo">{{ 'captura.campo.observaciones' | trans }}: </span>{{ captura.observaciones }}</li>
+            <li><span class="campo">{{ 'captura.campo.fotosURL' | trans }}: </span>{% if captura.fotosURL %}<a href="{{ captura.fotosURL }}" target="_blank">{{ captura.fotosURL }}</a>{% endif %}</li>
+        </ul>
+    </fieldset>
+
+    <div class="opciones">
+        <span class="buttons">
+            {% if is_granted('ROLE_OPERADOR_PROPIO') or
+                 (is_granted('ROLE_OPERADOR_EXTERNO_PRUEBAS') and captura.creadoPor and (captura.creadoPor.id == app.user.id)) %}
+            <a href="{{ url('captura_editar', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">{% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans }}</a>
+            {% endif %}
+            <a href="{{ path('captura_listar', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+        </span>
+    </div>
+
+    <div id="cortinilla" class="cortinilla"></div>
+
+    {% if captura.path %}
+    <div id="superpuesto" class="superpuesto"><img src="{{ asset('uploads/capturas/C-' ~ captura.id ~ '.' ~ captura.path) }}" /></div>
+    {% endif %}
+
+    <fieldset>
+        <legend>{{ 'captura.mensaje.datos_imagenes' | trans }}</legend>
+        {% if captura.path %}
+        <div class="centrado lanzador">
+            <img src="{{ ('uploads/capturas/C-' ~ captura.id ~ '.' ~ captura.path) | imagine_filter('thumbnail') }}" />
+        </div>
+        {% else %}
+        <p>{{ 'ejemplar.mensaje.no_imagen' | trans }}</p>
+        {% endif %}
+    </fieldset>
+
+    <fieldset>
+        <div><strong>{{ 'captura.campo.creado_por' | trans}}:</strong> <em>{% if creado_por %}{{ creado_por }}{% endif %}</em>{% if creado_el is not null %} - {{ creado_el | date("d/m/Y H:i") }}{% endif %}</div>
+        <div><strong>{{ 'captura.campo.modificado_por' | trans}}:</strong> <em>{% if modificado_por %}{{ modificado_por }}{% endif %}</em>{% if modificado_el is not null %} - {{ modificado_el | date("d/m/Y H:i") }}{% endif %}</div>
+    </fieldset>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const lanzador = document.querySelector('.lanzador');
+    const cortinilla = document.getElementById('cortinilla');
+    const superpuesto = document.getElementById('superpuesto');
+
+    if (lanzador) {
+        function mostrarImagen() {
+            const imagen = superpuesto.querySelector('img');
+
+            cortinilla.style.display = 'block';
+            cortinilla.style.opacity = '1';
+            superpuesto.style.display = 'block';
+            superpuesto.style.opacity = '1';
+
+            const ancho = imagen.width;
+            const alto = imagen.height;
+            superpuesto.style.width = ancho + 'px';
+            superpuesto.style.height = alto + 'px';
+            superpuesto.style.marginLeft = -Math.floor(ancho / 2) + 'px';
+            superpuesto.style.marginTop = -Math.floor(alto / 2) + 'px';
+        }
+
+        function ocultarSuperpuesto() {
+            cortinilla.style.display = 'none';
+            cortinilla.style.opacity = '0';
+            superpuesto.style.display = 'none';
+            superpuesto.style.opacity = '0';
+        }
+
+        lanzador.addEventListener('click', function(e) {
+            e.preventDefault();
+            mostrarImagen();
+        });
+
+        cortinilla.addEventListener('click', function(e) {
+            e.preventDefault();
+            ocultarSuperpuesto();
+        });
+    }
+});
+</script>
+{% endblock %}

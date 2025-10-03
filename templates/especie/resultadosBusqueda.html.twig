@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='especie' %}
+
+{% block title %}{{ 'title.especie.resultadosBusqueda' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.especie.resultadosBusqueda' | trans }}{% endblock %}
+
+{% block contenido %}
+
+<div class="total">
+    {{ 'especie.mensaje.especies_encontradas' | trans }}: {{ paginacion.getTotalItemCount }}
+</div>
+
+<fieldset>
+    <table>
+{% for especie in paginacion %}
+        <tr class="{{ cycle(['impar','par'], loop.index) }}">
+            <td>
+                <a href="{{ path('especie_ver', {'id': especie.id}) }}"><em>{{ especie.nombre }}</em></a>
+            </td>
+            <td>
+                {{ especie.comun }}
+            </td>
+            <td class="botones">
+            <span class="buttons">
+                <a href="{{ path('especie_editar', {'id': especie.id}) }}"><img src="{{ asset('img/icon/editar.png') }}" /> {{ 'varios.editar' | trans }}</a>
+            </span>
+        </tr>
+{% else %}
+        <tr class="impar"><td>{{ 'especie.mensaje.busqueda_sin_resultados' | trans }}</td></tr>
+{% endfor %}
+    </table>
+</fieldset>
+<div class="paginacion">
+    {{ knp_pagination_render(paginacion, null, {}, {'especie_type': {'nombre': app.request.query.get('especie_type')['nombre'] ?? '', 'comun': app.request.query.get('especie_type')['comun'] ?? ''}}) }}
+</div>
+<div class="opciones">
+    <span class="buttons">
+        <a href="{{ path('especie_buscar') }}"><img src="{{ asset('img/icon/volver.png') }}" /> {{ 'varios.volver' | trans }}</a>
+    </span>
+</div>
+{% endblock %}

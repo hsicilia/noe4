@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.ejemplar.eliminar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.ejemplar.eliminar' | trans }}{% endblock %}
+
+{% block contenido %}
+
+<fieldset>
+    <h3>{{ 'ejemplar.mensaje.desea_eliminar' | trans }}</h3>
+
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ path('ejemplar_ver', {'id' : id}) }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+            <a href="{{ path('ejemplar_eliminar_final', { 'id' : id }) }}">{% include 'icon.html.twig' with {icono: 'borrar'} %} {{ 'varios.borrar' | trans }}</a>
+        </span>
+    </div>
+</fieldset>
+
+{% endblock %}

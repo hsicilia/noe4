@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.ejemplar.buscar' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.ejemplar.buscar' | trans }}{% endblock %}
+
+{% block contenido %}
+
+{% for flashMessage in app.flashes('notice') %}
+    <div class="flash-notice">
+        {{ flashMessage | trans }}
+    </div>
+{% endfor %}
+
+    {{ form_start(form_id) }}
+
+        {{ form_errors(form_id) }}
+    <fieldset>
+        <legend>{{ 'ejemplar.campo.id' | trans }}</legend>
+        {{ form_row(form_id.id) }}
+        {{ form_row(form_id.buscar) }}
+        {{ form_rest(form_id) }}
+    {{ form_end(form_id) }}
+
+    {{ form_start(form_otroid) }}
+
+    {{ form_errors(form_otroid) }}
+        {{ form_row(form_otroid.otroId) }}
+        {{ form_row(form_otroid.buscar) }}
+        {{ form_rest(form_otroid) }}
+    </fieldset>
+    {{ form_end(form_otroid) }}
+{% endblock %}

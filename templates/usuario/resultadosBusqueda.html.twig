@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='usuario' %}
+
+{% block title %}{{ 'title.usuario.resultadosBusqueda' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.usuario.resultadosBusqueda' | trans }}{% endblock %}
+
+{% block contenido %}
+
+<div class="total">
+    {{ 'usuario.mensaje.usuarios_encontrados' | trans }}: {{ paginacion.getTotalItemCount }}
+</div>
+
+<fieldset>
+    <table>
+{% for usuario in paginacion %}
+        <tr class="{{ cycle(['impar','par'], loop.index) }}">
+            <td class="nombre"><a href="{{ path('usuario_ver', {'id': usuario.id}) }}">{{ usuario.usuario }}</a></td>
+            <td class="botones">
+                <span class="buttons">
+                    <a href="{{ path('usuario_editar', {'id': usuario.id}) }}">{% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans }}</a>
+                </span>
+            </td>
+        </tr>
+{% else %}
+        <tr class="impar"><td>{{ 'usuario.mensaje.busqueda_sin_resultados' | trans }}</td></tr>
+{% endfor %}
+    </table>
+</fieldset>
+<div class="paginacion">
+    {{ knp_pagination_render(paginacion) }}
+</div>
+<div class="opciones">
+    <span class="buttons">
+        <a href="{{ url('usuario_buscar') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+    </span>
+</div>
+{% endblock %}

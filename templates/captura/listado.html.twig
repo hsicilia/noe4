@@ -1,0 +1,78 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.captura.listadoCapturas' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.captura.listadoCapturas' | trans }}{% endblock %}
+
+{% block contenido %}
+
+{% for flashMessage in app.flashes('notice') %}
+    <div class="flash-notice">
+        {{ flashMessage | trans }}
+    </div>
+{% endfor %}
+
+{% set submenu = 'capturas' %}
+{% include 'captura/includes/cabecera.html.twig' %}
+
+<div id="subtabs">
+    {% if is_granted('ROLE_OPERADOR_EXTERNO_PRUEBAS') %}
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ url('captura_crear', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'crear'} %} {{ 'captura.mensaje.anadir' | trans }}</a>
+            <a href="{{ path('ejemplar_ver', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+        </span>
+    </div>
+    {% endif %}
+
+    <fieldset>
+        <legend>{{ 'captura.mensaje.listado' | trans }}</legend>
+        <table class="completa centrado">
+            <thead class="titulo">
+                <tr>
+                    <th>{{ 'captura.campo.fechaCaptura' | trans }}</th>
+                    <th>{{ 'captura.campo.tipoCapturaCorto' | trans }}</th>
+                    <th>{{ 'captura.campo.lugarCaptura' | trans }}</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for captura in capturas %}
+                <tr class="{{ cycle(['impar','par'], loop.index) }}">
+                    <td>
+                        <a href="{{ path('captura_ver', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">
+                            {{ captura.fechaCaptura | date('d/m/Y') }}
+                        </a>
+                    </td>
+                    <td>{{ captura.tipoCaptura | recortaTexto(30) }}</td>
+                    <td>{{ captura.lugarCaptura | recortaTexto(30) }}</td>
+                    <td class="botones">
+                        <span class="buttons">
+                            {% if is_granted('ROLE_OPERADOR_PROPIO') or
+                                 (is_granted('ROLE_OPERADOR_EXTERNO_PRUEBAS') and captura.creadoPor and (captura.creadoPor.id == app.user.id)) %}
+                             <a href="{{ path('captura_editar', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">
+                                 {% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans }}
+                             </a>
+                             {% else %}
+                             <a href="{{ path('captura_ver', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">
+                                 {% include 'icon.html.twig' with {icono: 'ver'} %} {{ 'varios.ver' | trans }}
+                             </a>
+                             {% endif %}
+                             {% if is_granted('ROLE_ADMIN') %}
+                             <a href="{{ path('captura_eliminar', {'id_ejemplar': ejemplar.id, 'id_captura': captura.id}) }}">
+                                 {% include 'icon.html.twig' with {icono: 'borrar'} %} {{ 'varios.borrar' | trans }}
+                             </a>
+                             {% endif %}
+                         </span>
+                    </td>
+                </tr>
+            {% else %}
+                <tr class="impar"><td colspan="4">{{ 'ejemplar.mensaje.no_capturas' | trans }}</td></tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </fieldset>
+</div>
+{% endblock %}
