@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='ejemplar' %}
+
+{% block title %}{{ 'title.informe.resultados' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.informe.resultados' | trans }}{% endblock %}
+
+{% block contenido %}
+    <fieldset>
+        <legend>{{ 'informe.mensaje.resultados' | trans }}</legend>
+        <p><strong>{{ 'informe.mensaje.total_ejemplares' | trans }}:</strong> {{ total }}</p>
+
+        {% if total > 0 %}
+            <p>{{ 'informe.mensaje.descargar_volumenes' | trans }}</p>
+
+            <h3>PDF</h3>
+            <ul>
+                {% for i in 1..numVolumenes %}
+                    {% set inicio = ((i - 1) * 500) + 1 %}
+                    {% set fin = i * 500 %}
+                    {% if fin > total %}
+                        {% set fin = total %}
+                    {% endif %}
+                    <li>
+                        <a href="{{ path('informe_busqueda_salida', params | merge({'salida': 'PDF', 'volumen': i})) }}">
+                            {{ 'informe.mensaje.volumen' | trans }} {{ i }}: {{ inicio }}-{{ fin }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <h3>CSV</h3>
+            <ul>
+                <li>
+                    <a href="{{ path('informe_busqueda_salida', params | merge({'salida': 'CSV', 'volumen': 0})) }}">
+                        {{ 'informe.mensaje.descargar_completo' | trans }}
+                    </a>
+                </li>
+            </ul>
+        {% else %}
+            <p><em>{{ 'informe.mensaje.sin_resultados' | trans }}</em></p>
+        {% endif %}
+    </fieldset>
+
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ path('ejemplar_buscar_mapa') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+        </span>
+    </div>
+{% endblock %}

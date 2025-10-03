@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Form\InformePersonalizadoType;
 use App\Repository\EjemplarRepository;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
@@ -15,71 +14,181 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/informe')]
 class InformeController extends AbstractController
 {
-    #[Route('/ejemplares-menu', name: 'informe_ejemplares_menu')]
-    public function ejemplaresMenu(Request $request, EjemplarRepository $repository): Response
+
+    #[Route('/busqueda/resultados', name: 'informe_busqueda_resultados')]
+    public function busquedaResultados(Request $request, EjemplarRepository $repository): Response
     {
-        $formulario = $this->createForm(InformePersonalizadoType::class);
-        $formulario->handleRequest($request);
+        // Reconstruir el objeto Ejemplar desde los parámetros
+        $ejemplar = new \App\Entity\Ejemplar();
 
-        if ($formulario->isSubmitted() && $formulario->isValid()) {
-            $datos = $formulario->getData();
-
-            return $this->redirectToRoute('informe_personalizado_resultados', [
-                'fechaInicio' => $datos['fechaInicio']?->format('Y-m-d'),
-                'fechaFin' => $datos['fechaFin']?->format('Y-m-d'),
-                'invasores' => $datos['invasores'],
-                'cites' => $datos['cites'],
-            ]);
+        if ($request->query->get('especieId')) {
+            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(\App\Entity\Especie::class)
+                ->find($request->query->get('especieId'));
+            $ejemplar->setEspecie($especie);
         }
 
-        return $this->render('informe/ejemplaresMenu.html.twig', [
-            'formulario' => $formulario->createView(),
-        ]);
-    }
+        if ($request->query->get('sexo')) {
+            $ejemplar->setSexo($request->query->get('sexo'));
+        }
+        if ($request->query->get('recinto')) {
+            $ejemplar->setRecinto($request->query->get('recinto'));
+        }
+        if ($request->query->get('lugar')) {
+            $ejemplar->setLugar($request->query->get('lugar'));
+        }
+        if ($request->query->get('origen')) {
+            $ejemplar->setOrigen($request->query->get('origen'));
+        }
+        if ($request->query->get('documentacion')) {
+            $ejemplar->setDocumentacion($request->query->get('documentacion'));
+        }
+        if ($request->query->get('progenitor1')) {
+            $ejemplar->setProgenitor1($request->query->get('progenitor1'));
+        }
+        if ($request->query->get('depositoNombre')) {
+            $ejemplar->setDepositoNombre($request->query->get('depositoNombre'));
+        }
+        if ($request->query->get('depositoDNI')) {
+            $ejemplar->setDepositoDNI($request->query->get('depositoDNI'));
+        }
+        if ($request->query->get('invasora') !== null) {
+            $ejemplar->setInvasora($request->query->get('invasora'));
+        }
+        if ($request->query->get('peligroso') !== null) {
+            $ejemplar->setPeligroso($request->query->get('peligroso'));
+        }
+        if ($request->query->get('cites') !== null) {
+            $ejemplar->setCites($request->query->get('cites'));
+        }
+        if ($request->query->get('causaBaja')) {
+            $ejemplar->setCausaBaja($request->query->get('causaBaja'));
+        }
 
-    #[Route('/personalizado/resultados', name: 'informe_personalizado_resultados')]
-    public function personalizadoResultados(Request $request, EjemplarRepository $repository): Response
-    {
-        $fechaInicio = $request->query->get('fechaInicio')
-            ? new \DateTime($request->query->get('fechaInicio'))
+        $fechaInicial = $request->query->get('fechaInicial')
+            ? new \DateTime($request->query->get('fechaInicial'))
             : null;
-        $fechaFin = $request->query->get('fechaFin')
-            ? new \DateTime($request->query->get('fechaFin'))
+        $fechaFinal = $request->query->get('fechaFinal')
+            ? new \DateTime($request->query->get('fechaFinal'))
             : null;
-        $invasores = $request->query->get('invasores', 'todos');
-        $cites = $request->query->get('cites', 'todos');
+        $fechaBajaInicial = $request->query->get('fechaBajaInicial')
+            ? new \DateTime($request->query->get('fechaBajaInicial'))
+            : null;
+        $fechaBajaFinal = $request->query->get('fechaBajaFinal')
+            ? new \DateTime($request->query->get('fechaBajaFinal'))
+            : null;
+        $latitud = $request->query->get('latitud');
+        $longitud = $request->query->get('longitud');
+        $distancia = $request->query->get('distancia');
 
-        $total = $repository->contarInformePersonalizado($fechaInicio, $fechaFin, $invasores, $cites);
+        // Contar total
+        $ejemplares = $repository->buscarMapa(
+            $ejemplar,
+            $fechaInicial,
+            $fechaFinal,
+            $fechaBajaInicial,
+            $fechaBajaFinal,
+            $latitud,
+            $longitud,
+            $distancia
+        );
+
+        $total = count($ejemplares);
         $numVolumenes = (int) ceil($total / 500);
 
-        return $this->render('informe/personalizadoResultados.html.twig', [
+        return $this->render('informe/busquedaResultados.html.twig', [
             'total' => $total,
             'numVolumenes' => $numVolumenes,
-            'fechaInicio' => $fechaInicio,
-            'fechaFin' => $fechaFin,
-            'invasores' => $invasores,
-            'cites' => $cites,
+            'params' => $request->query->all(),
         ]);
     }
 
-    #[Route('/personalizado/{salida}/{volumen}', name: 'informe_personalizado_salida', defaults: ['volumen' => 0])]
-    public function personalizadoSalida(
+    #[Route('/busqueda/{salida}/{volumen}', name: 'informe_busqueda_salida', defaults: ['volumen' => 0])]
+    public function busquedaSalida(
         Request $request,
         string $salida,
         int $volumen,
         EjemplarRepository $repository,
         Pdf $pdf
     ): Response {
-        $fechaInicio = $request->query->get('fechaInicio')
-            ? new \DateTime($request->query->get('fechaInicio'))
-            : null;
-        $fechaFin = $request->query->get('fechaFin')
-            ? new \DateTime($request->query->get('fechaFin'))
-            : null;
-        $invasores = $request->query->get('invasores', 'todos');
-        $cites = $request->query->get('cites', 'todos');
+        // Reconstruir búsqueda igual que busquedaResultados
+        $ejemplar = new \App\Entity\Ejemplar();
 
-        $ejemplares = $repository->informePersonalizado($fechaInicio, $fechaFin, $invasores, $cites, $volumen);
+        if ($request->query->get('especieId')) {
+            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(\App\Entity\Especie::class)
+                ->find($request->query->get('especieId'));
+            $ejemplar->setEspecie($especie);
+        }
+
+        if ($request->query->get('sexo')) {
+            $ejemplar->setSexo($request->query->get('sexo'));
+        }
+        if ($request->query->get('recinto')) {
+            $ejemplar->setRecinto($request->query->get('recinto'));
+        }
+        if ($request->query->get('lugar')) {
+            $ejemplar->setLugar($request->query->get('lugar'));
+        }
+        if ($request->query->get('origen')) {
+            $ejemplar->setOrigen($request->query->get('origen'));
+        }
+        if ($request->query->get('documentacion')) {
+            $ejemplar->setDocumentacion($request->query->get('documentacion'));
+        }
+        if ($request->query->get('progenitor1')) {
+            $ejemplar->setProgenitor1($request->query->get('progenitor1'));
+        }
+        if ($request->query->get('depositoNombre')) {
+            $ejemplar->setDepositoNombre($request->query->get('depositoNombre'));
+        }
+        if ($request->query->get('depositoDNI')) {
+            $ejemplar->setDepositoDNI($request->query->get('depositoDNI'));
+        }
+        if ($request->query->get('invasora') !== null) {
+            $ejemplar->setInvasora($request->query->get('invasora'));
+        }
+        if ($request->query->get('peligroso') !== null) {
+            $ejemplar->setPeligroso($request->query->get('peligroso'));
+        }
+        if ($request->query->get('cites') !== null) {
+            $ejemplar->setCites($request->query->get('cites'));
+        }
+        if ($request->query->get('causaBaja')) {
+            $ejemplar->setCausaBaja($request->query->get('causaBaja'));
+        }
+
+        $fechaInicial = $request->query->get('fechaInicial')
+            ? new \DateTime($request->query->get('fechaInicial'))
+            : null;
+        $fechaFinal = $request->query->get('fechaFinal')
+            ? new \DateTime($request->query->get('fechaFinal'))
+            : null;
+        $fechaBajaInicial = $request->query->get('fechaBajaInicial')
+            ? new \DateTime($request->query->get('fechaBajaInicial'))
+            : null;
+        $fechaBajaFinal = $request->query->get('fechaBajaFinal')
+            ? new \DateTime($request->query->get('fechaBajaFinal'))
+            : null;
+        $latitud = $request->query->get('latitud');
+        $longitud = $request->query->get('longitud');
+        $distancia = $request->query->get('distancia');
+
+        // Obtener ejemplares con paginación si es PDF
+        $ejemplares = $repository->buscarMapa(
+            $ejemplar,
+            $fechaInicial,
+            $fechaFinal,
+            $fechaBajaInicial,
+            $fechaBajaFinal,
+            $latitud,
+            $longitud,
+            $distancia
+        );
+
+        // Para PDF, limitar a 500 ejemplares por volumen
+        if ($salida === 'PDF' && $volumen > 0) {
+            $inicio = ($volumen - 1) * 500;
+            $ejemplares = array_slice($ejemplares, $inicio, 500);
+        }
 
         if ($salida === 'PDF') {
             return $this->ejemplaresPDF($ejemplares, $pdf);

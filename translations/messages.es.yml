@@ -291,6 +291,7 @@ captura:
         no_permiso_edicion: ERROR. NO TIENE PERMISO PARA MODIFICAR ESTA INCIDENCIA.
 
 busquedamapa:
+    generar_informe: Generar informe
     campo:
         distancia:        Distancia
         fechaInicial:     Registrado desde

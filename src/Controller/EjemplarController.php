@@ -309,6 +309,33 @@ class EjemplarController extends AbstractController
             $longitud = $formulario->get('geoLong')->getData();
             $distancia = $formulario->get('distancia')->getData();
 
+            // Si presionó "Generar informe", redirigir a la pantalla de informe
+            if ($formulario->get('informe')->isClicked()) {
+                return $this->redirectToRoute('informe_busqueda_resultados', [
+                    'fechaInicial' => $fechaInicial?->format('Y-m-d'),
+                    'fechaFinal' => $fechaFinal?->format('Y-m-d'),
+                    'fechaBajaInicial' => $fechaBajaInicial?->format('Y-m-d'),
+                    'fechaBajaFinal' => $fechaBajaFinal?->format('Y-m-d'),
+                    'latitud' => $latitud,
+                    'longitud' => $longitud,
+                    'distancia' => $distancia,
+                    'especieId' => $ejemplar->getEspecie()?->getId(),
+                    'sexo' => $ejemplar->getSexo(),
+                    'recinto' => $ejemplar->getRecinto(),
+                    'lugar' => $ejemplar->getLugar(),
+                    'origen' => $ejemplar->getOrigen(),
+                    'documentacion' => $ejemplar->getDocumentacion(),
+                    'progenitor1' => $ejemplar->getProgenitor1(),
+                    'depositoNombre' => $ejemplar->getDepositoNombre(),
+                    'depositoDNI' => $ejemplar->getDepositoDNI(),
+                    'invasora' => $ejemplar->getInvasora(),
+                    'peligroso' => $ejemplar->getPeligroso(),
+                    'cites' => $ejemplar->getCites(),
+                    'causaBaja' => $ejemplar->getCausaBaja(),
+                ]);
+            }
+
+            // Si presionó "Buscar", mostrar resultados paginados
             $ejemplares = $repository->buscarMapa(
                 $ejemplar,
                 $fechaInicial,

@@ -127,8 +127,11 @@ class BusquedaMapaType extends AbstractType
                 'choices' => array_flip(Constantes::$causa_baja),
                 'required' => false,
             ])
-            ->add('enviar', SubmitType::class, [
-                'label' => 'formulario.enviar',
+            ->add('buscar', SubmitType::class, [
+                'label' => 'formulario.buscar',
+            ])
+            ->add('informe', SubmitType::class, [
+                'label' => 'busquedamapa.generar_informe',
             ]);
     }
 

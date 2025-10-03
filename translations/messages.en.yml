@@ -280,6 +280,7 @@ captura:
         no_permiso_edicion: ERROR. YOU ARE NOT ALLOWED TO MODIFY THIS DATA.
 
 busquedamapa:
+    generar_informe: Generate report
     campo:
         distancia:        Distance
         fechaInicial:     From
