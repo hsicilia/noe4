@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use App\Form\InformePersonalizadoType;
 use App\Repository\EjemplarRepository;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -14,9 +16,76 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 class InformeController extends AbstractController
 {
     #[Route('/ejemplares-menu', name: 'informe_ejemplares_menu')]
-    public function ejemplaresMenu(): Response
+    public function ejemplaresMenu(Request $request, EjemplarRepository $repository): Response
     {
-        return $this->render('informe/ejemplaresMenu.html.twig');
+        $formulario = $this->createForm(InformePersonalizadoType::class);
+        $formulario->handleRequest($request);
+
+        if ($formulario->isSubmitted() && $formulario->isValid()) {
+            $datos = $formulario->getData();
+
+            return $this->redirectToRoute('informe_personalizado_resultados', [
+                'fechaInicio' => $datos['fechaInicio']?->format('Y-m-d'),
+                'fechaFin' => $datos['fechaFin']?->format('Y-m-d'),
+                'invasores' => $datos['invasores'],
+                'cites' => $datos['cites'],
+            ]);
+        }
+
+        return $this->render('informe/ejemplaresMenu.html.twig', [
+            'formulario' => $formulario->createView(),
+        ]);
+    }
+
+    #[Route('/personalizado/resultados', name: 'informe_personalizado_resultados')]
+    public function personalizadoResultados(Request $request, EjemplarRepository $repository): Response
+    {
+        $fechaInicio = $request->query->get('fechaInicio')
+            ? new \DateTime($request->query->get('fechaInicio'))
+            : null;
+        $fechaFin = $request->query->get('fechaFin')
+            ? new \DateTime($request->query->get('fechaFin'))
+            : null;
+        $invasores = $request->query->get('invasores', 'todos');
+        $cites = $request->query->get('cites', 'todos');
+
+        $total = $repository->contarInformePersonalizado($fechaInicio, $fechaFin, $invasores, $cites);
+        $numVolumenes = (int) ceil($total / 500);
+
+        return $this->render('informe/personalizadoResultados.html.twig', [
+            'total' => $total,
+            'numVolumenes' => $numVolumenes,
+            'fechaInicio' => $fechaInicio,
+            'fechaFin' => $fechaFin,
+            'invasores' => $invasores,
+            'cites' => $cites,
+        ]);
+    }
+
+    #[Route('/personalizado/{salida}/{volumen}', name: 'informe_personalizado_salida', defaults: ['volumen' => 0])]
+    public function personalizadoSalida(
+        Request $request,
+        string $salida,
+        int $volumen,
+        EjemplarRepository $repository,
+        Pdf $pdf
+    ): Response {
+        $fechaInicio = $request->query->get('fechaInicio')
+            ? new \DateTime($request->query->get('fechaInicio'))
+            : null;
+        $fechaFin = $request->query->get('fechaFin')
+            ? new \DateTime($request->query->get('fechaFin'))
+            : null;
+        $invasores = $request->query->get('invasores', 'todos');
+        $cites = $request->query->get('cites', 'todos');
+
+        $ejemplares = $repository->informePersonalizado($fechaInicio, $fechaFin, $invasores, $cites, $volumen);
+
+        if ($salida === 'PDF') {
+            return $this->ejemplaresPDF($ejemplares, $pdf);
+        } else {
+            return $this->ejemplaresCSV($ejemplares);
+        }
     }
 
     #[Route('/ejemplares/{tipo}/{salida}/{volumen}', name: 'informe_ejemplares_salida', defaults: ['volumen' => 0])]

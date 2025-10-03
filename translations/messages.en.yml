@@ -54,7 +54,7 @@ title:
         listadoCapturas:    Individual sightings
         ver:                Show a sighting
     busquedamapa:
-        indice:             Search by information and location
+        indice:             Search specimens by characteristics
         resultadosBusqueda: Search results
 
 usuario:
@@ -221,6 +221,14 @@ ejemplar:
         C:   C
         D:   D
 
+    invasora:
+        no:  No
+        si:  Yes
+
+    peligroso:
+        no:  No
+        si:  Yes
+
     causa_baja:
         devolucion:  Devolución (traducir)
         liberacion:  Liberación (traducir)
@@ -288,6 +296,29 @@ formulario:
     buscar:  Search
     guardar: Save
     cualquiera: All
+
+informe:
+    campo:
+        fechaInicio:  Start date
+        fechaFin:     End date
+        invasores:    Invasive species
+        cites:        CITES
+    opciones:
+        todos:           All
+        solo_invasores:  Only invasive
+        no_invasores:    Non-invasive
+        solo_cites:      Only CITES
+        no_cites:        Non-CITES
+    mensaje:
+        personalizado:         Custom report
+        predefinidos:          Predefined reports
+        criterios_busqueda:    Search criteria
+        resultados:            Results
+        total_ejemplares:      Total specimens found
+        descargar_volumenes:   Download by volumes
+        volumen:               Volume
+        descargar_completo:    Download complete
+        sin_resultados:        No specimens found with these criteria
 
 varios:
     borrar:      Delete

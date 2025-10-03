@@ -8,63 +8,14 @@
 
 {% block contenido %}
     <fieldset>
-        <ul>
-            <li>Completo: PDF
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'PDF', 'volumen': 1 }) }}">
-                    1-500
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'PDF', 'volumen': 2 }) }}">
-                    501-1000
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'PDF', 'volumen': 3 }) }}">
-                    1001-1500
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'PDF', 'volumen': 4 }) }}">
-                    1501-2000
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'PDF', 'volumen': 5 }) }}">
-                    2001-2500
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'PDF', 'volumen': 6 }) }}">
-                    2501-3000
-                </a>
-                |
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'completo', 'salida': 'CSV', 'volumen': 0 }) }}">
-                 CSV
-                 </a>
-            </li>
-            <li>Invasores: PDF
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'invasores', 'salida': 'PDF', 'volumen': 1 }) }}">
-                    1-500
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'invasores', 'salida': 'PDF', 'volumen': 2 }) }}">
-                    501-1000
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'invasores', 'salida': 'PDF', 'volumen': 3 }) }}">
-                    1001-1500
-                </a>
-                |
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'invasores', 'salida': 'CSV', 'volumen': 0 }) }}">
-                    CSV
-                </a>
-            </li>
-            <li>Cites: PDF
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'cites', 'salida': 'PDF', 'volumen': 1 }) }}">
-                    1-500
-                </a> -
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'cites', 'salida': 'PDF', 'volumen': 2 }) }}">
-                    501-1000
-                </a>
-                |
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'cites', 'salida': 'CSV', 'volumen': 0 }) }}">
-                    CSV
-                </a>
-            </li>
-            <li>
-                <a href="{{ path('informe_ejemplares_salida', {'tipo': 'especial', 'salida': 'PDF', 'volumen': 0 }) }}">
-                    Especial
-                </a>
-            </li>
-        </ul>
+        <legend>{{ 'informe.mensaje.personalizado' | trans }}</legend>
+        {{ form_start(formulario) }}
+            {{ form_errors(formulario) }}
+            {{ form_row(formulario.fechaInicio) }}
+            {{ form_row(formulario.fechaFin) }}
+            {{ form_row(formulario.invasores) }}
+            {{ form_row(formulario.cites) }}
+            {{ form_row(formulario.buscar) }}
+        {{ form_end(formulario) }}
     </fieldset>
 {% endblock %}

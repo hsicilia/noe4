@@ -1,0 +1,95 @@
+{% extends 'base.html.twig' %}
+
+{% set menu='informe' %}
+
+{% block title %}{{ 'title.informe.resultados' | trans }}{% endblock %}
+
+{% block titular %}{{ 'title.informe.resultados' | trans }}{% endblock %}
+
+{% block contenido %}
+    <fieldset>
+        <legend>{{ 'informe.mensaje.criterios_busqueda' | trans }}</legend>
+        <ul>
+            {% if fechaInicio %}
+                <li><strong>{{ 'informe.campo.fechaInicio' | trans }}:</strong> {{ fechaInicio | date('d/m/Y') }}</li>
+            {% endif %}
+            {% if fechaFin %}
+                <li><strong>{{ 'informe.campo.fechaFin' | trans }}:</strong> {{ fechaFin | date('d/m/Y') }}</li>
+            {% endif %}
+            <li><strong>{{ 'informe.campo.invasores' | trans }}:</strong>
+                {% if invasores == 'si' %}
+                    {{ 'informe.opciones.solo_invasores' | trans }}
+                {% elseif invasores == 'no' %}
+                    {{ 'informe.opciones.no_invasores' | trans }}
+                {% else %}
+                    {{ 'informe.opciones.todos' | trans }}
+                {% endif %}
+            </li>
+            <li><strong>{{ 'informe.campo.cites' | trans }}:</strong>
+                {% if cites == 'si' %}
+                    {{ 'informe.opciones.solo_cites' | trans }}
+                {% elseif cites == 'no' %}
+                    {{ 'informe.opciones.no_cites' | trans }}
+                {% else %}
+                    {{ 'informe.opciones.todos' | trans }}
+                {% endif %}
+            </li>
+        </ul>
+    </fieldset>
+
+    <fieldset>
+        <legend>{{ 'informe.mensaje.resultados' | trans }}</legend>
+        <p><strong>{{ 'informe.mensaje.total_ejemplares' | trans }}:</strong> {{ total }}</p>
+
+        {% if total > 0 %}
+            <p>{{ 'informe.mensaje.descargar_volumenes' | trans }}</p>
+
+            <h3>PDF</h3>
+            <ul>
+                {% for i in 1..numVolumenes %}
+                    {% set inicio = ((i - 1) * 500) + 1 %}
+                    {% set fin = i * 500 %}
+                    {% if fin > total %}
+                        {% set fin = total %}
+                    {% endif %}
+                    <li>
+                        <a href="{{ path('informe_personalizado_salida', {
+                            'salida': 'PDF',
+                            'volumen': i,
+                            'fechaInicio': fechaInicio ? fechaInicio.format('Y-m-d') : null,
+                            'fechaFin': fechaFin ? fechaFin.format('Y-m-d') : null,
+                            'invasores': invasores,
+                            'cites': cites
+                        }) }}">
+                            {{ 'informe.mensaje.volumen' | trans }} {{ i }}: {{ inicio }}-{{ fin }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+
+            <h3>CSV</h3>
+            <ul>
+                <li>
+                    <a href="{{ path('informe_personalizado_salida', {
+                        'salida': 'CSV',
+                        'volumen': 0,
+                        'fechaInicio': fechaInicio ? fechaInicio.format('Y-m-d') : null,
+                        'fechaFin': fechaFin ? fechaFin.format('Y-m-d') : null,
+                        'invasores': invasores,
+                        'cites': cites
+                    }) }}">
+                        {{ 'informe.mensaje.descargar_completo' | trans }}
+                    </a>
+                </li>
+            </ul>
+        {% else %}
+            <p><em>{{ 'informe.mensaje.sin_resultados' | trans }}</em></p>
+        {% endif %}
+    </fieldset>
+
+    <div class="opciones">
+        <span class="buttons">
+            <a href="{{ path('informe_ejemplares_menu') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
+        </span>
+    </div>
+{% endblock %}

@@ -63,6 +63,16 @@ class Constantes
         4 => 'ejemplar.cites.D',
     ];
 
+    public static array $opciones_invasora = [
+        0 => 'ejemplar.invasora.no',
+        1 => 'ejemplar.invasora.si',
+    ];
+
+    public static array $opciones_peligroso = [
+        0 => 'ejemplar.peligroso.no',
+        1 => 'ejemplar.peligroso.si',
+    ];
+
     public static array $causa_baja = [
         1 => 'ejemplar.causa_baja.devolucion',
         2 => 'ejemplar.causa_baja.liberacion',

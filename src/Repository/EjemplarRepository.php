@@ -271,4 +271,86 @@ class EjemplarRepository extends ServiceEntityRepository
             'max_lng' => $return['east']['lng'],
         ];
     }
+
+    public function informePersonalizado(
+        ?\DateTimeInterface $fechaInicio,
+        ?\DateTimeInterface $fechaFin,
+        string $invasores,
+        string $cites,
+        int $volumen = 0
+    ): array {
+        $EJEMPLARES_POR_VOLUMEN = 500;
+
+        $qb = $this->createQueryBuilder('e')
+            ->where('e.fechaBaja IS NULL')
+            ->andWhere('e.causaBaja IS NULL');
+
+        if ($fechaInicio !== null) {
+            $qb->andWhere('e.fechaRegistro >= :fechaInicio')
+                ->setParameter('fechaInicio', $fechaInicio->format('Y-m-d'));
+        }
+
+        if ($fechaFin !== null) {
+            $qb->andWhere('e.fechaRegistro <= :fechaFin')
+                ->setParameter('fechaFin', $fechaFin->format('Y-m-d'));
+        }
+
+        if ($invasores === 'si') {
+            $qb->andWhere('e.invasora = true');
+        } elseif ($invasores === 'no') {
+            $qb->andWhere('e.invasora = false');
+        }
+
+        if ($cites === 'si') {
+            $qb->andWhere('e.cites > 0');
+        } elseif ($cites === 'no') {
+            $qb->andWhere('(e.cites = 0 OR e.cites IS NULL)');
+        }
+
+        $qb->orderBy('e.origen', 'ASC')
+           ->addOrderBy('e.id', 'ASC');
+
+        if ($volumen > 0) {
+            $qb->setFirstResult(($volumen - 1) * $EJEMPLARES_POR_VOLUMEN)
+               ->setMaxResults($EJEMPLARES_POR_VOLUMEN);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    public function contarInformePersonalizado(
+        ?\DateTimeInterface $fechaInicio,
+        ?\DateTimeInterface $fechaFin,
+        string $invasores,
+        string $cites
+    ): int {
+        $qb = $this->createQueryBuilder('e')
+            ->select('COUNT(e.id)')
+            ->where('e.fechaBaja IS NULL')
+            ->andWhere('e.causaBaja IS NULL');
+
+        if ($fechaInicio !== null) {
+            $qb->andWhere('e.fechaRegistro >= :fechaInicio')
+                ->setParameter('fechaInicio', $fechaInicio->format('Y-m-d'));
+        }
+
+        if ($fechaFin !== null) {
+            $qb->andWhere('e.fechaRegistro <= :fechaFin')
+                ->setParameter('fechaFin', $fechaFin->format('Y-m-d'));
+        }
+
+        if ($invasores === 'si') {
+            $qb->andWhere('e.invasora = true');
+        } elseif ($invasores === 'no') {
+            $qb->andWhere('e.invasora = false');
+        }
+
+        if ($cites === 'si') {
+            $qb->andWhere('e.cites > 0');
+        } elseif ($cites === 'no') {
+            $qb->andWhere('(e.cites = 0 OR e.cites IS NULL)');
+        }
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
 }

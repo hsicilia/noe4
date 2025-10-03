@@ -54,10 +54,12 @@ title:
         ver:                Ver una incidencia
         listadoCapturas:    Incidenciass del ejemplar
     busquedamapa:
+        indice:                Búsqueda de ejemplares por características
         buscar:                Buscar por información y localización
         resultadosBusqueda:    Resultados de la búsqueda
     informe:
         ejemplares:            Informe de ejemplares
+        resultados:            Resultados del informe
 
 usuario:
     campo:
@@ -230,6 +232,14 @@ ejemplar:
         C:   C
         D:   D
 
+    invasora:
+        no:  No
+        si:  Sí
+
+    peligroso:
+        no:  No
+        si:  Sí
+
     causa_baja:
         devolucion:  Devolución
         liberacion:  Liberación
@@ -300,6 +310,29 @@ formulario:
     buscar:  Buscar
     guardar: Guardar
     cualquiera:  Cualquiera
+
+informe:
+    campo:
+        fechaInicio:  Fecha de inicio
+        fechaFin:     Fecha de fin
+        invasores:    Invasores
+        cites:        CITES
+    opciones:
+        todos:           Todos
+        solo_invasores:  Solo invasores
+        no_invasores:    No invasores
+        solo_cites:      Solo CITES
+        no_cites:        No CITES
+    mensaje:
+        personalizado:         Informe personalizado
+        predefinidos:          Informes predefinidos
+        criterios_busqueda:    Criterios de búsqueda
+        resultados:            Resultados
+        total_ejemplares:      Total de ejemplares encontrados
+        descargar_volumenes:   Descargar por volúmenes
+        volumen:               Volumen
+        descargar_completo:    Descargar completo
+        sin_resultados:        No se encontraron ejemplares con estos criterios
 
 varios:
     borrar:      borrar

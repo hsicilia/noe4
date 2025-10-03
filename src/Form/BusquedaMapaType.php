@@ -19,17 +19,10 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class BusquedaMapaType extends AbstractType
 {
-    private ?float $lat = null;
-    private ?float $long = null;
-
-    public function __construct(array $opciones = [])
-    {
-        $this->lat = $opciones['latitud'] ?? null;
-        $this->long = $opciones['longitud'] ?? null;
-    }
-
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $lat = $options['latitud'];
+        $long = $options['longitud'];
         $builder
             ->add('especie', EntityType::class, [
                 'label' => 'ejemplar.campo.especie',
@@ -72,13 +65,13 @@ class BusquedaMapaType extends AbstractType
             ])
             ->add('geoLat', NumberType::class, [
                 'label' => 'ejemplar.campo.geoLat',
-                'data' => $this->lat,
+                'data' => $lat,
                 'scale' => 12,
                 'attr' => ['readonly' => true],
             ])
             ->add('geoLong', NumberType::class, [
                 'label' => 'ejemplar.campo.geoLong',
-                'data' => $this->long,
+                'data' => $long,
                 'scale' => 12,
                 'attr' => ['readonly' => true],
             ])
@@ -144,6 +137,12 @@ class BusquedaMapaType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Ejemplar::class,
             'method' => 'GET',
+            'latitud' => null,
+            'longitud' => null,
         ]);
+
+        $resolver->setRequired(['latitud', 'longitud']);
+        $resolver->setAllowedTypes('latitud', ['float', 'null']);
+        $resolver->setAllowedTypes('longitud', ['float', 'null']);
     }
 }
