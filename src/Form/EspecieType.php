@@ -25,6 +25,17 @@ class EspecieType extends AbstractType
             ->add('enviar', SubmitType::class, [
                 'label' => 'formulario.enviar',
             ]);
+
+        // Agregar botones de informe solo si es formulario de búsqueda
+        if (!$options['required_fields']) {
+            $builder
+                ->add('informePDF', SubmitType::class, [
+                    'label' => 'formulario.informe_pdf',
+                ])
+                ->add('informeCSV', SubmitType::class, [
+                    'label' => 'formulario.informe_csv',
+                ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void

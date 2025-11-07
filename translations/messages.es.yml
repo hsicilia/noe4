@@ -296,9 +296,14 @@ busquedamapa:
         distancia:        Distancia
         fechaInicial:     Registrado desde
         fechaFinal:       Registrado hasta
+        tipoEjemplar:     Tipo de ejemplares
         fechaBajaInicial: Baja desde
         fechaBajaFinal:   Baja hasta
         progenitor:       Progenitor
+    opcion:
+        todos: Todos los ejemplares
+        alta:  Ejemplares de alta
+        baja:  Ejemplares de baja
     descripcion:
         distancia:    Km. del radio de búsqueda
     mensaje:
@@ -307,10 +312,12 @@ busquedamapa:
         datosBusqueda:         Datos para la búsqueda
 
 formulario:
-    enviar:  Enviar
-    buscar:  Buscar
-    guardar: Guardar
+    enviar:      Enviar
+    buscar:      Buscar
+    guardar:     Guardar
     cualquiera:  Cualquiera
+    informe_pdf: Informe PDF
+    informe_csv: Informe CSV
 
 informe:
     campo:

@@ -123,7 +123,8 @@ class EjemplarRepository extends ServiceEntityRepository
         ?\DateTimeInterface $fechaBajaFinal,
         ?float $latitud,
         ?float $longitud,
-        ?float $distancia
+        ?float $distancia,
+        string $tipoEjemplar = 'alta'
     ): array {
         $porDistancia = $distancia !== null && $distancia > 0;
 
@@ -218,20 +219,30 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('cites', $ejemplar->getCites());
         }
 
-        if ($fechaBajaInicial !== null) {
-            $qb->andWhere('e.fechaBaja >= :fechaBajaInicial')
-                ->setParameter('fechaBajaInicial', $fechaBajaInicial->format('Y-m-d'));
+        // Filtrar por tipo de ejemplar
+        if ($tipoEjemplar === 'alta') {
+            $qb->andWhere('e.fechaBaja IS NULL');
+        } elseif ($tipoEjemplar === 'baja') {
+            $qb->andWhere('e.fechaBaja IS NOT NULL');
         }
+        // Si es 'todos', no se aplica ningún filtro adicional
 
-        if ($fechaBajaFinal !== null) {
-            $qb->andWhere('e.fechaBaja <= :fechaBajaFinal')
-                ->setParameter('fechaBajaFinal', $fechaBajaFinal->format('Y-m-d'));
-        }
+        // Los campos de fecha de baja solo se aplican si el tipo es 'baja'
+        if ($tipoEjemplar === 'baja') {
+            if ($fechaBajaInicial !== null) {
+                $qb->andWhere('e.fechaBaja >= :fechaBajaInicial')
+                    ->setParameter('fechaBajaInicial', $fechaBajaInicial->format('Y-m-d'));
+            }
 
-        if ($ejemplar->getCausaBaja() !== null) {
-            $qb->andWhere('e.fechaBaja IS NOT NULL')
-                ->andWhere('e.causaBaja = :causaBaja')
-                ->setParameter('causaBaja', $ejemplar->getCausaBaja());
+            if ($fechaBajaFinal !== null) {
+                $qb->andWhere('e.fechaBaja <= :fechaBajaFinal')
+                    ->setParameter('fechaBajaFinal', $fechaBajaFinal->format('Y-m-d'));
+            }
+
+            if ($ejemplar->getCausaBaja() !== null) {
+                $qb->andWhere('e.causaBaja = :causaBaja')
+                    ->setParameter('causaBaja', $ejemplar->getCausaBaja());
+            }
         }
 
         return $qb->getQuery()->getResult();

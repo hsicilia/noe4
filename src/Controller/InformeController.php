@@ -306,4 +306,74 @@ class InformeController extends AbstractController
     {
         return str_replace(["\r\n", "\n\r", "\n", "\r"], '. ', $texto);
     }
+
+    #[Route('/especies/{salida}', name: 'informe_especies_salida')]
+    public function especiesSalida(
+        Request $request,
+        string $salida,
+        \App\Repository\EspecieRepository $especieRepository,
+        Pdf $pdf
+    ): Response {
+        // Obtener parámetros de búsqueda
+        $nombre = $request->query->get('nombre');
+        $comun = $request->query->get('comun');
+
+        // Crear objeto Especie para la búsqueda
+        $especie = new \App\Entity\Especie();
+        if ($nombre) {
+            $especie->setNombre($nombre);
+        }
+        if ($comun) {
+            $especie->setComun($comun);
+        }
+
+        // Obtener especies
+        $especies = $especieRepository->encontrarEspecies($especie);
+
+        if ($salida === 'PDF') {
+            return $this->especiesPDF($especies, $pdf);
+        } else {
+            return $this->especiesCSV($especies);
+        }
+    }
+
+    private function especiesPDF(array $especies, Pdf $pdf): Response
+    {
+        $html = $this->renderView('informe/especiesPDF.html.twig', [
+            'especies' => $especies
+        ]);
+
+        return new PdfResponse(
+            $pdf->getOutputFromHtml($html),
+            'informe_especies.pdf'
+        );
+    }
+
+    private function especiesCSV(array $especies): Response
+    {
+        $response = new Response($this->generaCSVEspecies($especies));
+        $response->headers->set('Content-Type', 'text/csv; charset=utf-8');
+        $response->headers->set('Content-Disposition', 'attachment; filename="informe_especies.csv"');
+
+        return $response;
+    }
+
+    private function generaCSVEspecies(array $especies): string
+    {
+        // Cabecera
+        $csv  = $this->col('ID')
+              . $this->col('Nombre científico')
+              . $this->col('Nombre común')
+              . "\n";
+
+        // Especies
+        foreach ($especies as $especie) {
+            $csv .= $this->col($especie->getId())
+                  . $this->col($especie->getNombre())
+                  . $this->col($especie->getComun())
+                  . "\n";
+        }
+
+        return $csv;
+    }
 }

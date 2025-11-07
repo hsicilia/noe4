@@ -22,6 +22,10 @@
         {{ form_row(formulario.nombre) }}
         {{ form_row(formulario.comun) }}
         {{ form_row(formulario.enviar) }}
+        {% if formulario.informePDF is defined %}
+            {{ form_row(formulario.informePDF) }}
+            {{ form_row(formulario.informeCSV) }}
+        {% endif %}
         {{ form_rest(formulario) }}
     {{ form_end(formulario) }}
 </fieldset>

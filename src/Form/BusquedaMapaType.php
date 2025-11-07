@@ -110,6 +110,17 @@ class BusquedaMapaType extends AbstractType
                 'choices' => array_flip(Constantes::$opciones_peligroso),
                 'required' => false,
             ])
+            ->add('tipoEjemplar', ChoiceType::class, [
+                'mapped' => false,
+                'label' => 'busquedamapa.campo.tipoEjemplar',
+                'choices' => [
+                    'busquedamapa.opcion.todos' => 'todos',
+                    'busquedamapa.opcion.alta' => 'alta',
+                    'busquedamapa.opcion.baja' => 'baja',
+                ],
+                'data' => 'alta',
+                'required' => true,
+            ])
             ->add('fechaBajaInicial', DateType::class, [
                 'mapped' => false,
                 'label' => 'busquedamapa.campo.fechaBajaInicial',

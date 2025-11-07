@@ -308,6 +308,7 @@ class EjemplarController extends AbstractController
             $latitud = $formulario->get('geoLat')->getData();
             $longitud = $formulario->get('geoLong')->getData();
             $distancia = $formulario->get('distancia')->getData();
+            $tipoEjemplar = $formulario->get('tipoEjemplar')->getData();
 
             // Si presionó "Generar informe", redirigir a la pantalla de informe
             if ($formulario->get('informe')->isClicked()) {
@@ -332,6 +333,7 @@ class EjemplarController extends AbstractController
                     'peligroso' => $ejemplar->getPeligroso(),
                     'cites' => $ejemplar->getCites(),
                     'causaBaja' => $ejemplar->getCausaBaja(),
+                    'tipoEjemplar' => $tipoEjemplar,
                 ]);
             }
 
@@ -344,7 +346,8 @@ class EjemplarController extends AbstractController
                 $fechaBajaFinal,
                 $latitud,
                 $longitud,
-                $distancia
+                $distancia,
+                $tipoEjemplar
             );
 
             $paginacion = $paginator->paginate(

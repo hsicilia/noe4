@@ -64,17 +64,20 @@
             {{ form_row(formulario.cites) }}
         </div>
         <div class="separador">
-        <div>
+            {{ form_row(formulario.tipoEjemplar) }}
+        <div id="campo_fechaBajaInicial">
             {{ form_label(formulario.fechaBajaInicial) }}
             {{ form_widget(formulario.fechaBajaInicial, {'attr': {'class': 'corto'}}) }}
             {{ form_errors(formulario.fechaBajaInicial) }}
         </div>
-        <div>
+        <div id="campo_fechaBajaFinal">
             {{ form_label(formulario.fechaBajaFinal) }}
             {{ form_widget(formulario.fechaBajaFinal, {'attr': {'class': 'corto'}}) }}
             {{ form_errors(formulario.fechaBajaFinal) }}
         </div>
+        <div id="campo_causaBaja">
             {{ form_row(formulario.causaBaja) }}
+        </div>
         </div>
         {{ form_row(formulario.buscar) }}
         {{ form_row(formulario.informe) }}
@@ -120,6 +123,46 @@
         }
 
         window.initMap = initMap;
+
+        // Control de activación/desactivación de campos de baja
+        $(document).ready(function() {
+            const tipoEjemplarSelect = $('#' + formName + '_tipoEjemplar');
+            const campoFechaBajaInicial = $('#campo_fechaBajaInicial');
+            const campoFechaBajaFinal = $('#campo_fechaBajaFinal');
+            const campoCausaBaja = $('#campo_causaBaja');
+
+            const fechaBajaInicialInput = $('#' + formName + '_fechaBajaInicial');
+            const fechaBajaFinalInput = $('#' + formName + '_fechaBajaFinal');
+            const causaBajaSelect = $('#' + formName + '_causaBaja');
+
+            function actualizarCamposBaja() {
+                const tipoSeleccionado = tipoEjemplarSelect.val();
+
+                if (tipoSeleccionado === 'baja') {
+                    // Habilitar campos
+                    campoFechaBajaInicial.show();
+                    campoFechaBajaFinal.show();
+                    campoCausaBaja.show();
+                    fechaBajaInicialInput.prop('disabled', false);
+                    fechaBajaFinalInput.prop('disabled', false);
+                    causaBajaSelect.prop('disabled', false);
+                } else {
+                    // Deshabilitar campos
+                    campoFechaBajaInicial.hide();
+                    campoFechaBajaFinal.hide();
+                    campoCausaBaja.hide();
+                    fechaBajaInicialInput.prop('disabled', true);
+                    fechaBajaFinalInput.prop('disabled', true);
+                    causaBajaSelect.prop('disabled', true);
+                }
+            }
+
+            // Ejecutar al cargar la página
+            actualizarCamposBaja();
+
+            // Ejecutar cuando cambie la selección
+            tipoEjemplarSelect.on('change', actualizarCamposBaja);
+        });
     </script>
     {# TODO: Replace with actual Google Maps API key #}
     <script async defer

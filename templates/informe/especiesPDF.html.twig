@@ -1,0 +1,69 @@
+<html lang="es">
+<head>
+    <title>Informe de Especies</title>
+	<meta charset="utf-8">
+    <style>
+        body {
+            font-size:12pt;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            background-color: #555;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            padding: 0.5cm 1cm;
+            margin: 0 0 1cm 0;
+        }
+        table {
+            width: 95%;
+            margin: 0 auto;
+            border-collapse: collapse;
+            border-spacing: 0;
+            border: 1px solid #ddd;
+        }
+        table thead {
+            background-color: #555;
+            color: white;
+            font-weight: bold;
+        }
+        table thead th {
+            padding: 5mm;
+            text-align: left;
+        }
+        table tr:nth-child(even) {
+            background-color: #f2f2f2
+        }
+        table td {
+            padding: 3mm;
+            border-bottom: 1px solid #ddd;
+        }
+        table td:first-child {
+            font-style: italic;
+            width: 50%;
+        }
+        table td:nth-child(2) {
+            width: 50%;
+        }
+</style>
+</head>
+<body>
+    <h1>Informe de Especies</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Nombre científico</th>
+                <th>Nombre común</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for especie in especies %}
+                <tr>
+                    <td>{{ especie.nombre }}</td>
+                    <td>{{ especie.comun }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

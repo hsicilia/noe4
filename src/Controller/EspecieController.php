@@ -121,6 +121,18 @@ class EspecieController extends AbstractController
         $formulario->handleRequest($request);
 
         if ($formulario->isSubmitted() && $formulario->isValid()) {
+            // Si presionó "Informe PDF" o "Informe CSV", redirigir al generador de informes
+            if ($formulario->get('informePDF')->isClicked() || $formulario->get('informeCSV')->isClicked()) {
+                $salida = $formulario->get('informePDF')->isClicked() ? 'PDF' : 'CSV';
+
+                return $this->redirectToRoute('informe_especies_salida', [
+                    'salida' => $salida,
+                    'nombre' => $especie->getNombre(),
+                    'comun' => $especie->getComun(),
+                ]);
+            }
+
+            // Si presionó "Enviar", mostrar resultados paginados
             $resultados = $repository->encontrarEspecies($especie);
 
             $paginacion = $paginator->paginate(
