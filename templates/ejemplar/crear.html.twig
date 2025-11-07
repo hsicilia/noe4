@@ -93,12 +93,9 @@
                 disableDoubleClickZoom: true,
             });
 
-            marker = new google.maps.Marker({
-                position: center,
+            marker = new google.maps.marker.AdvancedMarkerElement({
                 map: map,
-                animation: google.maps.Animation.DROP,
-                clickable: false,
-                flat: true,
+                position: center,
             });
 
             // Evento de clic en el mapa para actualizar la posición
@@ -111,8 +108,7 @@
 
         window.initMap = initMap;
     </script>
-    {# TODO: Replace with actual Google Maps API key #}
     <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&loading=async&libraries=marker">
     </script>
 {% endblock %}
