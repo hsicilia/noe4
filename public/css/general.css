@@ -225,6 +225,10 @@ section form textarea {
 	width: 400px;
 }
 
+section form button[type="submit"] {
+	margin-left: 220px;
+}
+
 section div.opciones {
 	margin: 20px 0 0 50px;
 }
