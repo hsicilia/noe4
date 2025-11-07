@@ -36,12 +36,12 @@ class EspecieRepository extends ServiceEntityRepository
 
         if ($especie->getNombre()) {
             $qb->andWhere('e.nombre LIKE :nombre')
-               ->setParameter('nombre', '%' . $especie->getNombre() . '%');
+                ->setParameter('nombre', '%' . $especie->getNombre() . '%');
         }
 
         if ($especie->getComun()) {
             $qb->andWhere('e.comun LIKE :comun')
-               ->setParameter('comun', '%' . $especie->getComun() . '%');
+                ->setParameter('comun', '%' . $especie->getComun() . '%');
         }
 
         return $qb->orderBy('e.nombre', 'ASC')

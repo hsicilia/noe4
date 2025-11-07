@@ -83,6 +83,11 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
         $this->capturasModificadas = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->nombre ?? '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -230,7 +235,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addEjemplarCreado(Ejemplar $ejemplar): static
     {
-        if (!$this->ejemplaresCreados->contains($ejemplar)) {
+        if (! $this->ejemplaresCreados->contains($ejemplar)) {
             $this->ejemplaresCreados->add($ejemplar);
             $ejemplar->setCreadoPor($this);
         }
@@ -259,7 +264,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addEjemplarModificado(Ejemplar $ejemplar): static
     {
-        if (!$this->ejemplaresModificados->contains($ejemplar)) {
+        if (! $this->ejemplaresModificados->contains($ejemplar)) {
             $this->ejemplaresModificados->add($ejemplar);
             $ejemplar->setModificadoPor($this);
         }
@@ -288,7 +293,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addCapturaCreada(Captura $captura): static
     {
-        if (!$this->capturasCreadas->contains($captura)) {
+        if (! $this->capturasCreadas->contains($captura)) {
             $this->capturasCreadas->add($captura);
             $captura->setCreadoPor($this);
         }
@@ -317,7 +322,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function addCapturaModificada(Captura $captura): static
     {
-        if (!$this->capturasModificadas->contains($captura)) {
+        if (! $this->capturasModificadas->contains($captura)) {
             $this->capturasModificadas->add($captura);
             $captura->setModificadoPor($this);
         }
@@ -340,7 +345,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         // Map tipo to roles based on Constantes class from noe2
-        return match($this->tipo) {
+        return match ($this->tipo) {
             1 => ['ROLE_ADMIN'],
             2 => ['ROLE_OPERADOR_PROPIO'],
             3 => ['ROLE_OPERADOR_EXTERNO'],
@@ -362,7 +367,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getTipoString(): string
     {
-        return match($this->tipo) {
+        return match ($this->tipo) {
             1 => 'administrador',
             2 => 'operador_propio',
             3 => 'operador_externo',
@@ -370,10 +375,5 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
             5 => 'visitante',
             default => 'desconocido',
         };
-    }
-
-    public function __toString(): string
-    {
-        return $this->nombre ?? '';
     }
 }

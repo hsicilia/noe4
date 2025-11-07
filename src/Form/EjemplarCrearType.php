@@ -104,12 +104,16 @@ class EjemplarCrearType extends AbstractType
             ->add('deposito', TextareaType::class, [
                 'label' => 'ejemplar.campo.deposito',
                 'required' => false,
-                'attr' => ['rows' => 5],
+                'attr' => [
+                    'rows' => 5,
+                ],
             ])
             ->add('observaciones', TextareaType::class, [
                 'label' => 'ejemplar.campo.observaciones',
                 'required' => false,
-                'attr' => ['rows' => 5],
+                'attr' => [
+                    'rows' => 5,
+                ],
             ])
             ->add('invasora', CheckboxType::class, [
                 'label' => 'ejemplar.campo.invasora',
@@ -149,8 +153,15 @@ class EjemplarCrearType extends AbstractType
                 'required' => false,
             ])
             ->add('enviar', SubmitType::class, [
-                'label' => 'formulario.enviar'
+                'label' => 'formulario.enviar',
             ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'data_class' => Ejemplar::class,
+        ]);
     }
 
     /**
@@ -160,12 +171,5 @@ class EjemplarCrearType extends AbstractType
     protected function especifico(FormBuilderInterface $builder): void
     {
         // Por defecto no hace nada, se sobrescribe en EjemplarEditarType
-    }
-
-    public function configureOptions(OptionsResolver $resolver): void
-    {
-        $resolver->setDefaults([
-            'data_class' => Ejemplar::class,
-        ]);
     }
 }

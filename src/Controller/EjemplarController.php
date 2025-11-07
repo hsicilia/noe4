@@ -35,7 +35,7 @@ class EjemplarController extends AbstractController
     {
         $ejemplar = $repository->find($id);
 
-        if (!$ejemplar) {
+        if (! $ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -46,7 +46,7 @@ class EjemplarController extends AbstractController
 
         if ($numCapturas > 0) {
             $primeraCaptura = $repository->primeraCaptura($id);
-            $ultimaCaptura = ($numCapturas == 1) ? null : $repository->ultimaCaptura($id);
+            $ultimaCaptura = ($numCapturas === 1) ? null : $repository->ultimaCaptura($id);
         }
 
         return $this->render('ejemplar/ver.html.twig', [
@@ -109,7 +109,9 @@ class EjemplarController extends AbstractController
 
             $this->addFlash('notice', 'ejemplar.mensaje.ejemplar_creado');
 
-            return $this->redirectToRoute('ejemplar_ver', ['id' => $ejemplar->getId()]);
+            return $this->redirectToRoute('ejemplar_ver', [
+                'id' => $ejemplar->getId(),
+            ]);
         }
 
         return $this->render('ejemplar/crear.html.twig', [
@@ -122,12 +124,14 @@ class EjemplarController extends AbstractController
     {
         $ejemplar = $repository->find($id);
 
-        if (!$ejemplar) {
+        if (! $ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
         $formulario = $this->createForm(EjemplarEditarType::class, $ejemplar, [
-            'action' => $this->generateUrl('ejemplar_editar', ['id' => $id]),
+            'action' => $this->generateUrl('ejemplar_editar', [
+                'id' => $id,
+            ]),
             'method' => 'POST',
         ]);
 
@@ -148,15 +152,15 @@ class EjemplarController extends AbstractController
             $borrarImagen3 = $formulario->get('borrarImagen3')->getData();
 
             // Borrar imágenes si se marcó el checkbox
-            if ($borrarImagen1 && !$imagen1) {
+            if ($borrarImagen1 && ! $imagen1) {
                 $this->borrarImagen($ejemplar, 1);
                 $ejemplar->setPath1(null);
             }
-            if ($borrarImagen2 && !$imagen2) {
+            if ($borrarImagen2 && ! $imagen2) {
                 $this->borrarImagen($ejemplar, 2);
                 $ejemplar->setPath2(null);
             }
-            if ($borrarImagen3 && !$imagen3) {
+            if ($borrarImagen3 && ! $imagen3) {
                 $this->borrarImagen($ejemplar, 3);
                 $ejemplar->setPath3(null);
             }
@@ -179,7 +183,9 @@ class EjemplarController extends AbstractController
 
             $this->addFlash('notice', 'ejemplar.mensaje.ejemplar_modificado');
 
-            return $this->redirectToRoute('ejemplar_ver', ['id' => $ejemplar->getId()]);
+            return $this->redirectToRoute('ejemplar_ver', [
+                'id' => $ejemplar->getId(),
+            ]);
         }
 
         // Obtener información de capturas
@@ -189,7 +195,7 @@ class EjemplarController extends AbstractController
 
         if ($numCapturas > 0) {
             $primeraCaptura = $repository->primeraCaptura($id);
-            $ultimaCaptura = ($numCapturas == 1) ? null : $repository->ultimaCaptura($id);
+            $ultimaCaptura = ($numCapturas === 1) ? null : $repository->ultimaCaptura($id);
         }
 
         return $this->render('ejemplar/editar.html.twig', [
@@ -254,7 +260,9 @@ class EjemplarController extends AbstractController
 
         if ($formularioId->isSubmitted() && $formularioId->isValid()) {
             $datos = $formularioId->getData();
-            $ejemplares = $repository->findBy(['id' => $datos['id']]);
+            $ejemplares = $repository->findBy([
+                'id' => $datos['id'],
+            ]);
 
             $paginacion = $paginator->paginate(
                 $ejemplares,
@@ -381,7 +389,7 @@ class EjemplarController extends AbstractController
         $this->redimensionarImagen($ejemplar, $numero, $extension);
 
         // Actualizar el path en la entidad
-        match($numero) {
+        match ($numero) {
             1 => $ejemplar->setPath1($extension),
             2 => $ejemplar->setPath2($extension),
             3 => $ejemplar->setPath3($extension),
@@ -413,7 +421,7 @@ class EjemplarController extends AbstractController
 
     private function borrarImagen(Ejemplar $ejemplar, int $numero): void
     {
-        $path = match($numero) {
+        $path = match ($numero) {
             1 => $ejemplar->getPath1(),
             2 => $ejemplar->getPath2(),
             3 => $ejemplar->getPath3(),

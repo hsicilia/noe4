@@ -33,7 +33,9 @@ class EspecieController extends AbstractController
 
             $this->addFlash('notice', 'especie.mensaje.especie_creada');
 
-            return $this->redirectToRoute('especie_ver', ['id' => $especie->getId()]);
+            return $this->redirectToRoute('especie_ver', [
+                'id' => $especie->getId(),
+            ]);
         }
 
         return $this->render('especie/crear.html.twig', [
@@ -46,12 +48,14 @@ class EspecieController extends AbstractController
     {
         $especie = $repository->find($id);
 
-        if (!$especie) {
+        if (! $especie) {
             throw $this->createNotFoundException('No se encontró la especie con id ' . $id);
         }
 
         $formulario = $this->createForm(EspecieType::class, $especie, [
-            'action' => $this->generateUrl('especie_editar', ['id' => $id]),
+            'action' => $this->generateUrl('especie_editar', [
+                'id' => $id,
+            ]),
             'method' => 'POST',
         ]);
 
@@ -75,7 +79,7 @@ class EspecieController extends AbstractController
     {
         $especie = $repository->find($id);
 
-        if (!$especie) {
+        if (! $especie) {
             throw $this->createNotFoundException('No se encontró la especie con id ' . $id);
         }
 

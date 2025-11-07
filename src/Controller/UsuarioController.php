@@ -55,7 +55,7 @@ class UsuarioController extends AbstractController
     {
         $usuario = $repository->find($id);
 
-        if (!$usuario) {
+        if (! $usuario) {
             throw $this->createNotFoundException('No se encontró el usuario con id ' . $id);
         }
 
@@ -89,7 +89,9 @@ class UsuarioController extends AbstractController
 
             $this->addFlash('notice', 'usuario.mensaje.usuario_creado');
 
-            return $this->redirectToRoute('usuario_ver', ['id' => $usuario->getId()]);
+            return $this->redirectToRoute('usuario_ver', [
+                'id' => $usuario->getId(),
+            ]);
         }
 
         return $this->render('usuario/crear.html.twig', [
@@ -102,12 +104,14 @@ class UsuarioController extends AbstractController
     {
         $usuario = $repository->find($id);
 
-        if (!$usuario) {
+        if (! $usuario) {
             throw $this->createNotFoundException('No se encontró el usuario con id ' . $id);
         }
 
         $formulario = $this->createForm(UsuarioEditarType::class, $usuario, [
-            'action' => $this->generateUrl('usuario_editar', ['id' => $id]),
+            'action' => $this->generateUrl('usuario_editar', [
+                'id' => $id,
+            ]),
             'method' => 'POST',
         ]);
 
@@ -125,7 +129,9 @@ class UsuarioController extends AbstractController
 
             $this->addFlash('notice', 'usuario.mensaje.usuario_modificado');
 
-            return $this->redirectToRoute('usuario_ver', ['id' => $usuario->getId()]);
+            return $this->redirectToRoute('usuario_ver', [
+                'id' => $usuario->getId(),
+            ]);
         }
 
         return $this->render('usuario/editar.html.twig', [

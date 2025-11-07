@@ -67,13 +67,17 @@ class BusquedaMapaType extends AbstractType
                 'label' => 'ejemplar.campo.geoLat',
                 'data' => $lat,
                 'scale' => 12,
-                'attr' => ['readonly' => true],
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('geoLong', NumberType::class, [
                 'label' => 'ejemplar.campo.geoLong',
                 'data' => $long,
                 'scale' => 12,
-                'attr' => ['readonly' => true],
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('origen', ChoiceType::class, [
                 'label' => 'ejemplar.campo.origen',

@@ -25,7 +25,10 @@ return RectorConfig::configure()
         instanceOf: true,
         earlyReturn: true
     )
-    ->withImportNames(importShortClasses: false, removeUnusedImports: true,)
+    ->withImportNames(
+        importShortClasses: false,
+        removeUnusedImports: true,
+    )
     ->withComposerBased(
         twig: true,
         doctrine: true,

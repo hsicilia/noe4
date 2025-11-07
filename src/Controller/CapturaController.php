@@ -32,14 +32,19 @@ class CapturaController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (!$ejemplar) {
+        if (! $ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
         $numCapturas = $ejemplarRepository->numCapturas($id);
         $capturas = $capturaRepository->findBy(
-            ['ejemplar' => $id],
-            ['fechaCaptura' => 'DESC', 'horaCaptura' => 'DESC']
+            [
+                'ejemplar' => $id,
+            ],
+            [
+                'fechaCaptura' => 'DESC',
+                'horaCaptura' => 'DESC',
+            ]
         );
 
         return $this->render('captura/listado.html.twig', [
@@ -54,7 +59,7 @@ class CapturaController extends AbstractController
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if (!$captura) {
+        if (! $captura) {
             throw $this->createNotFoundException('No se encontró la incidencia con id ' . $id_captura);
         }
 
@@ -77,7 +82,7 @@ class CapturaController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (!$ejemplar) {
+        if (! $ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -89,7 +94,9 @@ class CapturaController extends AbstractController
         $captura->setLugarCaptura($this->getUser()->getLugarDefecto());
 
         $formulario = $this->createForm(CapturaCrearType::class, $captura, [
-            'action' => $this->generateUrl('captura_crear', ['id' => $id]),
+            'action' => $this->generateUrl('captura_crear', [
+                'id' => $id,
+            ]),
             'method' => 'POST',
         ]);
 
@@ -117,7 +124,9 @@ class CapturaController extends AbstractController
 
             $this->addFlash('notice', 'captura.mensaje.captura_creada');
 
-            return $this->redirectToRoute('captura_listar', ['id' => $id]);
+            return $this->redirectToRoute('captura_listar', [
+                'id' => $id,
+            ]);
         }
 
         $numCapturas = $ejemplarRepository->numCapturas($id);
@@ -134,12 +143,15 @@ class CapturaController extends AbstractController
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if (!$captura) {
+        if (! $captura) {
             throw $this->createNotFoundException('No se encontró la incidencia con id ' . $id_captura);
         }
 
         $formulario = $this->createForm(CapturaEditarType::class, $captura, [
-            'action' => $this->generateUrl('captura_editar', ['id_ejemplar' => $id_ejemplar, 'id_captura' => $id_captura]),
+            'action' => $this->generateUrl('captura_editar', [
+                'id_ejemplar' => $id_ejemplar,
+                'id_captura' => $id_captura,
+            ]),
             'method' => 'POST',
         ]);
 
@@ -154,7 +166,7 @@ class CapturaController extends AbstractController
             $borrarImagen = $formulario->get('borrarImagen')->getData();
 
             // Borrar imagen si se marcó el checkbox
-            if ($borrarImagen && !$imagen) {
+            if ($borrarImagen && ! $imagen) {
                 $this->borrarImagen($captura);
                 $captura->setPath(null);
             }
@@ -169,7 +181,9 @@ class CapturaController extends AbstractController
 
             $this->addFlash('notice', 'captura.mensaje.captura_modificada');
 
-            return $this->redirectToRoute('captura_listar', ['id' => $id_ejemplar]);
+            return $this->redirectToRoute('captura_listar', [
+                'id' => $id_ejemplar,
+            ]);
         }
 
         $ejemplar = $ejemplarRepository->find($id_ejemplar);
@@ -209,7 +223,9 @@ class CapturaController extends AbstractController
             $this->addFlash('notice', 'captura.mensaje.captura_eliminada');
         }
 
-        return $this->redirectToRoute('captura_listar', ['id' => $id_ejemplar]);
+        return $this->redirectToRoute('captura_listar', [
+            'id' => $id_ejemplar,
+        ]);
     }
 
     private function guardarImagen(Captura $captura, $archivo): void

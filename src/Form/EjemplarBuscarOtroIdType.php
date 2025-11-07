@@ -20,7 +20,7 @@ class EjemplarBuscarOtroIdType extends AbstractType
                 'required' => false,
             ])
             ->add('buscar', SubmitType::class, [
-                'label' => 'formulario.buscar'
+                'label' => 'formulario.buscar',
             ]);
     }
 

@@ -5,15 +5,19 @@ namespace App\Classes;
 class Constantes
 {
     public const ROLE_ADMIN = 1;
+
     public const ROLE_OPERADOR_PROPIO = 2;
+
     public const ROLE_OPERADOR_EXTERNO = 3;
+
     public const ROLE_OPERADOR_EXTERNO_PRUEBAS = 4;
+
     public const ROLE_VISITANTE = 5;
 
     public static array $opciones_sexo = [
         0 => 'ejemplar.sexo.desconocido',
         1 => 'ejemplar.sexo.macho',
-        2 => 'ejemplar.sexo.hembra'
+        2 => 'ejemplar.sexo.hembra',
     ];
 
     public static array $opciones_origen = [

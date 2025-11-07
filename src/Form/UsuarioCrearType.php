@@ -28,8 +28,12 @@ class UsuarioCrearType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'usuario.error.password_norep',
-                'first_options' => ['label' => 'usuario.campo.password'],
-                'second_options' => ['label' => 'usuario.campo.password_rep'],
+                'first_options' => [
+                    'label' => 'usuario.campo.password',
+                ],
+                'second_options' => [
+                    'label' => 'usuario.campo.password_rep',
+                ],
                 'required' => false,
                 'mapped' => false,
             ])
@@ -54,22 +58,21 @@ class UsuarioCrearType extends AbstractType
                 'label' => 'captura.campo.geoLatCaptura',
                 'scale' => 12,
                 'required' => false,
-                'attr' => ['readonly' => true],
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('geoLongDefecto', NumberType::class, [
                 'label' => 'captura.campo.geoLongCaptura',
                 'scale' => 12,
                 'required' => false,
-                'attr' => ['readonly' => true],
+                'attr' => [
+                    'readonly' => true,
+                ],
             ])
             ->add('enviar', SubmitType::class, [
                 'label' => 'formulario.enviar',
             ]);
-    }
-
-    protected function especifico(FormBuilderInterface $builder): void
-    {
-        // Se sobreescribe en UsuarioEditarType
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -77,5 +80,10 @@ class UsuarioCrearType extends AbstractType
         $resolver->setDefaults([
             'data_class' => Usuario::class,
         ]);
+    }
+
+    protected function especifico(FormBuilderInterface $builder): void
+    {
+        // Se sobreescribe en UsuarioEditarType
     }
 }

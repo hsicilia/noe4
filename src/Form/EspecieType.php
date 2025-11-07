@@ -27,7 +27,7 @@ class EspecieType extends AbstractType
             ]);
 
         // Agregar botones de informe solo si es formulario de búsqueda
-        if (!$options['required_fields']) {
+        if (! $options['required_fields']) {
             $builder
                 ->add('informePDF', SubmitType::class, [
                     'label' => 'formulario.informe_pdf',

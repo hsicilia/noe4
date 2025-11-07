@@ -54,7 +54,12 @@ class EjemplarRepository extends ServiceEntityRepository
     {
         return $this->getEntityManager()
             ->getRepository('App\Entity\Captura')
-            ->findOneBy(['ejemplar' => $id], ['fechaCaptura' => 'ASC', 'horaCaptura' => 'ASC']);
+            ->findOneBy([
+                'ejemplar' => $id,
+            ], [
+                'fechaCaptura' => 'ASC',
+                'horaCaptura' => 'ASC',
+            ]);
     }
 
     /**
@@ -64,7 +69,12 @@ class EjemplarRepository extends ServiceEntityRepository
     {
         return $this->getEntityManager()
             ->getRepository('App\Entity\Captura')
-            ->findOneBy(['ejemplar' => $id], ['fechaCaptura' => 'DESC', 'horaCaptura' => 'DESC']);
+            ->findOneBy([
+                'ejemplar' => $id,
+            ], [
+                'fechaCaptura' => 'DESC',
+                'horaCaptura' => 'DESC',
+            ]);
     }
 
     public function informeEjemplaresCompleto(int $volumen = 0): array
@@ -85,34 +95,6 @@ class EjemplarRepository extends ServiceEntityRepository
     public function informeEjemplaresEspeciales(int $volumen = 0): array
     {
         return $this->informeEjemplares('especial', $volumen);
-    }
-
-    private function informeEjemplares(string $tipo, int $volumen = 0): array
-    {
-        $EJEMPLARES_POR_VOLUMEN = 500;
-
-        $qb = $this->createQueryBuilder('e')
-            ->where('e.fechaBaja IS NULL')
-            ->andWhere('e.causaBaja IS NULL');
-
-        switch ($tipo) {
-            case 'invasores':
-                $qb->andWhere('e.invasora = true');
-                break;
-            case 'cites':
-                $qb->andWhere('e.cites > 0');
-                break;
-        }
-
-        $qb->orderBy('e.origen', 'ASC')
-           ->addOrderBy('e.id', 'ASC');
-
-        if ($volumen > 0) {
-            $qb->setFirstResult(($volumen - 1) * $EJEMPLARES_POR_VOLUMEN)
-               ->setMaxResults($EJEMPLARES_POR_VOLUMEN);
-        }
-
-        return $qb->getQuery()->getResult();
     }
 
     public function buscarMapa(
@@ -154,7 +136,7 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('especie', $ejemplar->getEspecie());
         }
 
-        if ($ejemplar->getSexo() != 0) {
+        if ($ejemplar->getSexo() !== 0) {
             $qb->andWhere('e.sexo = :sexo')
                 ->setParameter('sexo', $ejemplar->getSexo());
         }
@@ -179,12 +161,12 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('lugar', '%' . $ejemplar->getLugar() . '%');
         }
 
-        if ($ejemplar->getOrigen() != 0) {
+        if ($ejemplar->getOrigen() !== 0) {
             $qb->andWhere('e.origen = :origen')
                 ->setParameter('origen', $ejemplar->getOrigen());
         }
 
-        if ($ejemplar->getDocumentacion() != 0) {
+        if ($ejemplar->getDocumentacion() !== 0) {
             $qb->andWhere('e.documentacion = :documentacion')
                 ->setParameter('documentacion', $ejemplar->getDocumentacion());
         }
@@ -204,12 +186,12 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('depositoDNI', '%' . $ejemplar->getDepositoDNI() . '%');
         }
 
-        if ($ejemplar->getInvasora() != 0) {
+        if ($ejemplar->getInvasora() !== 0) {
             $qb->andWhere('e.invasora = :invasora')
                 ->setParameter('invasora', $ejemplar->getInvasora());
         }
 
-        if ($ejemplar->getPeligroso() != 0) {
+        if ($ejemplar->getPeligroso() !== 0) {
             $qb->andWhere('e.peligroso = :peligroso')
                 ->setParameter('peligroso', $ejemplar->getPeligroso());
         }
@@ -243,6 +225,34 @@ class EjemplarRepository extends ServiceEntityRepository
                 $qb->andWhere('e.causaBaja = :causaBaja')
                     ->setParameter('causaBaja', $ejemplar->getCausaBaja());
             }
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
+    private function informeEjemplares(string $tipo, int $volumen = 0): array
+    {
+        $EJEMPLARES_POR_VOLUMEN = 500;
+
+        $qb = $this->createQueryBuilder('e')
+            ->where('e.fechaBaja IS NULL')
+            ->andWhere('e.causaBaja IS NULL');
+
+        switch ($tipo) {
+            case 'invasores':
+                $qb->andWhere('e.invasora = true');
+                break;
+            case 'cites':
+                $qb->andWhere('e.cites > 0');
+                break;
+        }
+
+        $qb->orderBy('e.origen', 'ASC')
+            ->addOrderBy('e.id', 'ASC');
+
+        if ($volumen > 0) {
+            $qb->setFirstResult(($volumen - 1) * $EJEMPLARES_POR_VOLUMEN)
+                ->setMaxResults($EJEMPLARES_POR_VOLUMEN);
         }
 
         return $qb->getQuery()->getResult();
@@ -282,5 +292,4 @@ class EjemplarRepository extends ServiceEntityRepository
             'max_lng' => $return['east']['lng'],
         ];
     }
-
 }

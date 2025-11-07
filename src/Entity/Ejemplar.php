@@ -125,6 +125,11 @@ class Ejemplar
         $this->capturas = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -476,7 +481,7 @@ class Ejemplar
 
     public function addCaptura(Captura $captura): static
     {
-        if (!$this->capturas->contains($captura)) {
+        if (! $this->capturas->contains($captura)) {
             $this->capturas->add($captura);
             $captura->setEjemplar($this);
         }
@@ -540,10 +545,5 @@ class Ejemplar
         if ($this->creadoEl === null) {
             $this->creadoEl = new \DateTime();
         }
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->id;
     }
 }

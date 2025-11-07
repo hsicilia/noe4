@@ -24,7 +24,7 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
      */
     public function upgradePassword(PasswordAuthenticatedUserInterface $user, string $newHashedPassword): void
     {
-        if (!$user instanceof Usuario) {
+        if (! $user instanceof Usuario) {
             throw new UnsupportedUserException(sprintf('Instances of "%s" are not supported.', $user::class));
         }
 
@@ -39,22 +39,22 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
 
         if ($usuario->getUsuario()) {
             $qb->andWhere('u.usuario LIKE :usuario')
-               ->setParameter('usuario', '%' . $usuario->getUsuario() . '%');
+                ->setParameter('usuario', '%' . $usuario->getUsuario() . '%');
         }
 
         if ($usuario->getNombre()) {
             $qb->andWhere('u.nombre LIKE :nombre')
-               ->setParameter('nombre', '%' . $usuario->getNombre() . '%');
+                ->setParameter('nombre', '%' . $usuario->getNombre() . '%');
         }
 
         if ($usuario->getOrganizacion()) {
             $qb->andWhere('u.organizacion LIKE :organizacion')
-               ->setParameter('organizacion', '%' . $usuario->getOrganizacion() . '%');
+                ->setParameter('organizacion', '%' . $usuario->getOrganizacion() . '%');
         }
 
         if ($usuario->getEmail()) {
             $qb->andWhere('u.email LIKE :email')
-               ->setParameter('email', '%' . $usuario->getEmail() . '%');
+                ->setParameter('email', '%' . $usuario->getEmail() . '%');
         }
 
         $qb->orderBy('u.usuario', 'ASC');

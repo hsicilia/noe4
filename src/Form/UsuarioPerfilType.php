@@ -21,8 +21,12 @@ class UsuarioPerfilType extends AbstractType
             ->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'usuario.error.password_norep',
-                'first_options' => ['label' => 'usuario.campo.password'],
-                'second_options' => ['label' => 'usuario.campo.password_rep'],
+                'first_options' => [
+                    'label' => 'usuario.campo.password',
+                ],
+                'second_options' => [
+                    'label' => 'usuario.campo.password_rep',
+                ],
                 'required' => false,
                 'mapped' => false,
             ])

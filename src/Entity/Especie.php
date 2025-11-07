@@ -33,6 +33,11 @@ class Especie
         $this->ejemplares = new ArrayCollection();
     }
 
+    public function __toString(): string
+    {
+        return $this->nombre ?? '';
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -72,7 +77,7 @@ class Especie
 
     public function addEjemplar(Ejemplar $ejemplar): static
     {
-        if (!$this->ejemplares->contains($ejemplar)) {
+        if (! $this->ejemplares->contains($ejemplar)) {
             $this->ejemplares->add($ejemplar);
             $ejemplar->setEspecie($this);
         }
@@ -89,10 +94,5 @@ class Especie
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        return $this->nombre ?? '';
     }
 }

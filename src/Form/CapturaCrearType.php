@@ -39,7 +39,9 @@ class CapturaCrearType extends AbstractType
             ->add('observaciones', TextareaType::class, [
                 'label' => 'captura.campo.observaciones',
                 'required' => false,
-                'attr' => ['rows' => 5],
+                'attr' => [
+                    'rows' => 5,
+                ],
             ])
             ->add('imagen', FileType::class, [
                 'label' => 'captura.campo.imagen',
@@ -55,15 +57,15 @@ class CapturaCrearType extends AbstractType
             ]);
     }
 
-    protected function especifico(FormBuilderInterface $builder): void
-    {
-        // Se sobreescribe en CapturaEditarType
-    }
-
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Captura::class,
         ]);
+    }
+
+    protected function especifico(FormBuilderInterface $builder): void
+    {
+        // Se sobreescribe en CapturaEditarType
     }
 }

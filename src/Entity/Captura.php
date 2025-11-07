@@ -55,6 +55,11 @@ class Captura
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $path = null;
 
+    public function __toString(): string
+    {
+        return (string) $this->id;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -213,10 +218,5 @@ class Captura
         if ($this->creadoEl === null) {
             $this->creadoEl = new \DateTime();
         }
-    }
-
-    public function __toString(): string
-    {
-        return (string) $this->id;
     }
 }

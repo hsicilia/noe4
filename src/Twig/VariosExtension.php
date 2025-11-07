@@ -26,7 +26,7 @@ class VariosExtension extends AbstractExtension
     // Función para obtener el sexo en función del valor de la base de datos
     public function sexoFilter($sexo): string
     {
-        return match($sexo) {
+        return match ($sexo) {
             1 => 'ejemplar.sexo.macho',
             2 => 'ejemplar.sexo.hembra',
             default => 'ejemplar.sexo.desconocido',
@@ -36,7 +36,7 @@ class VariosExtension extends AbstractExtension
     // Función para obtener el origen en función del valor de la base de datos
     public function origenFilter($origen): string
     {
-        return match($origen) {
+        return match ($origen) {
             0 => 'ejemplar.origen.desconocido',
             1 => 'ejemplar.origen.adquisicion',
             2 => 'ejemplar.origen.captura_directa',
@@ -59,7 +59,7 @@ class VariosExtension extends AbstractExtension
     // Función para obtener el documento en función del valor de la base de datos
     public function documentacionFilter($documento): string
     {
-        return match($documento) {
+        return match ($documento) {
             0 => 'ejemplar.documentacion.desconocida',
             1 => 'ejemplar.documentacion.acta_cabildo_lagomera',
             2 => 'ejemplar.documentacion.acta_cabildo_elhierro',
@@ -85,7 +85,7 @@ class VariosExtension extends AbstractExtension
     // Función para mostrar Sí o No
     public function sinoFilter($valor): string
     {
-        return $valor ? "Sí" : "No";
+        return $valor ? 'Sí' : 'No';
     }
 
     // Filtro para recortar un texto a un tamaño máximo. Añade puntos suspensivos al final.
@@ -108,7 +108,7 @@ class VariosExtension extends AbstractExtension
 
     public function citesFilter($valor): string
     {
-        return match($valor) {
+        return match ($valor) {
             0 => 'ejemplar.cites.no',
             1 => 'ejemplar.cites.A',
             2 => 'ejemplar.cites.B',
@@ -120,7 +120,7 @@ class VariosExtension extends AbstractExtension
 
     public function causaBajaFilter($valor): string
     {
-        return match($valor) {
+        return match ($valor) {
             1 => 'ejemplar.causa_baja.devolucion',
             2 => 'ejemplar.causa_baja.liberacion',
             3 => 'ejemplar.causa_baja.muerte',

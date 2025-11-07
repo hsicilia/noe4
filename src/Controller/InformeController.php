@@ -14,7 +14,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/informe')]
 class InformeController extends AbstractController
 {
-
     #[Route('/busqueda/resultados', name: 'informe_busqueda_resultados')]
     public function busquedaResultados(Request $request, EjemplarRepository $repository): Response
     {
@@ -102,7 +101,9 @@ class InformeController extends AbstractController
         ]);
     }
 
-    #[Route('/busqueda/{salida}/{volumen}', name: 'informe_busqueda_salida', defaults: ['volumen' => 0])]
+    #[Route('/busqueda/{salida}/{volumen}', name: 'informe_busqueda_salida', defaults: [
+        'volumen' => 0,
+    ])]
     public function busquedaSalida(
         Request $request,
         string $salida,
@@ -192,15 +193,17 @@ class InformeController extends AbstractController
 
         if ($salida === 'PDF') {
             return $this->ejemplaresPDF($ejemplares, $pdf);
-        } else {
-            return $this->ejemplaresCSV($ejemplares);
         }
+        return $this->ejemplaresCSV($ejemplares);
+
     }
 
-    #[Route('/ejemplares/{tipo}/{salida}/{volumen}', name: 'informe_ejemplares_salida', defaults: ['volumen' => 0])]
+    #[Route('/ejemplares/{tipo}/{salida}/{volumen}', name: 'informe_ejemplares_salida', defaults: [
+        'volumen' => 0,
+    ])]
     public function ejemplaresSalida(string $tipo, string $salida, int $volumen, EjemplarRepository $repository, Pdf $pdf): Response
     {
-        $ejemplares = match($tipo) {
+        $ejemplares = match ($tipo) {
             'cites' => $repository->informeEjemplaresCites($volumen),
             'invasores' => $repository->informeEjemplaresInvasores($volumen),
             'especial' => $repository->informeEjemplaresEspeciales($volumen),
@@ -209,15 +212,45 @@ class InformeController extends AbstractController
 
         if ($salida === 'PDF') {
             return $this->ejemplaresPDF($ejemplares, $pdf);
-        } else {
-            return $this->ejemplaresCSV($ejemplares);
         }
+        return $this->ejemplaresCSV($ejemplares);
+
+    }
+
+    #[Route('/especies/{salida}', name: 'informe_especies_salida')]
+    public function especiesSalida(
+        Request $request,
+        string $salida,
+        \App\Repository\EspecieRepository $especieRepository,
+        Pdf $pdf
+    ): Response {
+        // Obtener parámetros de búsqueda
+        $nombre = $request->query->get('nombre');
+        $comun = $request->query->get('comun');
+
+        // Crear objeto Especie para la búsqueda
+        $especie = new \App\Entity\Especie();
+        if ($nombre) {
+            $especie->setNombre($nombre);
+        }
+        if ($comun) {
+            $especie->setComun($comun);
+        }
+
+        // Obtener especies
+        $especies = $especieRepository->encontrarEspecies($especie);
+
+        if ($salida === 'PDF') {
+            return $this->especiesPDF($especies, $pdf);
+        }
+        return $this->especiesCSV($especies);
+
     }
 
     private function ejemplaresPDF(array $ejemplares, Pdf $pdf): Response
     {
         $html = $this->renderView('informe/ejemplaresPDF.html.twig', [
-            'ejemplares' => $ejemplares
+            'ejemplares' => $ejemplares,
         ]);
 
         return new PdfResponse(
@@ -238,7 +271,7 @@ class InformeController extends AbstractController
     private function generaCSV(array $ejemplares): string
     {
         // Cabecera
-        $csv  = $this->col('ID')
+        $csv = $this->col('ID')
               . $this->col('Fecha Registro')
               . $this->col('Especie')
               . $this->col('Nombre Común')
@@ -307,40 +340,10 @@ class InformeController extends AbstractController
         return str_replace(["\r\n", "\n\r", "\n", "\r"], '. ', $texto);
     }
 
-    #[Route('/especies/{salida}', name: 'informe_especies_salida')]
-    public function especiesSalida(
-        Request $request,
-        string $salida,
-        \App\Repository\EspecieRepository $especieRepository,
-        Pdf $pdf
-    ): Response {
-        // Obtener parámetros de búsqueda
-        $nombre = $request->query->get('nombre');
-        $comun = $request->query->get('comun');
-
-        // Crear objeto Especie para la búsqueda
-        $especie = new \App\Entity\Especie();
-        if ($nombre) {
-            $especie->setNombre($nombre);
-        }
-        if ($comun) {
-            $especie->setComun($comun);
-        }
-
-        // Obtener especies
-        $especies = $especieRepository->encontrarEspecies($especie);
-
-        if ($salida === 'PDF') {
-            return $this->especiesPDF($especies, $pdf);
-        } else {
-            return $this->especiesCSV($especies);
-        }
-    }
-
     private function especiesPDF(array $especies, Pdf $pdf): Response
     {
         $html = $this->renderView('informe/especiesPDF.html.twig', [
-            'especies' => $especies
+            'especies' => $especies,
         ]);
 
         return new PdfResponse(
@@ -361,7 +364,7 @@ class InformeController extends AbstractController
     private function generaCSVEspecies(array $especies): string
     {
         // Cabecera
-        $csv  = $this->col('ID')
+        $csv = $this->col('ID')
               . $this->col('Nombre científico')
               . $this->col('Nombre común')
               . "\n";
