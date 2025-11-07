@@ -64,7 +64,7 @@ class CapturaCrearType extends AbstractType
         ]);
     }
 
-    protected function especifico(FormBuilderInterface $builder): void
+    protected function especifico(FormBuilderInterface $formBuilder): void
     {
         // Se sobreescribe en CapturaEditarType
     }

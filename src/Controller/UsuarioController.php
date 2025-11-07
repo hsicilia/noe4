@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class UsuarioController extends AbstractController
 {
     #[Route('/buscar', name: 'usuario_buscar')]
-    public function buscar(Request $request, UsuarioRepository $repository, PaginatorInterface $paginator): Response
+    public function buscar(Request $request, UsuarioRepository $usuarioRepository, PaginatorInterface $paginator): Response
     {
         $usuario = new Usuario();
 
@@ -32,7 +32,7 @@ class UsuarioController extends AbstractController
         $formulario->handleRequest($request);
 
         if ($formulario->isSubmitted() && $formulario->isValid()) {
-            $usuarios = $repository->encontrarUsuarios($usuario);
+            $usuarios = $usuarioRepository->encontrarUsuarios($usuario);
 
             $paginacion = $paginator->paginate(
                 $usuarios,
@@ -51,11 +51,11 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/ver/{id}', name: 'usuario_ver')]
-    public function ver(int $id, UsuarioRepository $repository): Response
+    public function ver(int $id, UsuarioRepository $usuarioRepository): Response
     {
-        $usuario = $repository->find($id);
+        $usuario = $usuarioRepository->find($id);
 
-        if (! $usuario) {
+        if (!$usuario instanceof Usuario) {
             throw $this->createNotFoundException('No se encontró el usuario con id ' . $id);
         }
 
@@ -65,7 +65,7 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/crear', name: 'usuario_crear')]
-    public function crear(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function crear(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $usuario = new Usuario();
 
@@ -80,12 +80,12 @@ class UsuarioController extends AbstractController
             // Hash de la contraseña
             $plainPassword = $formulario->get('password')->getData();
             if ($plainPassword) {
-                $hashedPassword = $passwordHasher->hashPassword($usuario, $plainPassword);
+                $hashedPassword = $userPasswordHasher->hashPassword($usuario, $plainPassword);
                 $usuario->setPassword($hashedPassword);
             }
 
-            $em->persist($usuario);
-            $em->flush();
+            $entityManager->persist($usuario);
+            $entityManager->flush();
 
             $this->addFlash('notice', 'usuario.mensaje.usuario_creado');
 
@@ -100,11 +100,11 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/editar/{id}', name: 'usuario_editar')]
-    public function editar(int $id, Request $request, UsuarioRepository $repository, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function editar(int $id, Request $request, UsuarioRepository $usuarioRepository, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
-        $usuario = $repository->find($id);
+        $usuario = $usuarioRepository->find($id);
 
-        if (! $usuario) {
+        if (!$usuario instanceof Usuario) {
             throw $this->createNotFoundException('No se encontró el usuario con id ' . $id);
         }
 
@@ -121,11 +121,11 @@ class UsuarioController extends AbstractController
             // Hash de la contraseña solo si se proporcionó una nueva
             $plainPassword = $formulario->get('password')->getData();
             if ($plainPassword) {
-                $hashedPassword = $passwordHasher->hashPassword($usuario, $plainPassword);
+                $hashedPassword = $userPasswordHasher->hashPassword($usuario, $plainPassword);
                 $usuario->setPassword($hashedPassword);
             }
 
-            $em->flush();
+            $entityManager->flush();
 
             $this->addFlash('notice', 'usuario.mensaje.usuario_modificado');
 
@@ -141,7 +141,7 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/perfil', name: 'usuario_perfil')]
-    public function perfil(Request $request, EntityManagerInterface $em, UserPasswordHasherInterface $passwordHasher): Response
+    public function perfil(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
         $usuario = $this->getUser();
 
@@ -156,11 +156,11 @@ class UsuarioController extends AbstractController
             // Hash de la contraseña solo si se proporcionó una nueva
             $plainPassword = $formulario->get('password')->getData();
             if ($plainPassword) {
-                $hashedPassword = $passwordHasher->hashPassword($usuario, $plainPassword);
+                $hashedPassword = $userPasswordHasher->hashPassword($usuario, $plainPassword);
                 $usuario->setPassword($hashedPassword);
             }
 
-            $em->flush();
+            $entityManager->flush();
 
             $this->addFlash('notice', 'usuario.mensaje.perfil_modificado');
 
@@ -182,13 +182,13 @@ class UsuarioController extends AbstractController
     }
 
     #[Route('/eliminar-final/{id}', name: 'usuario_eliminar_final')]
-    public function eliminarFinal(int $id, UsuarioRepository $repository, EntityManagerInterface $em): Response
+    public function eliminarFinal(int $id, UsuarioRepository $usuarioRepository, EntityManagerInterface $entityManager): Response
     {
-        $usuario = $repository->find($id);
+        $usuario = $usuarioRepository->find($id);
 
-        if ($usuario) {
-            $em->remove($usuario);
-            $em->flush();
+        if ($usuario instanceof Usuario) {
+            $entityManager->remove($usuario);
+            $entityManager->flush();
 
             $this->addFlash('notice', 'usuario.mensaje.usuario_eliminado');
         }

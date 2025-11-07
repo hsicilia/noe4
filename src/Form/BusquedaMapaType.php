@@ -27,10 +27,8 @@ class BusquedaMapaType extends AbstractType
             ->add('especie', EntityType::class, [
                 'label' => 'ejemplar.campo.especie',
                 'class' => Especie::class,
-                'query_builder' => function (EntityRepository $er): QueryBuilder {
-                    return $er->createQueryBuilder('e')
-                        ->orderBy('e.nombre', 'ASC');
-                },
+                'query_builder' => fn(EntityRepository $entityRepository): QueryBuilder => $entityRepository->createQueryBuilder('e')
+                    ->orderBy('e.nombre', 'ASC'),
                 'choice_label' => 'nombre',
                 'required' => false,
             ])

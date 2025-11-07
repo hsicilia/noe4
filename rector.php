@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use Rector\Config\RectorConfig;
+use Rector\Naming\Rector\Foreach_\RenameForeachValueVariableToMatchExprVariableRector;
 
 return RectorConfig::configure()
     ->withPaths([
@@ -11,6 +12,7 @@ return RectorConfig::configure()
     ])
     ->withSkip([
         __DIR__ . '/src/Kernel.php',
+        RenameForeachValueVariableToMatchExprVariableRector::class,
     ])
     // Configurar PHP 8.2
     ->withPhpSets(php82: true)

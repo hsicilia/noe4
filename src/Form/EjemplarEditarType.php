@@ -11,9 +11,9 @@ class EjemplarEditarType extends EjemplarCrearType
      * Añade campos específicos del formulario de edición
      * (checkboxes para borrar imágenes)
      */
-    protected function especifico(FormBuilderInterface $builder): void
+    protected function especifico(FormBuilderInterface $formBuilder): void
     {
-        $builder
+        $formBuilder
             ->add('borrarImagen1', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'ejemplar.campo.borrarImagen1',

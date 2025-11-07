@@ -35,30 +35,30 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
 
     public function encontrarUsuarios(Usuario $usuario): array
     {
-        $qb = $this->createQueryBuilder('u');
+        $queryBuilder = $this->createQueryBuilder('u');
 
         if ($usuario->getUsuario()) {
-            $qb->andWhere('u.usuario LIKE :usuario')
+            $queryBuilder->andWhere('u.usuario LIKE :usuario')
                 ->setParameter('usuario', '%' . $usuario->getUsuario() . '%');
         }
 
         if ($usuario->getNombre()) {
-            $qb->andWhere('u.nombre LIKE :nombre')
+            $queryBuilder->andWhere('u.nombre LIKE :nombre')
                 ->setParameter('nombre', '%' . $usuario->getNombre() . '%');
         }
 
         if ($usuario->getOrganizacion()) {
-            $qb->andWhere('u.organizacion LIKE :organizacion')
+            $queryBuilder->andWhere('u.organizacion LIKE :organizacion')
                 ->setParameter('organizacion', '%' . $usuario->getOrganizacion() . '%');
         }
 
         if ($usuario->getEmail()) {
-            $qb->andWhere('u.email LIKE :email')
+            $queryBuilder->andWhere('u.email LIKE :email')
                 ->setParameter('email', '%' . $usuario->getEmail() . '%');
         }
 
-        $qb->orderBy('u.usuario', 'ASC');
+        $queryBuilder->orderBy('u.usuario', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 }

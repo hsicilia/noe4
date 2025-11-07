@@ -11,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: EjemplarRepository::class)]
 #[ORM\Table(name: 'Ejemplar')]
 #[ORM\HasLifecycleCallbacks]
-class Ejemplar
+class Ejemplar implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -428,9 +428,9 @@ class Ejemplar
         return $this->creadoPor;
     }
 
-    public function setCreadoPor(?Usuario $creadoPor): static
+    public function setCreadoPor(?Usuario $usuario): static
     {
-        $this->creadoPor = $creadoPor;
+        $this->creadoPor = $usuario;
 
         return $this;
     }
@@ -452,9 +452,9 @@ class Ejemplar
         return $this->modificadoPor;
     }
 
-    public function setModificadoPor(?Usuario $modificadoPor): static
+    public function setModificadoPor(?Usuario $usuario): static
     {
-        $this->modificadoPor = $modificadoPor;
+        $this->modificadoPor = $usuario;
 
         return $this;
     }
@@ -491,10 +491,8 @@ class Ejemplar
 
     public function removeCaptura(Captura $captura): static
     {
-        if ($this->capturas->removeElement($captura)) {
-            if ($captura->getEjemplar() === $this) {
-                $captura->setEjemplar(null);
-            }
+        if ($this->capturas->removeElement($captura) && $captura->getEjemplar() === $this) {
+            $captura->setEjemplar(null);
         }
 
         return $this;
@@ -542,7 +540,7 @@ class Ejemplar
     {
         $this->modificadoEl = new \DateTime();
 
-        if ($this->creadoEl === null) {
+        if (!$this->creadoEl instanceof \DateTimeInterface) {
             $this->creadoEl = new \DateTime();
         }
     }

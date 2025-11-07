@@ -2,6 +2,8 @@
 
 namespace App\Repository;
 
+use App\Entity\Captura;
+use App\Entity\Especie;
 use App\Entity\Ejemplar;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -40,7 +42,7 @@ class EjemplarRepository extends ServiceEntityRepository
         return (int) $this->getEntityManager()
             ->createQueryBuilder()
             ->select('count(c.id)')
-            ->from('App\Entity\Captura', 'c')
+            ->from(Captura::class, 'c')
             ->where('c.ejemplar = :id')
             ->setParameter('id', $id)
             ->getQuery()
@@ -50,10 +52,10 @@ class EjemplarRepository extends ServiceEntityRepository
     /**
      * Primera captura de un ejemplar
      */
-    public function primeraCaptura(int $id)
+    public function primeraCaptura(int $id): ?object
     {
         return $this->getEntityManager()
-            ->getRepository('App\Entity\Captura')
+            ->getRepository(Captura::class)
             ->findOneBy([
                 'ejemplar' => $id,
             ], [
@@ -65,10 +67,10 @@ class EjemplarRepository extends ServiceEntityRepository
     /**
      * Última captura de un ejemplar
      */
-    public function ultimaCaptura(int $id)
+    public function ultimaCaptura(int $id): ?object
     {
         return $this->getEntityManager()
-            ->getRepository('App\Entity\Captura')
+            ->getRepository(Captura::class)
             ->findOneBy([
                 'ejemplar' => $id,
             ], [
@@ -131,7 +133,7 @@ class EjemplarRepository extends ServiceEntityRepository
             $qb = $this->createQueryBuilder('e');
         }
 
-        if ($ejemplar->getEspecie() !== null) {
+        if ($ejemplar->getEspecie() instanceof Especie) {
             $qb->andWhere('e.especie = :especie')
                 ->setParameter('especie', $ejemplar->getEspecie());
         }
@@ -146,12 +148,12 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('recinto', '%' . $ejemplar->getRecinto() . '%');
         }
 
-        if ($fechaInicial !== null) {
+        if ($fechaInicial instanceof \DateTimeInterface) {
             $qb->andWhere('e.fechaRegistro >= :fechaInicial')
                 ->setParameter('fechaInicial', $fechaInicial->format('Y-m-d'));
         }
 
-        if ($fechaFinal !== null) {
+        if ($fechaFinal instanceof \DateTimeInterface) {
             $qb->andWhere('e.fechaRegistro <= :fechaFinal')
                 ->setParameter('fechaFinal', $fechaFinal->format('Y-m-d'));
         }
@@ -207,16 +209,17 @@ class EjemplarRepository extends ServiceEntityRepository
         } elseif ($tipoEjemplar === 'baja') {
             $qb->andWhere('e.fechaBaja IS NOT NULL');
         }
+
         // Si es 'todos', no se aplica ningún filtro adicional
 
         // Los campos de fecha de baja solo se aplican si el tipo es 'baja'
         if ($tipoEjemplar === 'baja') {
-            if ($fechaBajaInicial !== null) {
+            if ($fechaBajaInicial instanceof \DateTimeInterface) {
                 $qb->andWhere('e.fechaBaja >= :fechaBajaInicial')
                     ->setParameter('fechaBajaInicial', $fechaBajaInicial->format('Y-m-d'));
             }
 
-            if ($fechaBajaFinal !== null) {
+            if ($fechaBajaFinal instanceof \DateTimeInterface) {
                 $qb->andWhere('e.fechaBaja <= :fechaBajaFinal')
                     ->setParameter('fechaBajaFinal', $fechaBajaFinal->format('Y-m-d'));
             }
@@ -234,28 +237,28 @@ class EjemplarRepository extends ServiceEntityRepository
     {
         $EJEMPLARES_POR_VOLUMEN = 500;
 
-        $qb = $this->createQueryBuilder('e')
+        $queryBuilder = $this->createQueryBuilder('e')
             ->where('e.fechaBaja IS NULL')
             ->andWhere('e.causaBaja IS NULL');
 
         switch ($tipo) {
             case 'invasores':
-                $qb->andWhere('e.invasora = true');
+                $queryBuilder->andWhere('e.invasora = true');
                 break;
             case 'cites':
-                $qb->andWhere('e.cites > 0');
+                $queryBuilder->andWhere('e.cites > 0');
                 break;
         }
 
-        $qb->orderBy('e.origen', 'ASC')
+        $queryBuilder->orderBy('e.origen', 'ASC')
             ->addOrderBy('e.id', 'ASC');
 
         if ($volumen > 0) {
-            $qb->setFirstResult(($volumen - 1) * $EJEMPLARES_POR_VOLUMEN)
+            $queryBuilder->setFirstResult(($volumen - 1) * $EJEMPLARES_POR_VOLUMEN)
                 ->setMaxResults($EJEMPLARES_POR_VOLUMEN);
         }
 
-        return $qb->getQuery()->getResult();
+        return $queryBuilder->getQuery()->getResult();
     }
 
     private function getBoundaries(float $lat, float $lng, float $distance, float $earthRadius = 6371): array
@@ -280,8 +283,8 @@ class EjemplarRepository extends ServiceEntityRepository
             $rLonB = $rLng + atan2(sin($rAngle) * sin($rAngDist) * cos($rLat), cos($rAngDist) - sin($rLat) * sin($rLatB));
 
             $return[$name] = [
-                'lat' => (float) rad2deg($rLatB),
-                'lng' => (float) rad2deg($rLonB),
+                'lat' => rad2deg($rLatB),
+                'lng' => rad2deg($rLonB),
             ];
         }
 

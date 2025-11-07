@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Ejemplar;
+use App\Entity\Especie;
+use App\Repository\EspecieRepository;
 use App\Repository\EjemplarRepository;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
@@ -9,19 +12,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/informe')]
 class InformeController extends AbstractController
 {
     #[Route('/busqueda/resultados', name: 'informe_busqueda_resultados')]
-    public function busquedaResultados(Request $request, EjemplarRepository $repository): Response
+    public function busquedaResultados(Request $request, EjemplarRepository $ejemplarRepository): Response
     {
         // Reconstruir el objeto Ejemplar desde los parámetros
-        $ejemplar = new \App\Entity\Ejemplar();
+        $ejemplar = new Ejemplar();
 
         if ($request->query->get('especieId')) {
-            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(\App\Entity\Especie::class)
+            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(Especie::class)
                 ->find($request->query->get('especieId'));
             $ejemplar->setEspecie($especie);
         }
@@ -29,36 +31,47 @@ class InformeController extends AbstractController
         if ($request->query->get('sexo')) {
             $ejemplar->setSexo($request->query->get('sexo'));
         }
+
         if ($request->query->get('recinto')) {
             $ejemplar->setRecinto($request->query->get('recinto'));
         }
+
         if ($request->query->get('lugar')) {
             $ejemplar->setLugar($request->query->get('lugar'));
         }
+
         if ($request->query->get('origen')) {
             $ejemplar->setOrigen($request->query->get('origen'));
         }
+
         if ($request->query->get('documentacion')) {
             $ejemplar->setDocumentacion($request->query->get('documentacion'));
         }
+
         if ($request->query->get('progenitor1')) {
             $ejemplar->setProgenitor1($request->query->get('progenitor1'));
         }
+
         if ($request->query->get('depositoNombre')) {
             $ejemplar->setDepositoNombre($request->query->get('depositoNombre'));
         }
+
         if ($request->query->get('depositoDNI')) {
             $ejemplar->setDepositoDNI($request->query->get('depositoDNI'));
         }
+
         if ($request->query->get('invasora') !== null) {
             $ejemplar->setInvasora($request->query->get('invasora'));
         }
+
         if ($request->query->get('peligroso') !== null) {
             $ejemplar->setPeligroso($request->query->get('peligroso'));
         }
+
         if ($request->query->get('cites') !== null) {
             $ejemplar->setCites($request->query->get('cites'));
         }
+
         if ($request->query->get('causaBaja')) {
             $ejemplar->setCausaBaja($request->query->get('causaBaja'));
         }
@@ -80,7 +93,7 @@ class InformeController extends AbstractController
         $distancia = $request->query->get('distancia');
 
         // Contar total
-        $ejemplares = $repository->buscarMapa(
+        $ejemplares = $ejemplarRepository->buscarMapa(
             $ejemplar,
             $fechaInicial,
             $fechaFinal,
@@ -108,14 +121,14 @@ class InformeController extends AbstractController
         Request $request,
         string $salida,
         int $volumen,
-        EjemplarRepository $repository,
+        EjemplarRepository $ejemplarRepository,
         Pdf $pdf
     ): Response {
         // Reconstruir búsqueda igual que busquedaResultados
-        $ejemplar = new \App\Entity\Ejemplar();
+        $ejemplar = new Ejemplar();
 
         if ($request->query->get('especieId')) {
-            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(\App\Entity\Especie::class)
+            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(Especie::class)
                 ->find($request->query->get('especieId'));
             $ejemplar->setEspecie($especie);
         }
@@ -123,36 +136,47 @@ class InformeController extends AbstractController
         if ($request->query->get('sexo')) {
             $ejemplar->setSexo($request->query->get('sexo'));
         }
+
         if ($request->query->get('recinto')) {
             $ejemplar->setRecinto($request->query->get('recinto'));
         }
+
         if ($request->query->get('lugar')) {
             $ejemplar->setLugar($request->query->get('lugar'));
         }
+
         if ($request->query->get('origen')) {
             $ejemplar->setOrigen($request->query->get('origen'));
         }
+
         if ($request->query->get('documentacion')) {
             $ejemplar->setDocumentacion($request->query->get('documentacion'));
         }
+
         if ($request->query->get('progenitor1')) {
             $ejemplar->setProgenitor1($request->query->get('progenitor1'));
         }
+
         if ($request->query->get('depositoNombre')) {
             $ejemplar->setDepositoNombre($request->query->get('depositoNombre'));
         }
+
         if ($request->query->get('depositoDNI')) {
             $ejemplar->setDepositoDNI($request->query->get('depositoDNI'));
         }
+
         if ($request->query->get('invasora') !== null) {
             $ejemplar->setInvasora($request->query->get('invasora'));
         }
+
         if ($request->query->get('peligroso') !== null) {
             $ejemplar->setPeligroso($request->query->get('peligroso'));
         }
+
         if ($request->query->get('cites') !== null) {
             $ejemplar->setCites($request->query->get('cites'));
         }
+
         if ($request->query->get('causaBaja')) {
             $ejemplar->setCausaBaja($request->query->get('causaBaja'));
         }
@@ -174,7 +198,7 @@ class InformeController extends AbstractController
         $distancia = $request->query->get('distancia');
 
         // Obtener ejemplares con paginación si es PDF
-        $ejemplares = $repository->buscarMapa(
+        $ejemplares = $ejemplarRepository->buscarMapa(
             $ejemplar,
             $fechaInicial,
             $fechaFinal,
@@ -194,6 +218,7 @@ class InformeController extends AbstractController
         if ($salida === 'PDF') {
             return $this->ejemplaresPDF($ejemplares, $pdf);
         }
+
         return $this->ejemplaresCSV($ejemplares);
 
     }
@@ -201,18 +226,19 @@ class InformeController extends AbstractController
     #[Route('/ejemplares/{tipo}/{salida}/{volumen}', name: 'informe_ejemplares_salida', defaults: [
         'volumen' => 0,
     ])]
-    public function ejemplaresSalida(string $tipo, string $salida, int $volumen, EjemplarRepository $repository, Pdf $pdf): Response
+    public function ejemplaresSalida(string $tipo, string $salida, int $volumen, EjemplarRepository $ejemplarRepository, Pdf $pdf): Response
     {
         $ejemplares = match ($tipo) {
-            'cites' => $repository->informeEjemplaresCites($volumen),
-            'invasores' => $repository->informeEjemplaresInvasores($volumen),
-            'especial' => $repository->informeEjemplaresEspeciales($volumen),
-            default => $repository->informeEjemplaresCompleto($volumen),
+            'cites' => $ejemplarRepository->informeEjemplaresCites($volumen),
+            'invasores' => $ejemplarRepository->informeEjemplaresInvasores($volumen),
+            'especial' => $ejemplarRepository->informeEjemplaresEspeciales($volumen),
+            default => $ejemplarRepository->informeEjemplaresCompleto($volumen),
         };
 
         if ($salida === 'PDF') {
             return $this->ejemplaresPDF($ejemplares, $pdf);
         }
+
         return $this->ejemplaresCSV($ejemplares);
 
     }
@@ -221,7 +247,7 @@ class InformeController extends AbstractController
     public function especiesSalida(
         Request $request,
         string $salida,
-        \App\Repository\EspecieRepository $especieRepository,
+        EspecieRepository $especieRepository,
         Pdf $pdf
     ): Response {
         // Obtener parámetros de búsqueda
@@ -229,10 +255,11 @@ class InformeController extends AbstractController
         $comun = $request->query->get('comun');
 
         // Crear objeto Especie para la búsqueda
-        $especie = new \App\Entity\Especie();
+        $especie = new Especie();
         if ($nombre) {
             $especie->setNombre($nombre);
         }
+
         if ($comun) {
             $especie->setComun($comun);
         }
@@ -243,6 +270,7 @@ class InformeController extends AbstractController
         if ($salida === 'PDF') {
             return $this->especiesPDF($especies, $pdf);
         }
+
         return $this->especiesCSV($especies);
 
     }
@@ -259,7 +287,7 @@ class InformeController extends AbstractController
         );
     }
 
-    private function ejemplaresCSV(array $ejemplares, TranslatorInterface $translator = null): Response
+    private function ejemplaresCSV(array $ejemplares): Response
     {
         $response = new Response($this->generaCSV($ejemplares));
         $response->headers->set('Content-Type', 'text/csv; charset=utf-8');

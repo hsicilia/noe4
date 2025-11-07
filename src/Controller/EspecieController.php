@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class EspecieController extends AbstractController
 {
     #[Route('/crear', name: 'especie_crear')]
-    public function crear(Request $request, EntityManagerInterface $em): Response
+    public function crear(Request $request, EntityManagerInterface $entityManager): Response
     {
         $especie = new Especie();
 
@@ -28,8 +28,8 @@ class EspecieController extends AbstractController
         $formulario->handleRequest($request);
 
         if ($formulario->isSubmitted() && $formulario->isValid()) {
-            $em->persist($especie);
-            $em->flush();
+            $entityManager->persist($especie);
+            $entityManager->flush();
 
             $this->addFlash('notice', 'especie.mensaje.especie_creada');
 
@@ -44,11 +44,11 @@ class EspecieController extends AbstractController
     }
 
     #[Route('/editar/{id}', name: 'especie_editar')]
-    public function editar(int $id, Request $request, EspecieRepository $repository, EntityManagerInterface $em): Response
+    public function editar(int $id, Request $request, EspecieRepository $especieRepository, EntityManagerInterface $entityManager): Response
     {
-        $especie = $repository->find($id);
+        $especie = $especieRepository->find($id);
 
-        if (! $especie) {
+        if (!$especie instanceof Especie) {
             throw $this->createNotFoundException('No se encontró la especie con id ' . $id);
         }
 
@@ -62,7 +62,7 @@ class EspecieController extends AbstractController
         $formulario->handleRequest($request);
 
         if ($formulario->isSubmitted() && $formulario->isValid()) {
-            $em->flush();
+            $entityManager->flush();
 
             $this->addFlash('notice', 'especie.mensaje.especie_modificada');
 
@@ -75,11 +75,11 @@ class EspecieController extends AbstractController
     }
 
     #[Route('/ver/{id}', name: 'especie_ver')]
-    public function ver(int $id, EspecieRepository $repository): Response
+    public function ver(int $id, EspecieRepository $especieRepository): Response
     {
-        $especie = $repository->find($id);
+        $especie = $especieRepository->find($id);
 
-        if (! $especie) {
+        if (!$especie instanceof Especie) {
             throw $this->createNotFoundException('No se encontró la especie con id ' . $id);
         }
 
@@ -97,13 +97,13 @@ class EspecieController extends AbstractController
     }
 
     #[Route('/eliminar-final/{id}', name: 'especie_eliminar_final')]
-    public function eliminarFinal(int $id, EspecieRepository $repository, EntityManagerInterface $em): Response
+    public function eliminarFinal(int $id, EspecieRepository $especieRepository, EntityManagerInterface $entityManager): Response
     {
-        $especie = $repository->find($id);
+        $especie = $especieRepository->find($id);
 
-        if ($especie) {
-            $em->remove($especie);
-            $em->flush();
+        if ($especie instanceof Especie) {
+            $entityManager->remove($especie);
+            $entityManager->flush();
 
             $this->addFlash('notice', 'especie.mensaje.especie_eliminada');
         }
@@ -112,7 +112,7 @@ class EspecieController extends AbstractController
     }
 
     #[Route('/buscar', name: 'especie_buscar')]
-    public function buscar(Request $request, EspecieRepository $repository, PaginatorInterface $paginator): Response
+    public function buscar(Request $request, EspecieRepository $especieRepository, PaginatorInterface $paginator): Response
     {
         $especie = new Especie();
 
@@ -137,7 +137,7 @@ class EspecieController extends AbstractController
             }
 
             // Si presionó "Enviar", mostrar resultados paginados
-            $resultados = $repository->encontrarEspecies($especie);
+            $resultados = $especieRepository->encontrarEspecies($especie);
 
             $paginacion = $paginator->paginate(
                 $resultados,

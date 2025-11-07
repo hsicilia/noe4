@@ -32,7 +32,7 @@ class CapturaController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (! $ejemplar) {
+        if (!$ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -59,7 +59,7 @@ class CapturaController extends AbstractController
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if (! $captura) {
+        if (!$captura instanceof Captura) {
             throw $this->createNotFoundException('No se encontró la incidencia con id ' . $id_captura);
         }
 
@@ -78,11 +78,11 @@ class CapturaController extends AbstractController
     }
 
     #[Route('/crear/{id}', name: 'captura_crear')]
-    public function crear(int $id, Request $request, EjemplarRepository $ejemplarRepository, EntityManagerInterface $em): Response
+    public function crear(int $id, Request $request, EjemplarRepository $ejemplarRepository, EntityManagerInterface $entityManager): Response
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (! $ejemplar) {
+        if (!$ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -113,13 +113,13 @@ class CapturaController extends AbstractController
             // Procesar imagen
             $imagen = $formulario->get('imagen')->getData();
 
-            $em->persist($captura);
-            $em->flush();
+            $entityManager->persist($captura);
+            $entityManager->flush();
 
             // Guardar imagen después del flush para tener el ID
             if ($imagen) {
                 $this->guardarImagen($captura, $imagen);
-                $em->flush();
+                $entityManager->flush();
             }
 
             $this->addFlash('notice', 'captura.mensaje.captura_creada');
@@ -139,11 +139,11 @@ class CapturaController extends AbstractController
     }
 
     #[Route('/editar/{id_ejemplar}/{id_captura}', name: 'captura_editar')]
-    public function editar(int $id_ejemplar, int $id_captura, Request $request, EjemplarRepository $ejemplarRepository, CapturaRepository $capturaRepository, EntityManagerInterface $em): Response
+    public function editar(int $id_ejemplar, int $id_captura, Request $request, EjemplarRepository $ejemplarRepository, CapturaRepository $capturaRepository, EntityManagerInterface $entityManager): Response
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if (! $captura) {
+        if (!$captura instanceof Captura) {
             throw $this->createNotFoundException('No se encontró la incidencia con id ' . $id_captura);
         }
 
@@ -177,7 +177,7 @@ class CapturaController extends AbstractController
                 $this->guardarImagen($captura, $imagen);
             }
 
-            $em->flush();
+            $entityManager->flush();
 
             $this->addFlash('notice', 'captura.mensaje.captura_modificada');
 
@@ -211,14 +211,14 @@ class CapturaController extends AbstractController
     }
 
     #[Route('/eliminar-final/{id_ejemplar}/{id_captura}', name: 'captura_eliminar_final')]
-    public function eliminarFinal(int $id_ejemplar, int $id_captura, CapturaRepository $capturaRepository, EntityManagerInterface $em): Response
+    public function eliminarFinal(int $id_ejemplar, int $id_captura, CapturaRepository $capturaRepository, EntityManagerInterface $entityManager): Response
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if ($captura) {
+        if ($captura instanceof Captura) {
             $this->borrarImagen($captura);
-            $em->remove($captura);
-            $em->flush();
+            $entityManager->remove($captura);
+            $entityManager->flush();
 
             $this->addFlash('notice', 'captura.mensaje.captura_eliminada');
         }
@@ -253,8 +253,8 @@ class CapturaController extends AbstractController
 
         // Aplicar el filtro 'recorte' para redimensionar
         $webPath = 'uploads/capturas/' . $nombreArchivo;
-        $processedImage = $this->dataManager->find('recorte', $webPath);
-        $response = $this->filterManager->applyFilter($processedImage, 'recorte');
+        $binary = $this->dataManager->find('recorte', $webPath);
+        $response = $this->filterManager->applyFilter($binary, 'recorte');
 
         // Guardar la imagen redimensionada
         file_put_contents($rutaRedimensionada, $response->getContent());

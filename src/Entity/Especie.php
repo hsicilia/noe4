@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EspecieRepository::class)]
 #[ORM\Table(name: 'Especie')]
-class Especie
+class Especie implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -87,10 +87,8 @@ class Especie
 
     public function removeEjemplar(Ejemplar $ejemplar): static
     {
-        if ($this->ejemplares->removeElement($ejemplar)) {
-            if ($ejemplar->getEspecie() === $this) {
-                $ejemplar->setEspecie(null);
-            }
+        if ($this->ejemplares->removeElement($ejemplar) && $ejemplar->getEspecie() === $this) {
+            $ejemplar->setEspecie(null);
         }
 
         return $this;

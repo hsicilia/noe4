@@ -8,9 +8,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class UsuarioEditarType extends UsuarioCrearType
 {
-    protected function especifico(FormBuilderInterface $builder): void
+    protected function especifico(FormBuilderInterface $formBuilder): void
     {
-        $builder
+        $formBuilder
             ->add('activado', ChoiceType::class, [
                 'label' => 'usuario.campo.activado',
                 'choices' => array_flip(Constantes::$opciones_usuario_activado),

@@ -2,28 +2,11 @@
 
 namespace App\Twig;
 
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFilter;
-
-class VariosExtension extends AbstractExtension
+use Twig\Attribute\AsTwigFilter;
+class VariosExtension
 {
-    public function getFilters(): array
-    {
-        return [
-            new TwigFilter('recortaTexto', [$this, 'recortaTextoFilter']),
-            new TwigFilter('hora', [$this, 'horaFilter']),
-            new TwigFilter('imagenCache', [$this, 'imagenCacheFilter']),
-            new TwigFilter('nombreEspecie', [$this, 'nombreEspecieFilter']),
-            new TwigFilter('sexo', [$this, 'sexoFilter']),
-            new TwigFilter('origen', [$this, 'origenFilter']),
-            new TwigFilter('documentacion', [$this, 'documentacionFilter']),
-            new TwigFilter('sino', [$this, 'siNoFilter']),
-            new TwigFilter('cites', [$this, 'citesFilter']),
-            new TwigFilter('causaBaja', [$this, 'causaBajaFilter']),
-        ];
-    }
-
     // Función para obtener el sexo en función del valor de la base de datos
+    #[AsTwigFilter('sexo')]
     public function sexoFilter($sexo): string
     {
         return match ($sexo) {
@@ -34,6 +17,7 @@ class VariosExtension extends AbstractExtension
     }
 
     // Función para obtener el origen en función del valor de la base de datos
+    #[AsTwigFilter('origen')]
     public function origenFilter($origen): string
     {
         return match ($origen) {
@@ -57,6 +41,7 @@ class VariosExtension extends AbstractExtension
     }
 
     // Función para obtener el documento en función del valor de la base de datos
+    #[AsTwigFilter('documentacion')]
     public function documentacionFilter($documento): string
     {
         return match ($documento) {
@@ -83,29 +68,35 @@ class VariosExtension extends AbstractExtension
     }
 
     // Función para mostrar Sí o No
+    #[AsTwigFilter('sino')]
     public function sinoFilter($valor): string
     {
         return $valor ? 'Sí' : 'No';
     }
 
     // Filtro para recortar un texto a un tamaño máximo. Añade puntos suspensivos al final.
+    #[AsTwigFilter('recortaTexto')]
     public function recortaTextoFilter($texto, $tam = 50): string
     {
-        if (strlen($texto) > $tam) {
-            return substr($texto, 0, $tam) . '...';
+        if (strlen((string) $texto) > $tam) {
+            return substr((string) $texto, 0, $tam) . '...';
         }
+
         return $texto;
     }
 
     // Filtro para mostrar la hora de una fecha correctamente.
+    #[AsTwigFilter('hora')]
     public function horaFilter($fecha): string
     {
         if ($fecha !== null) {
             return $fecha->format('H:i');
         }
+
         return '';
     }
 
+    #[AsTwigFilter('cites')]
     public function citesFilter($valor): string
     {
         return match ($valor) {
@@ -118,6 +109,7 @@ class VariosExtension extends AbstractExtension
         };
     }
 
+    #[AsTwigFilter('causaBaja')]
     public function causaBajaFilter($valor): string
     {
         return match ($valor) {
@@ -131,18 +123,21 @@ class VariosExtension extends AbstractExtension
     }
 
     // Filtro para poner en cursiva el nombre de las especies dejando en letra normal el resto de datos
-    public function nombreEspecieFilter($especie): string
+    #[AsTwigFilter('nombreEspecie')]
+    public function nombreEspecieFilter(string $especie): string
     {
         $pos = strpos($especie, '(');
 
         if ($pos) {
             return '<em>' . substr($especie, 0, $pos) . '</em>' . substr($especie, $pos);
         }
+
         return '<em>' . $especie . '</em>';
     }
 
     // Filtro para añadir un parámetro tipo fecha a las url de las imágenes para que el navegador las cambie al actualizarlas.
-    public function imagenCacheFilter($url, $fecha): string
+    #[AsTwigFilter('imagenCache')]
+    public function imagenCacheFilter(string $url, $fecha): string
     {
         return $url . '?f=' . $fecha->format('dmYHi');
     }

@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use Doctrine\ORM\QueryBuilder;
 use App\Classes\Constantes;
 use App\Entity\Ejemplar;
 use App\Entity\Especie;
@@ -34,10 +35,8 @@ class EjemplarCrearType extends AbstractType
                 'label' => 'ejemplar.campo.especie',
                 'class' => Especie::class,
                 'choice_label' => 'nombre',
-                'query_builder' => function (EntityRepository $er) {
-                    return $er->createQueryBuilder('e')
-                        ->orderBy('e.nombre', 'ASC');
-                },
+                'query_builder' => fn(EntityRepository $entityRepository): QueryBuilder => $entityRepository->createQueryBuilder('e')
+                    ->orderBy('e.nombre', 'ASC'),
             ])
             ->add('idMicrochip', TextType::class, [
                 'label' => 'ejemplar.campo.idMicrochip',
@@ -168,7 +167,7 @@ class EjemplarCrearType extends AbstractType
      * Método específico que se puede sobrescribir en clases derivadas
      * para añadir campos adicionales (como checkboxes para borrar imágenes)
      */
-    protected function especifico(FormBuilderInterface $builder): void
+    protected function especifico(FormBuilderInterface $formBuilder): void
     {
         // Por defecto no hace nada, se sobrescribe en EjemplarEditarType
     }

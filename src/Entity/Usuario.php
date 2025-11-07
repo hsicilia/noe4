@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
 #[ORM\Table(name: 'Usuario')]
-class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -245,10 +245,8 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeEjemplarCreado(Ejemplar $ejemplar): static
     {
-        if ($this->ejemplaresCreados->removeElement($ejemplar)) {
-            if ($ejemplar->getCreadoPor() === $this) {
-                $ejemplar->setCreadoPor(null);
-            }
+        if ($this->ejemplaresCreados->removeElement($ejemplar) && $ejemplar->getCreadoPor() === $this) {
+            $ejemplar->setCreadoPor(null);
         }
 
         return $this;
@@ -274,10 +272,8 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeEjemplarModificado(Ejemplar $ejemplar): static
     {
-        if ($this->ejemplaresModificados->removeElement($ejemplar)) {
-            if ($ejemplar->getModificadoPor() === $this) {
-                $ejemplar->setModificadoPor(null);
-            }
+        if ($this->ejemplaresModificados->removeElement($ejemplar) && $ejemplar->getModificadoPor() === $this) {
+            $ejemplar->setModificadoPor(null);
         }
 
         return $this;
@@ -303,10 +299,8 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeCapturaCreada(Captura $captura): static
     {
-        if ($this->capturasCreadas->removeElement($captura)) {
-            if ($captura->getCreadoPor() === $this) {
-                $captura->setCreadoPor(null);
-            }
+        if ($this->capturasCreadas->removeElement($captura) && $captura->getCreadoPor() === $this) {
+            $captura->setCreadoPor(null);
         }
 
         return $this;
@@ -332,10 +326,8 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function removeCapturaModificada(Captura $captura): static
     {
-        if ($this->capturasModificadas->removeElement($captura)) {
-            if ($captura->getModificadoPor() === $this) {
-                $captura->setModificadoPor(null);
-            }
+        if ($this->capturasModificadas->removeElement($captura) && $captura->getModificadoPor() === $this) {
+            $captura->setModificadoPor(null);
         }
 
         return $this;

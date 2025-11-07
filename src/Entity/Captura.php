@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: CapturaRepository::class)]
 #[ORM\Table(name: 'Captura')]
 #[ORM\HasLifecycleCallbacks]
-class Captura
+class Captura implements \Stringable
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -154,9 +154,9 @@ class Captura
         return $this->creadoPor;
     }
 
-    public function setCreadoPor(?Usuario $creadoPor): static
+    public function setCreadoPor(?Usuario $usuario): static
     {
-        $this->creadoPor = $creadoPor;
+        $this->creadoPor = $usuario;
 
         return $this;
     }
@@ -178,9 +178,9 @@ class Captura
         return $this->modificadoPor;
     }
 
-    public function setModificadoPor(?Usuario $modificadoPor): static
+    public function setModificadoPor(?Usuario $usuario): static
     {
-        $this->modificadoPor = $modificadoPor;
+        $this->modificadoPor = $usuario;
 
         return $this;
     }
@@ -215,7 +215,7 @@ class Captura
     {
         $this->modificadoEl = new \DateTime();
 
-        if ($this->creadoEl === null) {
+        if (!$this->creadoEl instanceof \DateTimeInterface) {
             $this->creadoEl = new \DateTime();
         }
     }

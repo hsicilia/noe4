@@ -7,9 +7,9 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class CapturaEditarType extends CapturaCrearType
 {
-    protected function especifico(FormBuilderInterface $builder): void
+    protected function especifico(FormBuilderInterface $formBuilder): void
     {
-        $builder
+        $formBuilder
             ->add('borrarImagen', CheckboxType::class, [
                 'mapped' => false,
                 'label' => 'captura.campo.borrarImagen',

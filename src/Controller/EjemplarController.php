@@ -31,22 +31,22 @@ class EjemplarController extends AbstractController
     }
 
     #[Route('/ver/{id}', name: 'ejemplar_ver')]
-    public function ver(int $id, EjemplarRepository $repository): Response
+    public function ver(int $id, EjemplarRepository $ejemplarRepository): Response
     {
-        $ejemplar = $repository->find($id);
+        $ejemplar = $ejemplarRepository->find($id);
 
-        if (! $ejemplar) {
+        if (!$ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
         // Obtener información de capturas
-        $numCapturas = $repository->numCapturas($id);
+        $numCapturas = $ejemplarRepository->numCapturas($id);
         $primeraCaptura = null;
         $ultimaCaptura = null;
 
         if ($numCapturas > 0) {
-            $primeraCaptura = $repository->primeraCaptura($id);
-            $ultimaCaptura = ($numCapturas === 1) ? null : $repository->ultimaCaptura($id);
+            $primeraCaptura = $ejemplarRepository->primeraCaptura($id);
+            $ultimaCaptura = ($numCapturas === 1) ? null : $ejemplarRepository->ultimaCaptura($id);
         }
 
         return $this->render('ejemplar/ver.html.twig', [
@@ -62,7 +62,7 @@ class EjemplarController extends AbstractController
     }
 
     #[Route('/crear', name: 'ejemplar_crear')]
-    public function crear(Request $request, EntityManagerInterface $em): Response
+    public function crear(Request $request, EntityManagerInterface $entityManager): Response
     {
         $ejemplar = new Ejemplar();
 
@@ -89,22 +89,24 @@ class EjemplarController extends AbstractController
             $imagen2 = $formulario->get('imagen2')->getData();
             $imagen3 = $formulario->get('imagen3')->getData();
 
-            $em->persist($ejemplar);
-            $em->flush();
+            $entityManager->persist($ejemplar);
+            $entityManager->flush();
 
             // Guardar imágenes después del flush para tener el ID
             if ($imagen1) {
                 $this->guardarImagen($ejemplar, $imagen1, 1);
             }
+
             if ($imagen2) {
                 $this->guardarImagen($ejemplar, $imagen2, 2);
             }
+
             if ($imagen3) {
                 $this->guardarImagen($ejemplar, $imagen3, 3);
             }
 
             if ($imagen1 || $imagen2 || $imagen3) {
-                $em->flush();
+                $entityManager->flush();
             }
 
             $this->addFlash('notice', 'ejemplar.mensaje.ejemplar_creado');
@@ -120,11 +122,11 @@ class EjemplarController extends AbstractController
     }
 
     #[Route('/editar/{id}', name: 'ejemplar_editar')]
-    public function editar(int $id, Request $request, EjemplarRepository $repository, EntityManagerInterface $em): Response
+    public function editar(int $id, Request $request, EjemplarRepository $ejemplarRepository, EntityManagerInterface $entityManager): Response
     {
-        $ejemplar = $repository->find($id);
+        $ejemplar = $ejemplarRepository->find($id);
 
-        if (! $ejemplar) {
+        if (!$ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -156,10 +158,12 @@ class EjemplarController extends AbstractController
                 $this->borrarImagen($ejemplar, 1);
                 $ejemplar->setPath1(null);
             }
+
             if ($borrarImagen2 && ! $imagen2) {
                 $this->borrarImagen($ejemplar, 2);
                 $ejemplar->setPath2(null);
             }
+
             if ($borrarImagen3 && ! $imagen3) {
                 $this->borrarImagen($ejemplar, 3);
                 $ejemplar->setPath3(null);
@@ -170,16 +174,18 @@ class EjemplarController extends AbstractController
                 $this->borrarImagen($ejemplar, 1); // Borrar anterior si existe
                 $this->guardarImagen($ejemplar, $imagen1, 1);
             }
+
             if ($imagen2) {
                 $this->borrarImagen($ejemplar, 2);
                 $this->guardarImagen($ejemplar, $imagen2, 2);
             }
+
             if ($imagen3) {
                 $this->borrarImagen($ejemplar, 3);
                 $this->guardarImagen($ejemplar, $imagen3, 3);
             }
 
-            $em->flush();
+            $entityManager->flush();
 
             $this->addFlash('notice', 'ejemplar.mensaje.ejemplar_modificado');
 
@@ -189,13 +195,13 @@ class EjemplarController extends AbstractController
         }
 
         // Obtener información de capturas
-        $numCapturas = $repository->numCapturas($id);
+        $numCapturas = $ejemplarRepository->numCapturas($id);
         $primeraCaptura = null;
         $ultimaCaptura = null;
 
         if ($numCapturas > 0) {
-            $primeraCaptura = $repository->primeraCaptura($id);
-            $ultimaCaptura = ($numCapturas === 1) ? null : $repository->ultimaCaptura($id);
+            $primeraCaptura = $ejemplarRepository->primeraCaptura($id);
+            $ultimaCaptura = ($numCapturas === 1) ? null : $ejemplarRepository->ultimaCaptura($id);
         }
 
         return $this->render('ejemplar/editar.html.twig', [
@@ -220,13 +226,13 @@ class EjemplarController extends AbstractController
     }
 
     #[Route('/eliminar-final/{id}', name: 'ejemplar_eliminar_final')]
-    public function eliminarFinal(int $id, EjemplarRepository $repository, EntityManagerInterface $em): Response
+    public function eliminarFinal(int $id, EjemplarRepository $ejemplarRepository, EntityManagerInterface $entityManager): Response
     {
-        $ejemplar = $repository->find($id);
+        $ejemplar = $ejemplarRepository->find($id);
 
-        if ($ejemplar) {
-            $em->remove($ejemplar);
-            $em->flush();
+        if ($ejemplar instanceof Ejemplar) {
+            $entityManager->remove($ejemplar);
+            $entityManager->flush();
 
             $this->addFlash('notice', 'ejemplar.mensaje.ejemplar_eliminado');
         }
@@ -235,7 +241,7 @@ class EjemplarController extends AbstractController
     }
 
     #[Route('/buscar-id', name: 'ejemplar_buscar_id')]
-    public function buscarId(Request $request, EjemplarRepository $repository, PaginatorInterface $paginator): Response
+    public function buscarId(Request $request, EjemplarRepository $ejemplarRepository, PaginatorInterface $paginator): Response
     {
         // Formulario de búsqueda por ID numérico
         $formularioId = $this->createFormBuilder()
@@ -257,31 +263,28 @@ class EjemplarController extends AbstractController
         ]);
 
         $formularioOtroId->handleRequest($request);
-
         if ($formularioId->isSubmitted() && $formularioId->isValid()) {
             $datos = $formularioId->getData();
-            $ejemplares = $repository->findBy([
+            $ejemplares = $ejemplarRepository->findBy([
                 'id' => $datos['id'],
             ]);
-
             $paginacion = $paginator->paginate(
                 $ejemplares,
                 $request->query->getInt('p', 1),
                 20
             );
-
             return $this->render('ejemplar/resultadosBusqueda.html.twig', [
                 'paginacion' => $paginacion,
             ]);
-        } elseif ($formularioOtroId->isSubmitted() && $formularioOtroId->isValid()) {
-            $ejemplares = $repository->encontrarOtroId($formularioOtroId->get('otroId')->getData());
+        }
 
+        if ($formularioOtroId->isSubmitted() && $formularioOtroId->isValid()) {
+            $ejemplares = $ejemplarRepository->encontrarOtroId($formularioOtroId->get('otroId')->getData());
             $paginacion = $paginator->paginate(
                 $ejemplares,
                 $request->query->getInt('p', 1),
                 20
             );
-
             return $this->render('ejemplar/resultadosBusqueda.html.twig', [
                 'paginacion' => $paginacion,
             ]);
@@ -294,7 +297,7 @@ class EjemplarController extends AbstractController
     }
 
     #[Route('/buscar-mapa', name: 'ejemplar_buscar_mapa')]
-    public function buscarMapa(Request $request, EjemplarRepository $repository, PaginatorInterface $paginator): Response
+    public function buscarMapa(Request $request, EjemplarRepository $ejemplarRepository, PaginatorInterface $paginator): Response
     {
         $ejemplar = new Ejemplar();
 
@@ -346,7 +349,7 @@ class EjemplarController extends AbstractController
             }
 
             // Si presionó "Buscar", mostrar resultados paginados
-            $ejemplares = $repository->buscarMapa(
+            $ejemplares = $ejemplarRepository->buscarMapa(
                 $ejemplar,
                 $fechaInicial,
                 $fechaFinal,
@@ -405,8 +408,8 @@ class EjemplarController extends AbstractController
 
         // Aplicar el filtro 'recorte' para redimensionar
         $webPath = 'uploads/ejemplares/' . $nombreArchivo;
-        $processedImage = $this->dataManager->find('recorte', $webPath);
-        $response = $this->filterManager->applyFilter($processedImage, 'recorte');
+        $binary = $this->dataManager->find('recorte', $webPath);
+        $response = $this->filterManager->applyFilter($binary, 'recorte');
 
         // Guardar la imagen redimensionada
         file_put_contents($rutaRedimensionada, $response->getContent());
