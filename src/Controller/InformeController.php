@@ -17,14 +17,13 @@ use Symfony\Component\Routing\Attribute\Route;
 class InformeController extends AbstractController
 {
     #[Route('/busqueda/resultados', name: 'informe_busqueda_resultados')]
-    public function busquedaResultados(Request $request, EjemplarRepository $ejemplarRepository): Response
+    public function busquedaResultados(Request $request, EjemplarRepository $ejemplarRepository, EspecieRepository $especieRepository): Response
     {
         // Reconstruir el objeto Ejemplar desde los parámetros
         $ejemplar = new Ejemplar();
 
         if ($request->query->get('especieId')) {
-            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(Especie::class)
-                ->find($request->query->get('especieId'));
+            $especie = $especieRepository->find($request->query->get('especieId'));
             $ejemplar->setEspecie($especie);
         }
 
@@ -122,14 +121,14 @@ class InformeController extends AbstractController
         string $salida,
         int $volumen,
         EjemplarRepository $ejemplarRepository,
+        EspecieRepository $especieRepository,
         Pdf $pdf
     ): Response {
         // Reconstruir búsqueda igual que busquedaResultados
         $ejemplar = new Ejemplar();
 
         if ($request->query->get('especieId')) {
-            $especie = $this->getParameter('kernel.container')->get('doctrine')->getRepository(Especie::class)
-                ->find($request->query->get('especieId'));
+            $especie = $especieRepository->find($request->query->get('especieId'));
             $ejemplar->setEspecie($especie);
         }
 
