@@ -35,8 +35,8 @@
     {% if app.user %}
         <div id="login">
             <strong>{{ app.user.nombre }}</strong> ({{ app.user.organizacion }}) |
-            <a href="{{ path('app_logout') }}">{{ 'usuario.login.salir' | trans }}</a> |
-            <a href="{{ path('usuario_perfil') }}">{{ 'usuario.login.perfil' | trans }}</a>
+            <a href="{{ path('usuario_perfil') }}">{{ 'usuario.login.perfil' | trans }}</a> |
+            <a href="{{ path('app_logout') }}">{{ 'usuario.login.salir' | trans }}</a>
         </div>
     {% else %}
         <div id="login">

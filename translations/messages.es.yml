@@ -359,7 +359,7 @@ pagina:
     inicial: >
         <p>Programa de registro de ejemplares de la <strong>Fundación Neotrópico</strong>.</p>
         <ul>
-        <li>Si ya tiene usted un usuario pulse sobre el enlace <a href="/app.php/es/usuario/autentificar">Acceder</a>
+        <li>Si ya tiene usted un usuario pulse sobre el enlace <a href="/login">Acceder</a>
         en la parte superior derecha de la pantalla para iniciar sesión en la aplicación.</li>
         </ul>
 
