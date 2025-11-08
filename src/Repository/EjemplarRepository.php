@@ -138,7 +138,7 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('especie', $ejemplar->getEspecie());
         }
 
-        if ($ejemplar->getSexo() !== 0) {
+        if ($ejemplar->getSexo() !== null && $ejemplar->getSexo() !== 0) {
             $qb->andWhere('e.sexo = :sexo')
                 ->setParameter('sexo', $ejemplar->getSexo());
         }
@@ -163,12 +163,12 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('lugar', '%' . $ejemplar->getLugar() . '%');
         }
 
-        if ($ejemplar->getOrigen() !== 0) {
+        if ($ejemplar->getOrigen() !== null && $ejemplar->getOrigen() !== 0) {
             $qb->andWhere('e.origen = :origen')
                 ->setParameter('origen', $ejemplar->getOrigen());
         }
 
-        if ($ejemplar->getDocumentacion() !== 0) {
+        if ($ejemplar->getDocumentacion() !== null && $ejemplar->getDocumentacion() !== 0) {
             $qb->andWhere('e.documentacion = :documentacion')
                 ->setParameter('documentacion', $ejemplar->getDocumentacion());
         }
@@ -188,12 +188,14 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('depositoDNI', '%' . $ejemplar->getDepositoDNI() . '%');
         }
 
-        if ($ejemplar->getInvasora() !== 0) {
+        // Para invasora, peligroso y cites: son opcionales (required: false) y nullable
+        // Solo filtramos si tienen un valor no-null (pueden ser 0/false o 1/true)
+        if ($ejemplar->getInvasora() !== null) {
             $qb->andWhere('e.invasora = :invasora')
                 ->setParameter('invasora', $ejemplar->getInvasora());
         }
 
-        if ($ejemplar->getPeligroso() !== 0) {
+        if ($ejemplar->getPeligroso() !== null) {
             $qb->andWhere('e.peligroso = :peligroso')
                 ->setParameter('peligroso', $ejemplar->getPeligroso());
         }

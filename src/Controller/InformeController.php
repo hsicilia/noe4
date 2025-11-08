@@ -22,57 +22,57 @@ class InformeController extends AbstractController
         // Reconstruir el objeto Ejemplar desde los parámetros
         $ejemplar = new Ejemplar();
 
-        if ($request->query->get('especieId')) {
+        if ($request->query->get('especieId') !== null && $request->query->get('especieId') !== '') {
             $especie = $especieRepository->find($request->query->get('especieId'));
             $ejemplar->setEspecie($especie);
         }
 
-        if ($request->query->get('sexo')) {
-            $ejemplar->setSexo($request->query->get('sexo'));
+        if ($request->query->get('sexo') !== null && $request->query->get('sexo') !== '') {
+            $ejemplar->setSexo((int) $request->query->get('sexo'));
         }
 
-        if ($request->query->get('recinto')) {
+        if ($request->query->get('recinto') !== null && $request->query->get('recinto') !== '') {
             $ejemplar->setRecinto($request->query->get('recinto'));
         }
 
-        if ($request->query->get('lugar')) {
+        if ($request->query->get('lugar') !== null && $request->query->get('lugar') !== '') {
             $ejemplar->setLugar($request->query->get('lugar'));
         }
 
-        if ($request->query->get('origen')) {
-            $ejemplar->setOrigen($request->query->get('origen'));
+        if ($request->query->get('origen') !== null && $request->query->get('origen') !== '') {
+            $ejemplar->setOrigen((int) $request->query->get('origen'));
         }
 
-        if ($request->query->get('documentacion')) {
-            $ejemplar->setDocumentacion($request->query->get('documentacion'));
+        if ($request->query->get('documentacion') !== null && $request->query->get('documentacion') !== '') {
+            $ejemplar->setDocumentacion((int) $request->query->get('documentacion'));
         }
 
-        if ($request->query->get('progenitor1')) {
+        if ($request->query->get('progenitor1') !== null && $request->query->get('progenitor1') !== '') {
             $ejemplar->setProgenitor1($request->query->get('progenitor1'));
         }
 
-        if ($request->query->get('depositoNombre')) {
+        if ($request->query->get('depositoNombre') !== null && $request->query->get('depositoNombre') !== '') {
             $ejemplar->setDepositoNombre($request->query->get('depositoNombre'));
         }
 
-        if ($request->query->get('depositoDNI')) {
+        if ($request->query->get('depositoDNI') !== null && $request->query->get('depositoDNI') !== '') {
             $ejemplar->setDepositoDNI($request->query->get('depositoDNI'));
         }
 
-        if ($request->query->get('invasora') !== null) {
-            $ejemplar->setInvasora($request->query->get('invasora'));
+        if ($request->query->get('invasora') !== null && $request->query->get('invasora') !== '') {
+            $ejemplar->setInvasora((int) $request->query->get('invasora') === 1);
         }
 
-        if ($request->query->get('peligroso') !== null) {
-            $ejemplar->setPeligroso($request->query->get('peligroso'));
+        if ($request->query->get('peligroso') !== null && $request->query->get('peligroso') !== '') {
+            $ejemplar->setPeligroso((int) $request->query->get('peligroso') === 1);
         }
 
-        if ($request->query->get('cites') !== null) {
-            $ejemplar->setCites($request->query->get('cites'));
+        if ($request->query->get('cites') !== null && $request->query->get('cites') !== '') {
+            $ejemplar->setCites((int) $request->query->get('cites'));
         }
 
-        if ($request->query->get('causaBaja')) {
-            $ejemplar->setCausaBaja($request->query->get('causaBaja'));
+        if ($request->query->get('causaBaja') !== null && $request->query->get('causaBaja') !== '') {
+            $ejemplar->setCausaBaja((int) $request->query->get('causaBaja'));
         }
 
         $fechaInicial = $request->query->get('fechaInicial')
@@ -87,9 +87,10 @@ class InformeController extends AbstractController
         $fechaBajaFinal = $request->query->get('fechaBajaFinal')
             ? new \DateTime($request->query->get('fechaBajaFinal'))
             : null;
-        $latitud = $request->query->get('latitud');
-        $longitud = $request->query->get('longitud');
-        $distancia = $request->query->get('distancia');
+        $latitud = $request->query->get('latitud') ? (float) $request->query->get('latitud') : null;
+        $longitud = $request->query->get('longitud') ? (float) $request->query->get('longitud') : null;
+        $distancia = $request->query->get('distancia') ? (float) $request->query->get('distancia') : null;
+        $tipoEjemplar = $request->query->get('tipoEjemplar', 'alta');
 
         // Contar total
         $ejemplares = $ejemplarRepository->buscarMapa(
@@ -100,7 +101,8 @@ class InformeController extends AbstractController
             $fechaBajaFinal,
             $latitud,
             $longitud,
-            $distancia
+            $distancia,
+            $tipoEjemplar
         );
 
         $total = count($ejemplares);
@@ -127,57 +129,57 @@ class InformeController extends AbstractController
         // Reconstruir búsqueda igual que busquedaResultados
         $ejemplar = new Ejemplar();
 
-        if ($request->query->get('especieId')) {
+        if ($request->query->get('especieId') !== null && $request->query->get('especieId') !== '') {
             $especie = $especieRepository->find($request->query->get('especieId'));
             $ejemplar->setEspecie($especie);
         }
 
-        if ($request->query->get('sexo')) {
-            $ejemplar->setSexo($request->query->get('sexo'));
+        if ($request->query->get('sexo') !== null && $request->query->get('sexo') !== '') {
+            $ejemplar->setSexo((int) $request->query->get('sexo'));
         }
 
-        if ($request->query->get('recinto')) {
+        if ($request->query->get('recinto') !== null && $request->query->get('recinto') !== '') {
             $ejemplar->setRecinto($request->query->get('recinto'));
         }
 
-        if ($request->query->get('lugar')) {
+        if ($request->query->get('lugar') !== null && $request->query->get('lugar') !== '') {
             $ejemplar->setLugar($request->query->get('lugar'));
         }
 
-        if ($request->query->get('origen')) {
-            $ejemplar->setOrigen($request->query->get('origen'));
+        if ($request->query->get('origen') !== null && $request->query->get('origen') !== '') {
+            $ejemplar->setOrigen((int) $request->query->get('origen'));
         }
 
-        if ($request->query->get('documentacion')) {
-            $ejemplar->setDocumentacion($request->query->get('documentacion'));
+        if ($request->query->get('documentacion') !== null && $request->query->get('documentacion') !== '') {
+            $ejemplar->setDocumentacion((int) $request->query->get('documentacion'));
         }
 
-        if ($request->query->get('progenitor1')) {
+        if ($request->query->get('progenitor1') !== null && $request->query->get('progenitor1') !== '') {
             $ejemplar->setProgenitor1($request->query->get('progenitor1'));
         }
 
-        if ($request->query->get('depositoNombre')) {
+        if ($request->query->get('depositoNombre') !== null && $request->query->get('depositoNombre') !== '') {
             $ejemplar->setDepositoNombre($request->query->get('depositoNombre'));
         }
 
-        if ($request->query->get('depositoDNI')) {
+        if ($request->query->get('depositoDNI') !== null && $request->query->get('depositoDNI') !== '') {
             $ejemplar->setDepositoDNI($request->query->get('depositoDNI'));
         }
 
-        if ($request->query->get('invasora') !== null) {
-            $ejemplar->setInvasora($request->query->get('invasora'));
+        if ($request->query->get('invasora') !== null && $request->query->get('invasora') !== '') {
+            $ejemplar->setInvasora((int) $request->query->get('invasora') === 1);
         }
 
-        if ($request->query->get('peligroso') !== null) {
-            $ejemplar->setPeligroso($request->query->get('peligroso'));
+        if ($request->query->get('peligroso') !== null && $request->query->get('peligroso') !== '') {
+            $ejemplar->setPeligroso((int) $request->query->get('peligroso') === 1);
         }
 
-        if ($request->query->get('cites') !== null) {
-            $ejemplar->setCites($request->query->get('cites'));
+        if ($request->query->get('cites') !== null && $request->query->get('cites') !== '') {
+            $ejemplar->setCites((int) $request->query->get('cites'));
         }
 
-        if ($request->query->get('causaBaja')) {
-            $ejemplar->setCausaBaja($request->query->get('causaBaja'));
+        if ($request->query->get('causaBaja') !== null && $request->query->get('causaBaja') !== '') {
+            $ejemplar->setCausaBaja((int) $request->query->get('causaBaja'));
         }
 
         $fechaInicial = $request->query->get('fechaInicial')
@@ -192,9 +194,10 @@ class InformeController extends AbstractController
         $fechaBajaFinal = $request->query->get('fechaBajaFinal')
             ? new \DateTime($request->query->get('fechaBajaFinal'))
             : null;
-        $latitud = $request->query->get('latitud');
-        $longitud = $request->query->get('longitud');
-        $distancia = $request->query->get('distancia');
+        $latitud = $request->query->get('latitud') ? (float) $request->query->get('latitud') : null;
+        $longitud = $request->query->get('longitud') ? (float) $request->query->get('longitud') : null;
+        $distancia = $request->query->get('distancia') ? (float) $request->query->get('distancia') : null;
+        $tipoEjemplar = $request->query->get('tipoEjemplar', 'alta');
 
         // Obtener ejemplares con paginación si es PDF
         $ejemplares = $ejemplarRepository->buscarMapa(
@@ -205,7 +208,8 @@ class InformeController extends AbstractController
             $fechaBajaFinal,
             $latitud,
             $longitud,
-            $distancia
+            $distancia,
+            $tipoEjemplar
         );
 
         // Para PDF, limitar a 500 ejemplares por volumen

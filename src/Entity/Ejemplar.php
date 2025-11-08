@@ -82,14 +82,14 @@ class Ejemplar implements \Stringable
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $observaciones = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $invasora = false;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $invasora = null;
 
     #[ORM\Column(type: 'smallint')]
     private ?int $cites = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private bool $peligroso = false;
+    #[ORM\Column(type: 'boolean', nullable: true)]
+    private ?bool $peligroso = null;
 
     #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'ejemplaresCreados')]
     #[ORM\JoinColumn(name: 'creado_usuario_id', onDelete: 'SET NULL')]
@@ -387,12 +387,12 @@ class Ejemplar implements \Stringable
         return $this;
     }
 
-    public function getInvasora(): bool
+    public function getInvasora(): ?bool
     {
         return $this->invasora;
     }
 
-    public function setInvasora(bool $invasora): static
+    public function setInvasora(?bool $invasora): static
     {
         $this->invasora = $invasora;
 
@@ -411,12 +411,12 @@ class Ejemplar implements \Stringable
         return $this;
     }
 
-    public function getPeligroso(): bool
+    public function getPeligroso(): ?bool
     {
         return $this->peligroso;
     }
 
-    public function setPeligroso(bool $peligroso): static
+    public function setPeligroso(?bool $peligroso): static
     {
         $this->peligroso = $peligroso;
 

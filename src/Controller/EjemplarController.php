@@ -323,29 +323,70 @@ class EjemplarController extends AbstractController
 
             // Si presionó "Generar informe", redirigir a la pantalla de informe
             if ($formulario->get('informe')->isClicked()) {
-                return $this->redirectToRoute('informe_busqueda_resultados', [
-                    'fechaInicial' => $fechaInicial?->format('Y-m-d'),
-                    'fechaFinal' => $fechaFinal?->format('Y-m-d'),
-                    'fechaBajaInicial' => $fechaBajaInicial?->format('Y-m-d'),
-                    'fechaBajaFinal' => $fechaBajaFinal?->format('Y-m-d'),
-                    'latitud' => $latitud,
-                    'longitud' => $longitud,
-                    'distancia' => $distancia,
-                    'especieId' => $ejemplar->getEspecie()?->getId(),
-                    'sexo' => $ejemplar->getSexo(),
-                    'recinto' => $ejemplar->getRecinto(),
-                    'lugar' => $ejemplar->getLugar(),
-                    'origen' => $ejemplar->getOrigen(),
-                    'documentacion' => $ejemplar->getDocumentacion(),
-                    'progenitor1' => $ejemplar->getProgenitor1(),
-                    'depositoNombre' => $ejemplar->getDepositoNombre(),
-                    'depositoDNI' => $ejemplar->getDepositoDNI(),
-                    'invasora' => $ejemplar->getInvasora(),
-                    'peligroso' => $ejemplar->getPeligroso(),
-                    'cites' => $ejemplar->getCites(),
-                    'causaBaja' => $ejemplar->getCausaBaja(),
-                    'tipoEjemplar' => $tipoEjemplar,
-                ]);
+                $params = ['tipoEjemplar' => $tipoEjemplar];
+
+                if ($fechaInicial) {
+                    $params['fechaInicial'] = $fechaInicial->format('Y-m-d');
+                }
+                if ($fechaFinal) {
+                    $params['fechaFinal'] = $fechaFinal->format('Y-m-d');
+                }
+                if ($fechaBajaInicial) {
+                    $params['fechaBajaInicial'] = $fechaBajaInicial->format('Y-m-d');
+                }
+                if ($fechaBajaFinal) {
+                    $params['fechaBajaFinal'] = $fechaBajaFinal->format('Y-m-d');
+                }
+                if ($latitud !== null) {
+                    $params['latitud'] = $latitud;
+                }
+                if ($longitud !== null) {
+                    $params['longitud'] = $longitud;
+                }
+                if ($distancia !== null) {
+                    $params['distancia'] = $distancia;
+                }
+                if ($ejemplar->getEspecie()) {
+                    $params['especieId'] = $ejemplar->getEspecie()->getId();
+                }
+                if ($ejemplar->getSexo() !== null && $ejemplar->getSexo() !== 0) {
+                    $params['sexo'] = $ejemplar->getSexo();
+                }
+                if ($ejemplar->getRecinto() !== null && $ejemplar->getRecinto() !== '') {
+                    $params['recinto'] = $ejemplar->getRecinto();
+                }
+                if ($ejemplar->getLugar() !== null && $ejemplar->getLugar() !== '') {
+                    $params['lugar'] = $ejemplar->getLugar();
+                }
+                if ($ejemplar->getOrigen() !== null && $ejemplar->getOrigen() !== 0) {
+                    $params['origen'] = $ejemplar->getOrigen();
+                }
+                if ($ejemplar->getDocumentacion() !== null && $ejemplar->getDocumentacion() !== 0) {
+                    $params['documentacion'] = $ejemplar->getDocumentacion();
+                }
+                if ($ejemplar->getProgenitor1() !== null && $ejemplar->getProgenitor1() !== '') {
+                    $params['progenitor1'] = $ejemplar->getProgenitor1();
+                }
+                if ($ejemplar->getDepositoNombre() !== null && $ejemplar->getDepositoNombre() !== '') {
+                    $params['depositoNombre'] = $ejemplar->getDepositoNombre();
+                }
+                if ($ejemplar->getDepositoDNI() !== null && $ejemplar->getDepositoDNI() !== '') {
+                    $params['depositoDNI'] = $ejemplar->getDepositoDNI();
+                }
+                if ($ejemplar->getInvasora() !== null) {
+                    $params['invasora'] = $ejemplar->getInvasora() ? 1 : 0;
+                }
+                if ($ejemplar->getPeligroso() !== null) {
+                    $params['peligroso'] = $ejemplar->getPeligroso() ? 1 : 0;
+                }
+                if ($ejemplar->getCites() !== null) {
+                    $params['cites'] = $ejemplar->getCites();
+                }
+                if ($ejemplar->getCausaBaja() !== null) {
+                    $params['causaBaja'] = $ejemplar->getCausaBaja();
+                }
+
+                return $this->redirectToRoute('informe_busqueda_resultados', $params);
             }
 
             // Si presionó "Buscar", mostrar resultados paginados
