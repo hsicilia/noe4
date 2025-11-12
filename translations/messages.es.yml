@@ -82,6 +82,7 @@ usuario:
         usuarios_encontrados:    Usuarios encontrados
         desea_eliminar:          ¿Está seguro de eliminar el usuario?
         usuario_eliminado:       El usuario se ha eliminado correctamente
+        perfil_modificado:       El perfil se ha modificado correctamente
 
     login:
         acceder: Acceder
