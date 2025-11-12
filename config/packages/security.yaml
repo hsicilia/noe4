@@ -1,10 +1,9 @@
 security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
-        # Plain text password hasher for legacy noe2 compatibility
-        # TODO: Change to 'auto' after migration and rehash all passwords
+        # Using auto hasher for secure password storage
         App\Entity\Usuario:
-            id: App\Security\PlainPasswordHasher
+            algorithm: auto
 
     # Role hierarchy from noe2
     role_hierarchy:

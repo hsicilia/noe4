@@ -21,7 +21,7 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Str
     #[ORM\Column(length: 15, unique: true)]
     private ?string $usuario = null;
 
-    #[ORM\Column(length: 15)]
+    #[ORM\Column(length: 255)]
     private ?string $password = null;
 
     #[ORM\Column(length: 255)]
