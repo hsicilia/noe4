@@ -114,18 +114,6 @@ class EjemplarCrearType extends AbstractType
                     'rows' => 5,
                 ],
             ])
-            ->add('invasora', CheckboxType::class, [
-                'label' => 'ejemplar.campo.invasora',
-                'required' => false,
-            ])
-            ->add('cites', ChoiceType::class, [
-                'label' => 'ejemplar.campo.cites',
-                'choices' => array_flip(Constantes::$opciones_cites),
-            ])
-            ->add('peligroso', CheckboxType::class, [
-                'label' => 'ejemplar.campo.peligroso',
-                'required' => false,
-            ])
             ->add('imagen1', FileType::class, [
                 'label' => 'ejemplar.campo.imagen1',
                 'required' => false,

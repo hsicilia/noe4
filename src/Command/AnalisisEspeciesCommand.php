@@ -12,7 +12,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'app:analisis-especies',
-    description: 'Genera un archivo CSV con análisis de invasora, peligroso y cites por especie',
+    description: 'Genera un archivo CSV con el listado de especies y sus campos invasora, peligroso y cites',
 )]
 class AnalisisEspeciesCommand extends Command
 {
@@ -36,11 +36,13 @@ class AnalisisEspeciesCommand extends Command
             return Command::FAILURE;
         }
 
-        // Primero, obtener todos los valores únicos de CITES
-        $citesValuesQuery = $this->entityManager->createQuery(
-            'SELECT DISTINCT e.cites FROM App\Entity\Ejemplar e ORDER BY e.cites'
-        );
-        $citesValues = array_column($citesValuesQuery->getResult(), 'cites');
+        // Obtener valores únicos de CITES desde Ejemplar
+        $citesValues = $this->entityManager->createQueryBuilder()
+            ->select('DISTINCT e.cites')
+            ->from('App\Entity\Ejemplar', 'e')
+            ->where('e.cites IS NOT NULL')
+            ->getQuery()
+            ->getSingleColumnResult();
 
         // Preparar archivo CSV
         $filename = 'analisis_especies_' . date('Y-m-d_His') . '.csv';
@@ -48,7 +50,9 @@ class AnalisisEspeciesCommand extends Command
 
         // Crear directorio var si no existe
         if (!is_dir(__DIR__ . '/../../var')) {
-            mkdir(__DIR__ . '/../../var', 0755, true);
+            if (!mkdir($concurrentDirectory = __DIR__.'/../../var', 0755, true) && !is_dir($concurrentDirectory)) {
+                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+            }
         }
 
         $file = fopen($filepath, 'w');
@@ -78,6 +82,8 @@ class AnalisisEspeciesCommand extends Command
         fputcsv($file, $headers, ';');
 
         $io->progressStart(count($especies));
+
+        $especiesActualizadas = 0;
 
         // Procesar cada especie
         foreach ($especies as $especie) {
@@ -122,6 +128,33 @@ class AnalisisEspeciesCommand extends Command
                 }
             }
 
+            // Determinar valor más común para invasora
+            $maxInvasora = max($invasoraTrue, $invasoraFalse, $invasoraNull);
+            if ($maxInvasora === $invasoraTrue) {
+                $especie->setInvasora(true);
+            } elseif ($maxInvasora === $invasoraFalse) {
+                $especie->setInvasora(false);
+            } else {
+                $especie->setInvasora(null);
+            }
+
+            // Determinar valor más común para peligroso
+            $maxPeligroso = max($peligrosoTrue, $peligrosoFalse, $peligrosoNull);
+            if ($maxPeligroso === $peligrosoTrue) {
+                $especie->setPeligroso(true);
+            } elseif ($maxPeligroso === $peligrosoFalse) {
+                $especie->setPeligroso(false);
+            } else {
+                $especie->setPeligroso(null);
+            }
+
+            // Determinar valor más común para CITES
+            arsort($citesCounts);
+            $citesMaxValue = array_key_first($citesCounts);
+            $especie->setCites($citesMaxValue);
+
+            $especiesActualizadas++;
+
             // Preparar fila
             $row = [
                 $especie->getId(),
@@ -148,9 +181,13 @@ class AnalisisEspeciesCommand extends Command
         fclose($file);
         $io->progressFinish();
 
+        // Guardar todos los cambios en la base de datos
+        $this->entityManager->flush();
+
         $io->success([
             sprintf('Análisis completado: %d especies procesadas.', count($especies)),
-            sprintf('Archivo generado: %s', $filepath)
+            sprintf('Especies actualizadas con valores más comunes: %d', $especiesActualizadas),
+            sprintf('Archivo CSV generado: %s', $filepath)
         ]);
 
         return Command::SUCCESS;

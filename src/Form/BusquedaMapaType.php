@@ -98,16 +98,19 @@ class BusquedaMapaType extends AbstractType
                 'required' => false,
             ])
             ->add('invasora', ChoiceType::class, [
+                'mapped' => false,
                 'label' => 'ejemplar.campo.invasora',
                 'choices' => array_flip(Constantes::$opciones_invasora),
                 'required' => false,
             ])
             ->add('cites', ChoiceType::class, [
+                'mapped' => false,
                 'label' => 'ejemplar.campo.cites',
                 'choices' => array_flip(Constantes::$opciones_cites),
                 'required' => false,
             ])
             ->add('peligroso', ChoiceType::class, [
+                'mapped' => false,
                 'label' => 'ejemplar.campo.peligroso',
                 'choices' => array_flip(Constantes::$opciones_peligroso),
                 'required' => false,

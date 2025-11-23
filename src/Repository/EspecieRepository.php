@@ -44,6 +44,21 @@ class EspecieRepository extends ServiceEntityRepository
                 ->setParameter('comun', '%' . $especie->getComun() . '%');
         }
 
+        if ($especie->getInvasora() !== null) {
+            $queryBuilder->andWhere('e.invasora = :invasora')
+                ->setParameter('invasora', $especie->getInvasora());
+        }
+
+        if ($especie->getCites() !== null) {
+            $queryBuilder->andWhere('e.cites = :cites')
+                ->setParameter('cites', $especie->getCites());
+        }
+
+        if ($especie->getPeligroso() !== null) {
+            $queryBuilder->andWhere('e.peligroso = :peligroso')
+                ->setParameter('peligroso', $especie->getPeligroso());
+        }
+
         return $queryBuilder->orderBy('e.nombre', 'ASC')
             ->getQuery()
             ->getResult();

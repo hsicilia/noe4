@@ -17,6 +17,11 @@
         <ul>
             <li><span class="campo">{{ 'especie.campo.nombre' | trans }}: </span>{{ especie.nombre | nombreEspecie | raw }}</li>
             <li><span class="campo">{{ 'especie.campo.comun' | trans }}: </span>{{ especie.comun }}</li>
+            <div class="separador">
+                <li><span class="campo">{{ 'ejemplar.campo.invasora' | trans }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>: </span>{{ especie.invasora | sino }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.peligroso' | trans }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>: </span>{{ especie.peligroso | sino }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.cites' | trans }}: </span>{{ especie.cites | cites | trans }}</li>
+            </div>
         </ul>
     </fieldset>
     <div class="opciones">

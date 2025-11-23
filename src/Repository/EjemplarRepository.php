@@ -188,21 +188,31 @@ class EjemplarRepository extends ServiceEntityRepository
                 ->setParameter('depositoDNI', '%' . $ejemplar->getDepositoDNI() . '%');
         }
 
-        // Para invasora, peligroso y cites: son opcionales (required: false) y nullable
-        // Solo filtramos si tienen un valor no-null (pueden ser 0/false o 1/true)
-        if ($ejemplar->getInvasora() !== null) {
-            $qb->andWhere('e.invasora = :invasora')
-                ->setParameter('invasora', $ejemplar->getInvasora());
-        }
+        // Para invasora, peligroso y cites: consultar desde Especie (no desde Ejemplar)
+        // Accedemos a propiedades dinámicas porque estos campos ya no están en Ejemplar
+        $invasora = $ejemplar->invasora ?? null;
+        $peligroso = $ejemplar->peligroso ?? null;
+        $cites = $ejemplar->cites ?? null;
 
-        if ($ejemplar->getPeligroso() !== null) {
-            $qb->andWhere('e.peligroso = :peligroso')
-                ->setParameter('peligroso', $ejemplar->getPeligroso());
-        }
+        $necesitaJoinEspecie = $invasora !== null || $peligroso !== null || $cites !== null;
 
-        if ($ejemplar->getCites() !== null) {
-            $qb->andWhere('e.cites = :cites')
-                ->setParameter('cites', $ejemplar->getCites());
+        if ($necesitaJoinEspecie) {
+            $qb->join('e.especie', 'esp_filtro');
+
+            if ($invasora !== null) {
+                $qb->andWhere('esp_filtro.invasora = :invasora')
+                    ->setParameter('invasora', $invasora);
+            }
+
+            if ($peligroso !== null) {
+                $qb->andWhere('esp_filtro.peligroso = :peligroso')
+                    ->setParameter('peligroso', $peligroso);
+            }
+
+            if ($cites !== null) {
+                $qb->andWhere('esp_filtro.cites = :cites')
+                    ->setParameter('cites', $cites);
+            }
         }
 
         // Filtrar por tipo de ejemplar
@@ -232,6 +242,8 @@ class EjemplarRepository extends ServiceEntityRepository
             }
         }
 
+        $qb->orderBy('e.id', 'ASC');
+
         return $qb->getQuery()->getResult();
     }
 
@@ -245,10 +257,12 @@ class EjemplarRepository extends ServiceEntityRepository
 
         switch ($tipo) {
             case 'invasores':
-                $queryBuilder->andWhere('e.invasora = true');
+                $queryBuilder->join('e.especie', 'esp_informe')
+                    ->andWhere('esp_informe.invasora = true');
                 break;
             case 'cites':
-                $queryBuilder->andWhere('e.cites > 0');
+                $queryBuilder->join('e.especie', 'esp_informe')
+                    ->andWhere('esp_informe.cites > 0');
                 break;
         }
 

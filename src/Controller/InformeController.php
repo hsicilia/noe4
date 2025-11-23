@@ -256,6 +256,9 @@ class InformeController extends AbstractController
         // Obtener parámetros de búsqueda
         $nombre = $request->query->get('nombre');
         $comun = $request->query->get('comun');
+        $invasora = $request->query->get('invasora');
+        $cites = $request->query->get('cites');
+        $peligroso = $request->query->get('peligroso');
 
         // Crear objeto Especie para la búsqueda
         $especie = new Especie();
@@ -265,6 +268,18 @@ class InformeController extends AbstractController
 
         if ($comun) {
             $especie->setComun($comun);
+        }
+
+        if ($invasora !== null && $invasora !== '') {
+            $especie->setInvasora((bool) $invasora);
+        }
+
+        if ($cites !== null && $cites !== '') {
+            $especie->setCites((int) $cites);
+        }
+
+        if ($peligroso !== null && $peligroso !== '') {
+            $especie->setPeligroso((bool) $peligroso);
         }
 
         // Obtener especies
@@ -398,6 +413,9 @@ class InformeController extends AbstractController
         $csv = $this->col('ID')
               . $this->col('Nombre científico')
               . $this->col('Nombre común')
+              . $this->col('Invasora')
+              . $this->col('CITES')
+              . $this->col('Peligroso')
               . "\n";
 
         // Especies
@@ -405,9 +423,24 @@ class InformeController extends AbstractController
             $csv .= $this->col($especie->getId())
                   . $this->col($especie->getNombre())
                   . $this->col($especie->getComun())
+                  . $this->col($especie->getInvasora() ? 'Sí' : 'No')
+                  . $this->col($this->getCitesTexto($especie->getCites()))
+                  . $this->col($especie->getPeligroso() ? 'Sí' : 'No')
                   . "\n";
         }
 
         return $csv;
+    }
+
+    private function getCitesTexto(?int $valor): string
+    {
+        return match ($valor) {
+            0 => 'No',
+            1 => 'A',
+            2 => 'B',
+            3 => 'C',
+            4 => 'D',
+            default => 'No',
+        };
     }
 }

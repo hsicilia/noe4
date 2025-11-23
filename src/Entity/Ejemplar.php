@@ -82,15 +82,6 @@ class Ejemplar implements \Stringable
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $observaciones = null;
 
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $invasora = null;
-
-    #[ORM\Column(type: 'smallint')]
-    private ?int $cites = null;
-
-    #[ORM\Column(type: 'boolean', nullable: true)]
-    private ?bool $peligroso = null;
-
     #[ORM\ManyToOne(targetEntity: Usuario::class, inversedBy: 'ejemplaresCreados')]
     #[ORM\JoinColumn(name: 'creado_usuario_id', onDelete: 'SET NULL')]
     private ?Usuario $creadoPor = null;
@@ -383,42 +374,6 @@ class Ejemplar implements \Stringable
     public function setObservaciones(?string $observaciones): static
     {
         $this->observaciones = $observaciones;
-
-        return $this;
-    }
-
-    public function getInvasora(): ?bool
-    {
-        return $this->invasora;
-    }
-
-    public function setInvasora(?bool $invasora): static
-    {
-        $this->invasora = $invasora;
-
-        return $this;
-    }
-
-    public function getCites(): ?int
-    {
-        return $this->cites;
-    }
-
-    public function setCites(int $cites): static
-    {
-        $this->cites = $cites;
-
-        return $this;
-    }
-
-    public function getPeligroso(): ?bool
-    {
-        return $this->peligroso;
-    }
-
-    public function setPeligroso(?bool $peligroso): static
-    {
-        $this->peligroso = $peligroso;
 
         return $this;
     }

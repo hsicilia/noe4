@@ -87,12 +87,10 @@ class EjemplarController extends AbstractController
         $ejemplar->setDepositoDNI($ejemplarOriginal->getDepositoDNI());
         $ejemplar->setDeposito($ejemplarOriginal->getDeposito());
         $ejemplar->setObservaciones($ejemplarOriginal->getObservaciones());
-        $ejemplar->setInvasora($ejemplarOriginal->getInvasora());
-        $ejemplar->setCites($ejemplarOriginal->getCites());
-        $ejemplar->setPeligroso($ejemplarOriginal->getPeligroso());
         // No copiamos: idMicrochip, idAnilla, idOtro, idOtro2, fechaBaja, causaBaja
         // No copiamos: imágenes (path1, path2, path3)
         // No copiamos: capturas (se quedan vacías)
+        // No copiamos: invasora, cites, peligroso (ahora están en Especie)
 
         // Redirigir al formulario de crear con el ejemplar clonado
         return $this->render('ejemplar/crear.html.twig', [
@@ -364,6 +362,16 @@ class EjemplarController extends AbstractController
             $distancia = $formulario->get('distancia')->getData();
             $tipoEjemplar = $formulario->get('tipoEjemplar')->getData();
 
+            // Obtener valores de campos que ahora están en Especie (no mapeados)
+            $invasora = $formulario->get('invasora')->getData();
+            $cites = $formulario->get('cites')->getData();
+            $peligroso = $formulario->get('peligroso')->getData();
+
+            // Añadirlos dinámicamente al ejemplar para que el repositorio pueda usarlos
+            $ejemplar->invasora = $invasora;
+            $ejemplar->cites = $cites;
+            $ejemplar->peligroso = $peligroso;
+
             // Si presionó "Generar informe", redirigir a la pantalla de informe
             if ($formulario->get('informe')->isClicked()) {
                 $params = ['tipoEjemplar' => $tipoEjemplar];
@@ -416,14 +424,14 @@ class EjemplarController extends AbstractController
                 if ($ejemplar->getDepositoDNI() !== null && $ejemplar->getDepositoDNI() !== '') {
                     $params['depositoDNI'] = $ejemplar->getDepositoDNI();
                 }
-                if ($ejemplar->getInvasora() !== null) {
-                    $params['invasora'] = $ejemplar->getInvasora() ? 1 : 0;
+                if ($invasora !== null) {
+                    $params['invasora'] = $invasora ? 1 : 0;
                 }
-                if ($ejemplar->getPeligroso() !== null) {
-                    $params['peligroso'] = $ejemplar->getPeligroso() ? 1 : 0;
+                if ($peligroso !== null) {
+                    $params['peligroso'] = $peligroso ? 1 : 0;
                 }
-                if ($ejemplar->getCites() !== null) {
-                    $params['cites'] = $ejemplar->getCites();
+                if ($cites !== null) {
+                    $params['cites'] = $cites;
                 }
                 if ($ejemplar->getCausaBaja() !== null) {
                     $params['causaBaja'] = $ejemplar->getCausaBaja();

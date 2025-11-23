@@ -129,11 +129,25 @@ class EspecieController extends AbstractController
             if ($formulario->get('informePDF')->isClicked() || $formulario->get('informeCSV')->isClicked()) {
                 $salida = $formulario->get('informePDF')->isClicked() ? 'PDF' : 'CSV';
 
-                return $this->redirectToRoute('informe_especies_salida', [
-                    'salida' => $salida,
-                    'nombre' => $especie->getNombre(),
-                    'comun' => $especie->getComun(),
-                ]);
+                $params = ['salida' => $salida];
+
+                if ($especie->getNombre()) {
+                    $params['nombre'] = $especie->getNombre();
+                }
+                if ($especie->getComun()) {
+                    $params['comun'] = $especie->getComun();
+                }
+                if ($especie->getInvasora() !== null) {
+                    $params['invasora'] = $especie->getInvasora() ? 1 : 0;
+                }
+                if ($especie->getCites() !== null) {
+                    $params['cites'] = $especie->getCites();
+                }
+                if ($especie->getPeligroso() !== null) {
+                    $params['peligroso'] = $especie->getPeligroso() ? 1 : 0;
+                }
+
+                return $this->redirectToRoute('informe_especies_salida', $params);
             }
 
             // Si presionó "Enviar", mostrar resultados paginados

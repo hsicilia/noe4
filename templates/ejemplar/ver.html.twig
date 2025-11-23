@@ -20,7 +20,7 @@
         <legend>{{ 'ejemplar.mensaje.datos_generales' | trans }}</legend>
         <ul>
             <li><span class="campo">{{ 'ejemplar.campo.fechaRegistro' | trans }}: </span>{% if ejemplar.fechaRegistro is not null %}{{ ejemplar.fechaRegistro | date("d/m/Y") }}{% endif %}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.especie' | trans }}: </span>{{ ejemplar.especie.nombre | nombreEspecie | raw }}</li>
+            <li><span class="campo">{{ 'ejemplar.campo.especie' | trans }}: </span><a href="{{ path('especie_ver', {'id': ejemplar.especie.id}) }}">{{ ejemplar.especie.nombre | nombreEspecie | raw }}</a></li>
             <li><span class="campo">{{ 'ejemplar.campo.especieComun' | trans }}: </span>{{ ejemplar.especie.comun }}</li>
             <li><span class="campo">{{ 'ejemplar.campo.idMicrochip' | trans }}: </span>{{ ejemplar.idMicrochip }}</li>
             <li><span class="campo">{{ 'ejemplar.campo.idAnilla' | trans }}: </span>{{ ejemplar.idAnilla }}</li>
@@ -43,11 +43,6 @@
                 <li><span class="campo">{{ 'ejemplar.campo.depositoNombre' | trans }}: </span>{{ ejemplar.depositoNombre }}</li>
                 <li><span class="campo">{{ 'ejemplar.campo.depositoDNI' | trans }}: </span>{{ ejemplar.depositoDNI }}</li>
                 <li><span class="campo">{{ 'ejemplar.campo.deposito' | trans }}: </span>{{ ejemplar.deposito | raw }}</li>
-            </div>
-            <div class="separador">
-                <li><span class="campo">{{ 'ejemplar.campo.invasora' | trans }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>: </span>{{ ejemplar.invasora | sino }}</li>
-                <li><span class="campo">{{ 'ejemplar.campo.peligroso' | trans }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>: </span>{{ ejemplar.peligroso | sino }}</li>
-                <li><span class="campo">{{ 'ejemplar.campo.cites' | trans }}: </span>{{ ejemplar.cites | cites | trans }}</li>
             </div>
             <div class="separador separador-bajo">
                 <li><span class="campo">{{ 'ejemplar.campo.fechaBaja' | trans }}: </span>{% if ejemplar.fechaBaja is not null %}{{ ejemplar.fechaBaja | date("d/m/Y")}}{% endif %}</li>

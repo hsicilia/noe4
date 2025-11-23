@@ -38,19 +38,6 @@
             {{ form_row(formulario.deposito) }}
         </div>
         <div class="separador">
-            <div>
-                {{ form_label(formulario.invasora) }}
-                {{ form_widget(formulario.invasora) }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>
-                {{ form_errors(formulario.invasora) }}
-            </div>
-            <div>
-                {{ form_label(formulario.peligroso) }}
-                {{ form_widget(formulario.peligroso) }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>
-                {{ form_errors(formulario.peligroso) }}
-            </div>
-            {{ form_row(formulario.cites) }}
-        </div>
-        <div class="separador">
             {{ form_row(formulario.fechaBaja, {'attr': {'class': 'corto'}}) }}
             {{ form_row(formulario.causaBaja) }}
         </div>

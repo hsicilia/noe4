@@ -15,6 +15,11 @@
 
         {{ form_row(formulario.nombre) }}
         {{ form_row(formulario.comun) }}
+        <div class="separador">
+            {{ form_row(formulario.invasora) }}
+            {{ form_row(formulario.peligroso) }}
+            {{ form_row(formulario.cites) }}
+        </div>
         {{ form_row(formulario.enviar) }}
         {{ form_rest(formulario) }}
     {{ form_end(formulario) }}

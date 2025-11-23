@@ -40,10 +40,6 @@
         }
         table td:first-child {
             font-style: italic;
-            width: 50%;
-        }
-        table td:nth-child(2) {
-            width: 50%;
         }
 </style>
 </head>
@@ -54,6 +50,9 @@
             <tr>
                 <th>Nombre científico</th>
                 <th>Nombre común</th>
+                <th>Invasora</th>
+                <th>CITES</th>
+                <th>Peligroso</th>
             </tr>
         </thead>
         <tbody>
@@ -61,6 +60,9 @@
                 <tr>
                     <td>{{ especie.nombre }}</td>
                     <td>{{ especie.comun }}</td>
+                    <td>{{ especie.invasora ? 'Sí' : 'No' }}</td>
+                    <td>{{ especie.cites | cites }}</td>
+                    <td>{{ especie.peligroso ? 'Sí' : 'No' }}</td>
                 </tr>
             {% endfor %}
         </tbody>

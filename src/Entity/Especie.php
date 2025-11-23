@@ -22,6 +22,15 @@ class Especie implements \Stringable
     #[ORM\Column(length: 100, unique: true)]
     private ?string $comun = null;
 
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $invasora = null;
+
+    #[ORM\Column(type: 'smallint')]
+    private ?int $cites = null;
+
+    #[ORM\Column(type: 'boolean')]
+    private ?bool $peligroso = null;
+
     /**
      * @var Collection<int, Ejemplar>
      */
@@ -63,6 +72,42 @@ class Especie implements \Stringable
     public function setComun(string $comun): static
     {
         $this->comun = $comun;
+
+        return $this;
+    }
+
+    public function getInvasora(): ?bool
+    {
+        return $this->invasora;
+    }
+
+    public function setInvasora(?bool $invasora): static
+    {
+        $this->invasora = $invasora;
+
+        return $this;
+    }
+
+    public function getCites(): ?int
+    {
+        return $this->cites;
+    }
+
+    public function setCites(?int $cites): static
+    {
+        $this->cites = $cites;
+
+        return $this;
+    }
+
+    public function getPeligroso(): ?bool
+    {
+        return $this->peligroso;
+    }
+
+    public function setPeligroso(?bool $peligroso): static
+    {
+        $this->peligroso = $peligroso;
 
         return $this;
     }
