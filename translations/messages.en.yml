@@ -324,6 +324,7 @@ informe:
 varios:
     borrar:      Delete
     buscar:      Search
+    clonar:      Clone
     crear:       Generate
     cancelar:    Cancel
     editar:      Edit

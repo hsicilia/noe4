@@ -61,6 +61,49 @@ class EjemplarController extends AbstractController
         ]);
     }
 
+    #[Route('/clonar/{id}', name: 'ejemplar_clonar')]
+    public function clonar(int $id, EjemplarRepository $ejemplarRepository): Response
+    {
+        $ejemplarOriginal = $ejemplarRepository->find($id);
+
+        if (!$ejemplarOriginal instanceof Ejemplar) {
+            throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
+        }
+
+        // Crear un nuevo ejemplar copiando los datos del original
+        $ejemplar = new Ejemplar();
+        $ejemplar->setFechaRegistro(new \DateTime());
+        $ejemplar->setEspecie($ejemplarOriginal->getEspecie());
+        $ejemplar->setSexo($ejemplarOriginal->getSexo());
+        $ejemplar->setOrigen($ejemplarOriginal->getOrigen());
+        $ejemplar->setRecinto($ejemplarOriginal->getRecinto());
+        $ejemplar->setLugar($ejemplarOriginal->getLugar());
+        $ejemplar->setGeoLat($ejemplarOriginal->getGeoLat());
+        $ejemplar->setGeoLong($ejemplarOriginal->getGeoLong());
+        $ejemplar->setDocumentacion($ejemplarOriginal->getDocumentacion());
+        $ejemplar->setProgenitor1($ejemplarOriginal->getProgenitor1());
+        $ejemplar->setProgenitor2($ejemplarOriginal->getProgenitor2());
+        $ejemplar->setDepositoNombre($ejemplarOriginal->getDepositoNombre());
+        $ejemplar->setDepositoDNI($ejemplarOriginal->getDepositoDNI());
+        $ejemplar->setDeposito($ejemplarOriginal->getDeposito());
+        $ejemplar->setObservaciones($ejemplarOriginal->getObservaciones());
+        $ejemplar->setInvasora($ejemplarOriginal->getInvasora());
+        $ejemplar->setCites($ejemplarOriginal->getCites());
+        $ejemplar->setPeligroso($ejemplarOriginal->getPeligroso());
+        // No copiamos: idMicrochip, idAnilla, idOtro, idOtro2, fechaBaja, causaBaja
+        // No copiamos: imágenes (path1, path2, path3)
+        // No copiamos: capturas (se quedan vacías)
+
+        // Redirigir al formulario de crear con el ejemplar clonado
+        return $this->render('ejemplar/crear.html.twig', [
+            'formulario' => $this->createForm(EjemplarCrearType::class, $ejemplar, [
+                'action' => $this->generateUrl('ejemplar_crear'),
+                'method' => 'POST',
+            ])->createView(),
+            'clonado' => true,
+        ]);
+    }
+
     #[Route('/crear', name: 'ejemplar_crear')]
     public function crear(Request $request, EntityManagerInterface $entityManager): Response
     {

@@ -346,6 +346,7 @@ informe:
 varios:
     borrar:      borrar
     buscar:      buscar
+    clonar:      clonar
     crear:       crear
     cancelar:    cancelar
     editar:      editar

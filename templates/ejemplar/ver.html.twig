@@ -63,6 +63,9 @@
                  (is_granted('ROLE_OPERADOR_EXTERNO') and ejemplar.creadoPor and (ejemplar.creadoPor.id == app.user.id)) %}
             <a href="{{ path('ejemplar_editar', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'editar'} %} {{ 'varios.editar' | trans }}</a>
             {% endif %}
+            {% if is_granted('ROLE_OPERADOR_PROPIO') %}
+            <a href="{{ path('ejemplar_clonar', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'crear'} %} {{ 'varios.clonar' | trans }}</a>
+            {% endif %}
             {% if is_granted('ROLE_ADMIN') %}
             <a href="{{ path('ejemplar_eliminar', {'id': ejemplar.id}) }}">{% include 'icon.html.twig' with {icono: 'borrar'} %} {{ 'varios.borrar' | trans }}</a>
             {% endif %}
