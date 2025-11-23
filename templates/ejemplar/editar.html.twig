@@ -226,8 +226,9 @@ const formName = '{{ formulario.vars.name }}';
 function initMap() {
     const latField = document.getElementById(formName + '_geoLat');
     const lngField = document.getElementById(formName + '_geoLong');
-    const initialLat = parseFloat(latField.value) || 0;
-    const initialLng = parseFloat(lngField.value) || 0;
+    // Convertir comas a puntos para parseFloat
+    const initialLat = parseFloat(latField.value.replace(',', '.')) || 0;
+    const initialLng = parseFloat(lngField.value.replace(',', '.')) || 0;
     const center = { lat: initialLat, lng: initialLng };
 
     map = new google.maps.Map(document.getElementById("mapa_canvas"), {
@@ -236,6 +237,7 @@ function initMap() {
         mapTypeId: 'terrain',
         disableDefaultUI: false,
         disableDoubleClickZoom: true,
+        mapId: '{{ google_maps_map_id }}',
     });
 
     marker = new google.maps.marker.AdvancedMarkerElement({
@@ -245,7 +247,7 @@ function initMap() {
 
     // Evento de clic en el mapa para actualizar la posición
     map.addListener('click', function(event) {
-        marker.setPosition(event.latLng);
+        marker.position = event.latLng;
         latField.value = event.latLng.lat();
         lngField.value = event.latLng.lng();
     });

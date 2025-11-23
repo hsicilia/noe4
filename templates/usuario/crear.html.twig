@@ -28,15 +28,59 @@
             {{ form_row(formulario.lugarDefecto, {'attr': {'class': 'largo'}}) }}
             {{ form_row(formulario.geoLongDefecto, {'attr': {'class': 'no_cambiar corto'}}) }}
             {{ form_row(formulario.geoLatDefecto, {'attr': {'class': 'no_cambiar corto'}}) }}
-            <br />
-            {{ form_row(formulario.enviar)}}
-            {{ form_rest(formulario) }}
-        {{ form_end(formulario) }}
+            <div id="mapa_canvas" style="width: 100%; height: 400px; margin-top: 10px;"></div>
         </fieldset>
+        {{ form_row(formulario.enviar)}}
+        {{ form_rest(formulario) }}
+    {{ form_end(formulario) }}
 
 <div class="opciones">
     <span class="buttons">
         <a href="{{ url('usuario_buscar') }}">{% include 'icon.html.twig' with {icono: 'volver'} %} {{ 'varios.volver' | trans }}</a>
     </span>
 </div>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script>
+    let map;
+    let marker;
+
+    function initMap() {
+        const formName = '{{ formulario.vars.name }}';
+        const latField = document.getElementById(formName + '_geoLatDefecto');
+        const lngField = document.getElementById(formName + '_geoLongDefecto');
+        // Convertir comas a puntos para parseFloat
+        const initialLat = parseFloat(latField.value.replace(',', '.')) || 0;
+        const initialLng = parseFloat(lngField.value.replace(',', '.')) || 0;
+        const center = { lat: initialLat, lng: initialLng };
+
+        map = new google.maps.Map(document.getElementById("mapa_canvas"), {
+            zoom: 7,
+            center: center,
+            mapTypeId: 'terrain',
+            disableDefaultUI: false,
+            disableDoubleClickZoom: true,
+            mapId: '{{ google_maps_map_id }}',
+        });
+
+        marker = new google.maps.marker.AdvancedMarkerElement({
+            map: map,
+            position: center,
+        });
+
+        // Evento de clic en el mapa para actualizar la posición
+        map.addListener('click', function(event) {
+            marker.position = event.latLng;
+            latField.value = event.latLng.lat();
+            lngField.value = event.latLng.lng();
+        });
+    }
+
+    window.initMap = initMap;
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&loading=async&libraries=marker">
+</script>
 {% endblock %}

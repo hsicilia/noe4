@@ -39,6 +39,7 @@
                 <li><span class="campo">{{ 'ejemplar.campo.lugar' | trans }}: </span>{{ ejemplar.lugar }}</li>
                 <li><span class="campo">{{ 'ejemplar.campo.geoLong' | trans }}: </span>{{ ejemplar.geoLong }}</li>
                 <li><span class="campo">{{ 'ejemplar.campo.geoLat' | trans }}: </span>{{ ejemplar.geoLat }}</li>
+                <div id="mapa_canvas" style="width: 100%; height: 300px; margin-top: 10px;"></div>
             </div>
             <div class="separador">
                 <li><span class="campo">{{ 'ejemplar.campo.origen' | trans }}: </span>{{ ejemplar.origen | origen | trans }}</li>
@@ -206,5 +207,34 @@ document.addEventListener('DOMContentLoaded', function() {
         ocultarSuperpuesto();
     });
 });
+</script>
+
+<script>
+let map;
+let marker;
+
+function initMap() {
+    const lat = {{ ejemplar.geoLat ?? 0 }};
+    const lng = {{ ejemplar.geoLong ?? 0 }};
+    const center = { lat: lat, lng: lng };
+
+    map = new google.maps.Map(document.getElementById("mapa_canvas"), {
+        zoom: 10,
+        center: center,
+        mapTypeId: 'terrain',
+        disableDefaultUI: false,
+        mapId: '{{ google_maps_map_id }}',
+    });
+
+    marker = new google.maps.marker.AdvancedMarkerElement({
+        map: map,
+        position: center,
+    });
+}
+
+window.initMap = initMap;
+</script>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key={{ google_maps_api_key }}&callback=initMap&loading=async&libraries=marker">
 </script>
 {% endblock %}
