@@ -33,7 +33,7 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->getEntityManager()->flush();
     }
 
-    public function encontrarUsuarios(Usuario $usuario): array
+    public function encontrarUsuarios(Usuario $usuario)
     {
         $queryBuilder = $this->createQueryBuilder('u');
 
@@ -59,6 +59,6 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
 
         $queryBuilder->orderBy('u.usuario', 'ASC');
 
-        return $queryBuilder->getQuery()->getResult();
+        return $queryBuilder->getQuery();
     }
 }

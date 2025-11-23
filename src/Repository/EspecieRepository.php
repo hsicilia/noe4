@@ -30,7 +30,7 @@ class EspecieRepository extends ServiceEntityRepository
     /**
      * Encuentra especies por nombre científico y/o común
      */
-    public function encontrarEspecies(Especie $especie): array
+    public function encontrarEspecies(Especie $especie)
     {
         $queryBuilder = $this->createQueryBuilder('e');
 
@@ -60,7 +60,6 @@ class EspecieRepository extends ServiceEntityRepository
         }
 
         return $queryBuilder->orderBy('e.nombre', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->getQuery();
     }
 }

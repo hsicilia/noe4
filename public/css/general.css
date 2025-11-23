@@ -364,27 +364,62 @@ section div.paginacion {
 
 section div.pagination {
 	color: black;
+	text-align: center;
+	margin: 20px 0;
+}
+
+section div.pagination span {
+	display: inline-block;
+	margin: 0 5px;
 }
 
 section div.pagination a {
 	text-decoration: none;
 	color: black;
+	padding: 4px 8px;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	display: inline-block;
+	min-width: 30px;
+	text-align: center;
+	font-size: 14px;
+	transition: background-color 0.2s;
+}
+
+section div.pagination a:hover {
+	background-color: #f0f0f0;
 }
 
 section div.pagination .first a,
 section div.pagination .last a
 {
 	color: blue;
+	font-weight: bold;
 }
 
 section div.pagination .previous a,
 section div.pagination .next a
 {
 	color: #90BAFF;
+	font-weight: bold;
 }
 
 section div.pagination .current {
 	font-weight: bold;
+	padding: 4px 8px;
+	background-color: #007bff;
+	color: white;
+	border-radius: 4px;
+	display: inline-block;
+	min-width: 30px;
+	text-align: center;
+	font-size: 14px;
+}
+
+section div.pagination .separator {
+	padding: 8px 5px;
+	font-size: 14px;
+	color: #999;
 }
 
 #mapa_canvas {

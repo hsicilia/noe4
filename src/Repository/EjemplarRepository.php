@@ -21,17 +21,18 @@ class EjemplarRepository extends ServiceEntityRepository
     /**
      * Encuentra ejemplares por otros identificadores (microchip, anilla, etc.)
      */
-    public function encontrarOtroId(?string $otroId): array
+    public function encontrarOtroId(?string $otroId)
     {
         if ($otroId !== null && $otroId !== '') {
             return $this->createQueryBuilder('e')
                 ->where('e.idMicrochip LIKE :id OR e.idAnilla LIKE :id OR e.idOtro LIKE :id OR e.idOtro2 LIKE :id')
                 ->setParameter('id', '%' . $otroId . '%')
-                ->getQuery()
-                ->getResult();
+                ->getQuery();
         }
 
-        return [];
+        return $this->createQueryBuilder('e')
+            ->where('1 = 0')
+            ->getQuery();
     }
 
     /**
@@ -109,7 +110,7 @@ class EjemplarRepository extends ServiceEntityRepository
         ?float $longitud,
         ?float $distancia,
         string $tipoEjemplar = 'alta'
-    ): array {
+    ) {
         $porDistancia = $distancia !== null && $distancia > 0;
 
         if ($porDistancia && $latitud !== null && $longitud !== null) {
@@ -244,7 +245,7 @@ class EjemplarRepository extends ServiceEntityRepository
 
         $qb->orderBy('e.id', 'ASC');
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery();
     }
 
     private function informeEjemplares(string $tipo, int $volumen = 0): array

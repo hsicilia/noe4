@@ -1,0 +1,54 @@
+{# Sliding pagination with last page always visible #}
+{% if pageCount > 1 %}
+    <div class="pagination">
+        {% if first is defined and current != first %}
+            <span class="first">
+                <a href="{{ path(route, knp_pagination_query(query, first, options)) }}">&lt;&lt;</a>
+            </span>
+        {% endif %}
+
+        {% if previous is defined %}
+            <span class="previous">
+                <a rel="prev" href="{{ path(route, knp_pagination_query(query, previous, options)) }}">&lt;</a>
+            </span>
+        {% endif %}
+
+        {# Mostrar primera página y puntos suspensivos si no está en el rango #}
+        {% if first is defined and first not in pagesInRange %}
+            <span class="page">
+                <a href="{{ path(route, knp_pagination_query(query, first, options)) }}">{{ first }}</a>
+            </span>
+            <span class="separator">...</span>
+        {% endif %}
+
+        {% for page in pagesInRange %}
+            {% if page != current %}
+                <span class="page">
+                    <a href="{{ path(route, knp_pagination_query(query, page, options)) }}">{{ page }}</a>
+                </span>
+            {% else %}
+                <span class="current">{{ page }}</span>
+            {% endif %}
+        {% endfor %}
+
+        {# Mostrar puntos suspensivos y última página si no está en el rango #}
+        {% if last is defined and last not in pagesInRange %}
+            <span class="separator">...</span>
+            <span class="page">
+                <a href="{{ path(route, knp_pagination_query(query, last, options)) }}">{{ last }}</a>
+            </span>
+        {% endif %}
+
+        {% if next is defined %}
+            <span class="next">
+                <a rel="next" href="{{ path(route, knp_pagination_query(query, next, options)) }}">&gt;</a>
+            </span>
+        {% endif %}
+
+        {% if last is defined and current != last %}
+            <span class="last">
+                <a href="{{ path(route, knp_pagination_query(query, last, options)) }}">&gt;&gt;</a>
+            </span>
+        {% endif %}
+    </div>
+{% endif %}
