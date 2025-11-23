@@ -20,14 +20,21 @@
         <legend>{{ 'ejemplar.mensaje.datos_generales' | trans }}</legend>
         <ul>
             <li><span class="campo">{{ 'ejemplar.campo.fechaRegistro' | trans }}: </span>{% if ejemplar.fechaRegistro is not null %}{{ ejemplar.fechaRegistro | date("d/m/Y") }}{% endif %}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.especie' | trans }}: </span><a href="{{ path('especie_ver', {'id': ejemplar.especie.id}) }}">{{ ejemplar.especie.nombre | nombreEspecie | raw }}</a></li>
-            <li><span class="campo">{{ 'ejemplar.campo.especieComun' | trans }}: </span>{{ ejemplar.especie.comun }}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.idMicrochip' | trans }}: </span>{{ ejemplar.idMicrochip }}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.idAnilla' | trans }}: </span>{{ ejemplar.idAnilla }}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.idOtro' | trans }}: </span>{{ ejemplar.idOtro }}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.idOtro2' | trans }}: </span>{{ ejemplar.idOtro2 }}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.sexo' | trans }}: </span>{{ ejemplar.sexo | sexo | trans }}</li>
-            <li><span class="campo">{{ 'ejemplar.campo.recinto' | trans }}: </span>{{ ejemplar.recinto }}</li>
+            <div class="separador">
+                <li><span class="campo">{{ 'ejemplar.campo.especie' | trans }}: </span><a href="{{ path('especie_ver', {'id': ejemplar.especie.id}) }}">{{ ejemplar.especie.nombre | nombreEspecie | raw }}</a></li>
+                <li><span class="campo">{{ 'ejemplar.campo.especieComun' | trans }}: </span>{{ ejemplar.especie.comun }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.invasora' | trans }} <em>{{ 'ejemplar.campo.invasora_RD' | trans }}</em>: </span>{{ ejemplar.especie.invasora | sino | trans }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.cites' | trans }}: </span>{{ ejemplar.especie.cites | cites }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.peligroso' | trans }} <em>{{ 'ejemplar.campo.peligroso_RD' | trans }}</em>: </span>{{ ejemplar.especie.peligroso | sino | trans }}</li>
+            </div>
+            <div class="separador">
+                <li><span class="campo">{{ 'ejemplar.campo.idMicrochip' | trans }}: </span>{{ ejemplar.idMicrochip }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.idAnilla' | trans }}: </span>{{ ejemplar.idAnilla }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.idOtro' | trans }}: </span>{{ ejemplar.idOtro }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.idOtro2' | trans }}: </span>{{ ejemplar.idOtro2 }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.sexo' | trans }}: </span>{{ ejemplar.sexo | sexo | trans }}</li>
+                <li><span class="campo">{{ 'ejemplar.campo.recinto' | trans }}: </span>{{ ejemplar.recinto }}</li>
+            </div>
             <div class="separador">
                 <li><span class="campo">{{ 'ejemplar.campo.lugar' | trans }}: </span>{{ ejemplar.lugar }}</li>
                 <li><span class="campo">{{ 'ejemplar.campo.geoLong' | trans }}: </span>{{ ejemplar.geoLong }}</li>
