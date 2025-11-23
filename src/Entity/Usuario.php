@@ -24,9 +24,6 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Str
     #[ORM\Column(length: 255)]
     private ?string $password = null;
 
-    #[ORM\Column(length: 255)]
-    private string $salt = '';
-
     #[ORM\Column(length: 50)]
     private ?string $email = null;
 
@@ -113,18 +110,6 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface, \Str
     public function setPassword(string $password): static
     {
         $this->password = $password;
-
-        return $this;
-    }
-
-    public function getSalt(): string
-    {
-        return $this->salt;
-    }
-
-    public function setSalt(string $salt): static
-    {
-        $this->salt = $salt;
 
         return $this;
     }
