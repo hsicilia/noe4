@@ -60,15 +60,15 @@ class InformeController extends AbstractController
         }
 
         if ($request->query->get('invasora') !== null && $request->query->get('invasora') !== '') {
-            $ejemplar->setInvasora((int) $request->query->get('invasora') === 1);
+            $ejemplar->invasora = (int) $request->query->get('invasora') === 1;
         }
 
         if ($request->query->get('peligroso') !== null && $request->query->get('peligroso') !== '') {
-            $ejemplar->setPeligroso((int) $request->query->get('peligroso') === 1);
+            $ejemplar->peligroso = (int) $request->query->get('peligroso') === 1;
         }
 
         if ($request->query->get('cites') !== null && $request->query->get('cites') !== '') {
-            $ejemplar->setCites((int) $request->query->get('cites'));
+            $ejemplar->cites = (int) $request->query->get('cites');
         }
 
         if ($request->query->get('causaBaja') !== null && $request->query->get('causaBaja') !== '') {
@@ -167,15 +167,15 @@ class InformeController extends AbstractController
         }
 
         if ($request->query->get('invasora') !== null && $request->query->get('invasora') !== '') {
-            $ejemplar->setInvasora((int) $request->query->get('invasora') === 1);
+            $ejemplar->invasora = (int) $request->query->get('invasora') === 1;
         }
 
         if ($request->query->get('peligroso') !== null && $request->query->get('peligroso') !== '') {
-            $ejemplar->setPeligroso((int) $request->query->get('peligroso') === 1);
+            $ejemplar->peligroso = (int) $request->query->get('peligroso') === 1;
         }
 
         if ($request->query->get('cites') !== null && $request->query->get('cites') !== '') {
-            $ejemplar->setCites((int) $request->query->get('cites'));
+            $ejemplar->cites = (int) $request->query->get('cites');
         }
 
         if ($request->query->get('causaBaja') !== null && $request->query->get('causaBaja') !== '') {
@@ -365,9 +365,9 @@ class InformeController extends AbstractController
                   . $this->col($ejemplar->getDepositoNombre())
                   . $this->col($ejemplar->getDepositoDNI())
                   . $this->col($ejemplar->getDeposito())
-                  . $this->col($ejemplar->getInvasora())
-                  . $this->col($ejemplar->getPeligroso())
-                  . $this->col($ejemplar->getCites())
+                  . $this->col($ejemplar->getEspecie()->getInvasora())
+                  . $this->col($ejemplar->getEspecie()->getPeligroso())
+                  . $this->col($this->getCitesTexto($ejemplar->getEspecie()->getCites()))
                   . $this->col($ejemplar->getObservaciones())
                   . "\n";
         }
