@@ -109,7 +109,8 @@ class EjemplarRepository extends ServiceEntityRepository
         ?float $latitud,
         ?float $longitud,
         ?float $distancia,
-        string $tipoEjemplar = 'alta'
+        string $tipoEjemplar = 'alta',
+        bool $ejecutarQuery = true
     ) {
         $porDistancia = $distancia !== null && $distancia > 0;
 
@@ -245,7 +246,9 @@ class EjemplarRepository extends ServiceEntityRepository
 
         $qb->orderBy('e.id', 'ASC');
 
-        return $qb->getQuery();
+        $query = $qb->getQuery();
+
+        return $ejecutarQuery ? $query->getResult() : $query;
     }
 
     private function informeEjemplares(string $tipo, int $volumen = 0): array

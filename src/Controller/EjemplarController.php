@@ -450,7 +450,8 @@ class EjemplarController extends AbstractController
                 $latitud,
                 $longitud,
                 $distancia,
-                $tipoEjemplar
+                $tipoEjemplar,
+                false // No ejecutar query, devolver Query para paginador
             );
 
             $paginacion = $paginator->paginate(
