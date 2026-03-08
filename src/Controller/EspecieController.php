@@ -125,9 +125,13 @@ class EspecieController extends AbstractController
         $formulario->handleRequest($request);
 
         if ($formulario->isSubmitted() && $formulario->isValid()) {
-            // Si presionó "Informe PDF" o "Informe CSV", redirigir al generador de informes
-            if ($formulario->get('informePDF')->isClicked() || $formulario->get('informeCSV')->isClicked()) {
-                $salida = $formulario->get('informePDF')->isClicked() ? 'PDF' : 'CSV';
+            // Si presionó "Informe PDF", "Informe CSV" o "Informe Excel", redirigir al generador de informes
+            if ($formulario->get('informePDF')->isClicked() || $formulario->get('informeCSV')->isClicked() || $formulario->get('informeEXCEL')->isClicked()) {
+                $salida = match (true) {
+                    $formulario->get('informePDF')->isClicked() => 'PDF',
+                    $formulario->get('informeEXCEL')->isClicked() => 'EXCEL',
+                    default => 'CSV',
+                };
 
                 $params = ['salida' => $salida];
 

@@ -6,16 +6,27 @@ use App\Entity\Ejemplar;
 use App\Entity\Especie;
 use App\Repository\EspecieRepository;
 use App\Repository\EjemplarRepository;
+use App\Twig\VariosExtension;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/informe')]
 class InformeController extends AbstractController
 {
+    public function __construct(
+        private readonly VariosExtension $variosExtension,
+        private readonly TranslatorInterface $translator,
+    ) {
+    }
+
     #[Route('/busqueda/resultados', name: 'informe_busqueda_resultados')]
     public function busquedaResultados(Request $request, EjemplarRepository $ejemplarRepository, EspecieRepository $especieRepository): Response
     {
@@ -222,6 +233,10 @@ class InformeController extends AbstractController
             return $this->ejemplaresPDF($ejemplares, $pdf);
         }
 
+        if ($salida === 'EXCEL') {
+            return $this->ejemplaresExcel($ejemplares);
+        }
+
         return $this->ejemplaresCSV($ejemplares);
 
     }
@@ -240,6 +255,10 @@ class InformeController extends AbstractController
 
         if ($salida === 'PDF') {
             return $this->ejemplaresPDF($ejemplares, $pdf);
+        }
+
+        if ($salida === 'EXCEL') {
+            return $this->ejemplaresExcel($ejemplares);
         }
 
         return $this->ejemplaresCSV($ejemplares);
@@ -283,10 +302,14 @@ class InformeController extends AbstractController
         }
 
         // Obtener especies
-        $especies = $especieRepository->encontrarEspecies($especie);
+        $especies = $especieRepository->encontrarEspecies($especie)->getResult();
 
         if ($salida === 'PDF') {
             return $this->especiesPDF($especies, $pdf);
+        }
+
+        if ($salida === 'EXCEL') {
+            return $this->especiesExcel($especies);
         }
 
         return $this->especiesCSV($especies);
@@ -353,7 +376,7 @@ class InformeController extends AbstractController
                   . $this->col($ejemplar->getIdAnilla())
                   . $this->col($ejemplar->getIdOtro())
                   . $this->col($ejemplar->getIdOtro2())
-                  . $this->col($ejemplar->getSexo())
+                  . $this->col($this->translator->trans($this->variosExtension->sexoFilter($ejemplar->getSexo())))
                   . $this->col($ejemplar->getRecinto())
                   . $this->col($ejemplar->getLugar())
                   . $this->col($ejemplar->getGeoLong())
@@ -367,7 +390,7 @@ class InformeController extends AbstractController
                   . $this->col($ejemplar->getDeposito())
                   . $this->col($ejemplar->getEspecie()->getInvasora())
                   . $this->col($ejemplar->getEspecie()->getPeligroso())
-                  . $this->col($this->getCitesTexto($ejemplar->getEspecie()->getCites()))
+                  . $this->col($this->translator->trans($this->variosExtension->citesFilter($ejemplar->getEspecie()->getCites())))
                   . $this->col($ejemplar->getObservaciones())
                   . "\n";
         }
@@ -424,7 +447,7 @@ class InformeController extends AbstractController
                   . $this->col($especie->getNombre())
                   . $this->col($especie->getComun())
                   . $this->col($especie->getInvasora() ? 'Sí' : 'No')
-                  . $this->col($this->getCitesTexto($especie->getCites()))
+                  . $this->col($this->translator->trans($this->variosExtension->citesFilter($especie->getCites())))
                   . $this->col($especie->getPeligroso() ? 'Sí' : 'No')
                   . "\n";
         }
@@ -432,15 +455,91 @@ class InformeController extends AbstractController
         return $csv;
     }
 
-    private function getCitesTexto(?int $valor): string
+    private function ejemplaresExcel(array $ejemplares): StreamedResponse
     {
-        return match ($valor) {
-            0 => 'No',
-            1 => 'A',
-            2 => 'B',
-            3 => 'C',
-            4 => 'D',
-            default => 'No',
-        };
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $cabecera = [
+            'ID', 'Fecha Registro', 'Especie', 'Nombre Común', 'Microchip', 'Anilla',
+            'Otro ID', 'Otro ID 2', 'Sexo', 'Recinto', 'Lugar', 'Longitud', 'Latitud',
+            'Origen', 'Documentación', 'Progenitor 1', 'Progenitor 2', 'Depósito Nombre',
+            'Depósito DNI', 'Depósito', 'Invasora', 'Peligroso', 'CITES', 'Observaciones',
+        ];
+        $sheet->fromArray($cabecera, null, 'A1');
+
+        $fila = 2;
+        foreach ($ejemplares as $ejemplar) {
+            $sheet->fromArray([
+                $ejemplar->getId(),
+                $ejemplar->getFechaRegistro()?->format('d/m/Y') ?? '',
+                $ejemplar->getEspecie()?->getNombre() ?? '',
+                $ejemplar->getEspecie()?->getComun() ?? '',
+                $ejemplar->getIdMicrochip(),
+                $ejemplar->getIdAnilla(),
+                $ejemplar->getIdOtro(),
+                $ejemplar->getIdOtro2(),
+                $this->translator->trans($this->variosExtension->sexoFilter($ejemplar->getSexo())),
+                $ejemplar->getRecinto(),
+                $ejemplar->getLugar(),
+                $ejemplar->getGeoLong(),
+                $ejemplar->getGeoLat(),
+                $ejemplar->getOrigen(),
+                $ejemplar->getDocumentacion(),
+                $ejemplar->getProgenitor1(),
+                $ejemplar->getProgenitor2(),
+                $ejemplar->getDepositoNombre(),
+                $ejemplar->getDepositoDNI(),
+                $ejemplar->getDeposito(),
+                $ejemplar->getEspecie()->getInvasora() ? 'Sí' : 'No',
+                $ejemplar->getEspecie()->getPeligroso() ? 'Sí' : 'No',
+                $this->translator->trans($this->variosExtension->citesFilter($ejemplar->getEspecie()->getCites())),
+                $ejemplar->getObservaciones(),
+            ], null, 'A' . $fila);
+            ++$fila;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $response = new StreamedResponse(static function () use ($writer): void {
+            $writer->save('php://output');
+        });
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', 'attachment; filename="informe_ejemplares.xlsx"');
+        $response->headers->set('Cache-Control', 'max-age=0');
+
+        return $response;
     }
+
+    private function especiesExcel(array $especies): StreamedResponse
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+
+        $cabecera = ['ID', 'Nombre científico', 'Nombre común', 'Invasora', 'CITES', 'Peligroso'];
+        $sheet->fromArray($cabecera, null, 'A1');
+
+        $fila = 2;
+        foreach ($especies as $especie) {
+            $sheet->fromArray([
+                $especie->getId(),
+                $especie->getNombre(),
+                $especie->getComun(),
+                $especie->getInvasora() ? 'Sí' : 'No',
+                $this->translator->trans($this->variosExtension->citesFilter($especie->getCites())),
+                $especie->getPeligroso() ? 'Sí' : 'No',
+            ], null, 'A' . $fila);
+            ++$fila;
+        }
+
+        $writer = new Xlsx($spreadsheet);
+        $response = new StreamedResponse(static function () use ($writer): void {
+            $writer->save('php://output');
+        });
+        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $response->headers->set('Content-Disposition', 'attachment; filename="informe_especies.xlsx"');
+        $response->headers->set('Cache-Control', 'max-age=0');
+
+        return $response;
+    }
+
 }

@@ -38,6 +38,15 @@
                     </a>
                 </li>
             </ul>
+
+            <h3>Excel</h3>
+            <ul>
+                <li>
+                    <a href="{{ path('informe_busqueda_salida', params | merge({'salida': 'EXCEL', 'volumen': 0})) }}">
+                        {{ 'informe.mensaje.descargar_completo' | trans }}
+                    </a>
+                </li>
+            </ul>
         {% else %}
             <p><em>{{ 'informe.mensaje.sin_resultados' | trans }}</em></p>
         {% endif %}

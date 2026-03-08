@@ -317,8 +317,9 @@ formulario:
     buscar:      Buscar
     guardar:     Guardar
     cualquiera:  Cualquiera
-    informe_pdf: Informe PDF
-    informe_csv: Informe CSV
+    informe_pdf:   Informe PDF
+    informe_csv:   Informe CSV
+    informe_excel: Informe Excel
 
 informe:
     campo:

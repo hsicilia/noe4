@@ -51,6 +51,9 @@ class EspecieType extends AbstractType
                 ])
                 ->add('informeCSV', SubmitType::class, [
                     'label' => 'formulario.informe_csv',
+                ])
+                ->add('informeEXCEL', SubmitType::class, [
+                    'label' => 'formulario.informe_excel',
                 ]);
         }
     }

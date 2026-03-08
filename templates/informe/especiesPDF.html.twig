@@ -61,7 +61,7 @@
                     <td>{{ especie.nombre }}</td>
                     <td>{{ especie.comun }}</td>
                     <td>{{ especie.invasora ? 'Sí' : 'No' }}</td>
-                    <td>{{ especie.cites | cites }}</td>
+                    <td>{{ especie.cites | cites | trans }}</td>
                     <td>{{ especie.peligroso ? 'Sí' : 'No' }}</td>
                 </tr>
             {% endfor %}
