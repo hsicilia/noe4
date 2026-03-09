@@ -550,6 +550,14 @@ overflow:visible;
 padding:4px 10px 3px 7px; /* IE6 */
 }
 
+.buttons button[type="submit"] {
+    margin-left: 0;
+}
+
+.buttons button {
+    border-color: #dddddd #bbbbbb #999999;
+}
+
 .buttons button[type]
 {
 padding:5px 10px 5px 7px; /* Firefox */

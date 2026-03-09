@@ -28,9 +28,11 @@
         </div>
         {{ form_row(formulario.enviar) }}
         {% if formulario.informePDF is defined %}
-            {{ form_row(formulario.informePDF) }}
-            {{ form_row(formulario.informeCSV) }}
-            {{ form_row(formulario.informeEXCEL) }}
+            <span class="buttons" style="margin-left: 220px;">
+                {{ form_widget(formulario.informePDF) }}
+                {{ form_widget(formulario.informeCSV) }}
+                {{ form_widget(formulario.informeEXCEL) }}
+            </span>
         {% endif %}
         {{ form_rest(formulario) }}
     {{ form_end(formulario) }}
