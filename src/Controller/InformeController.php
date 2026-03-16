@@ -9,6 +9,7 @@ use App\Repository\EjemplarRepository;
 use App\Twig\VariosExtension;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
+use PhpOffice\PhpSpreadsheet\Cell\DataType;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -341,7 +342,8 @@ class InformeController extends AbstractController
     {
         // Cabecera
         $csv = $this->col('ID')
-              . $this->col('Fecha Registro')
+              . $this->col('Fecha Ingreso')
+              . $this->col('Fecha Baja')
               . $this->col('Especie')
               . $this->col('Nombre Común')
               . $this->col('Microchip')
@@ -370,6 +372,7 @@ class InformeController extends AbstractController
         foreach ($ejemplares as $ejemplar) {
             $csv .= $this->col($ejemplar->getId())
                   . $this->col($ejemplar->getFechaRegistro()?->format('d/m/Y') ?? '')
+                  . $this->col($ejemplar->getFechaBaja()?->format('d/m/Y') ?? '')
                   . $this->col($ejemplar->getEspecie()?->getNombre() ?? '')
                   . $this->col($ejemplar->getEspecie()?->getComun() ?? '')
                   . $this->col($ejemplar->getIdMicrochip())
@@ -381,15 +384,15 @@ class InformeController extends AbstractController
                   . $this->col($ejemplar->getLugar())
                   . $this->col($ejemplar->getGeoLong())
                   . $this->col($ejemplar->getGeoLat())
-                  . $this->col($ejemplar->getOrigen())
-                  . $this->col($ejemplar->getDocumentacion())
+                  . $this->col($this->translator->trans($this->variosExtension->origenFilter($ejemplar->getOrigen())))
+                  . $this->col($this->translator->trans($this->variosExtension->documentacionFilter($ejemplar->getDocumentacion())))
                   . $this->col($ejemplar->getProgenitor1())
                   . $this->col($ejemplar->getProgenitor2())
                   . $this->col($ejemplar->getDepositoNombre())
                   . $this->col($ejemplar->getDepositoDNI())
                   . $this->col($ejemplar->getDeposito())
-                  . $this->col($ejemplar->getEspecie()->getInvasora())
-                  . $this->col($ejemplar->getEspecie()->getPeligroso())
+                  . $this->col($this->variosExtension->sinoFilter($ejemplar->getEspecie()->getInvasora()))
+                  . $this->col($this->variosExtension->sinoFilter($ejemplar->getEspecie()->getPeligroso()))
                   . $this->col($this->translator->trans($this->variosExtension->citesFilter($ejemplar->getEspecie()->getCites())))
                   . $this->col($ejemplar->getObservaciones())
                   . "\n";
@@ -401,7 +404,10 @@ class InformeController extends AbstractController
     private function col(?string $texto): string
     {
         $sep = ',';
-        return '"' . $this->eliminarSaltos($texto ?? '') . '"' . $sep;
+        $texto = $this->eliminarSaltos($texto ?? '');
+        $texto = str_replace('"', '""', $texto);
+
+        return '"' . $texto . '"' . $sep;
     }
 
     private function eliminarSaltos(string $texto): string
@@ -461,7 +467,7 @@ class InformeController extends AbstractController
         $sheet = $spreadsheet->getActiveSheet();
 
         $cabecera = [
-            'ID', 'Fecha Registro', 'Especie', 'Nombre Común', 'Microchip', 'Anilla',
+            'ID', 'Fecha Ingreso', 'Fecha Baja', 'Especie', 'Nombre Común', 'Microchip', 'Anilla',
             'Otro ID', 'Otro ID 2', 'Sexo', 'Recinto', 'Lugar', 'Longitud', 'Latitud',
             'Origen', 'Documentación', 'Progenitor 1', 'Progenitor 2', 'Depósito Nombre',
             'Depósito DNI', 'Depósito', 'Invasora', 'Peligroso', 'CITES', 'Observaciones',
@@ -473,9 +479,10 @@ class InformeController extends AbstractController
             $sheet->fromArray([
                 $ejemplar->getId(),
                 $ejemplar->getFechaRegistro()?->format('d/m/Y') ?? '',
+                $ejemplar->getFechaBaja()?->format('d/m/Y') ?? '',
                 $ejemplar->getEspecie()?->getNombre() ?? '',
                 $ejemplar->getEspecie()?->getComun() ?? '',
-                $ejemplar->getIdMicrochip(),
+                null,
                 $ejemplar->getIdAnilla(),
                 $ejemplar->getIdOtro(),
                 $ejemplar->getIdOtro2(),
@@ -484,18 +491,19 @@ class InformeController extends AbstractController
                 $ejemplar->getLugar(),
                 $ejemplar->getGeoLong(),
                 $ejemplar->getGeoLat(),
-                $ejemplar->getOrigen(),
-                $ejemplar->getDocumentacion(),
+                $this->translator->trans($this->variosExtension->origenFilter($ejemplar->getOrigen())),
+                $this->translator->trans($this->variosExtension->documentacionFilter($ejemplar->getDocumentacion())),
                 $ejemplar->getProgenitor1(),
                 $ejemplar->getProgenitor2(),
                 $ejemplar->getDepositoNombre(),
                 $ejemplar->getDepositoDNI(),
                 $ejemplar->getDeposito(),
-                $ejemplar->getEspecie()->getInvasora() ? 'Sí' : 'No',
-                $ejemplar->getEspecie()->getPeligroso() ? 'Sí' : 'No',
+                $this->variosExtension->sinoFilter($ejemplar->getEspecie()->getInvasora()),
+                $this->variosExtension->sinoFilter($ejemplar->getEspecie()->getPeligroso()),
                 $this->translator->trans($this->variosExtension->citesFilter($ejemplar->getEspecie()->getCites())),
                 $ejemplar->getObservaciones(),
             ], null, 'A' . $fila);
+            $sheet->setCellValueExplicit('F' . $fila, (string) ($ejemplar->getIdMicrochip() ?? ''), DataType::TYPE_STRING);
             ++$fila;
         }
 
