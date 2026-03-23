@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query;
 use App\Entity\Especie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,7 +31,7 @@ class EspecieRepository extends ServiceEntityRepository
     /**
      * Encuentra especies por nombre científico y/o común
      */
-    public function encontrarEspecies(Especie $especie)
+    public function encontrarEspecies(Especie $especie): Query
     {
         $queryBuilder = $this->createQueryBuilder('e');
 

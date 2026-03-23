@@ -14,8 +14,7 @@ return RectorConfig::configure()
         __DIR__ . '/src/Kernel.php',
         RenameForeachValueVariableToMatchExprVariableRector::class,
     ])
-    // Configurar PHP 8.2
-    ->withPhpSets(php82: true)
+    ->withPhpSets(php84: true)
     // Aplicar reglas de código limpio
     ->withPreparedSets(
         deadCode: true,

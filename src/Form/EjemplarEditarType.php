@@ -11,6 +11,7 @@ class EjemplarEditarType extends EjemplarCrearType
      * Añade campos específicos del formulario de edición
      * (checkboxes para borrar imágenes)
      */
+    #[\Override]
     protected function especifico(FormBuilderInterface $formBuilder): void
     {
         $formBuilder

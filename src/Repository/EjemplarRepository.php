@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query;
 use App\Entity\Captura;
 use App\Entity\Especie;
 use App\Entity\Ejemplar;
@@ -21,7 +22,7 @@ class EjemplarRepository extends ServiceEntityRepository
     /**
      * Encuentra ejemplares por otros identificadores (microchip, anilla, etc.)
      */
-    public function encontrarOtroId(?string $otroId)
+    public function encontrarOtroId(?string $otroId): Query
     {
         if ($otroId !== null && $otroId !== '') {
             return $this->createQueryBuilder('e')

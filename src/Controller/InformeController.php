@@ -464,7 +464,7 @@ class InformeController extends AbstractController
     private function ejemplaresExcel(array $ejemplares): StreamedResponse
     {
         $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $worksheet = $spreadsheet->getActiveSheet();
 
         $cabecera = [
             'ID', 'Fecha Ingreso', 'Fecha Baja', 'Especie', 'Nombre Común', 'Microchip', 'Anilla',
@@ -472,11 +472,11 @@ class InformeController extends AbstractController
             'Origen', 'Documentación', 'Progenitor 1', 'Progenitor 2', 'Depósito Nombre',
             'Depósito DNI', 'Depósito', 'Invasora', 'Peligroso', 'CITES', 'Observaciones',
         ];
-        $sheet->fromArray($cabecera, null, 'A1');
+        $worksheet->fromArray($cabecera, null, 'A1');
 
         $fila = 2;
         foreach ($ejemplares as $ejemplar) {
-            $sheet->fromArray([
+            $worksheet->fromArray([
                 $ejemplar->getId(),
                 $ejemplar->getFechaRegistro()?->format('d/m/Y') ?? '',
                 $ejemplar->getFechaBaja()?->format('d/m/Y') ?? '',
@@ -503,32 +503,32 @@ class InformeController extends AbstractController
                 $this->translator->trans($this->variosExtension->citesFilter($ejemplar->getEspecie()->getCites())),
                 $ejemplar->getObservaciones(),
             ], null, 'A' . $fila);
-            $sheet->setCellValueExplicit('F' . $fila, (string) ($ejemplar->getIdMicrochip() ?? ''), DataType::TYPE_STRING);
+            $worksheet->setCellValueExplicit('F' . $fila, (string) ($ejemplar->getIdMicrochip() ?? ''), DataType::TYPE_STRING);
             ++$fila;
         }
 
-        $writer = new Xlsx($spreadsheet);
-        $response = new StreamedResponse(static function () use ($writer): void {
-            $writer->save('php://output');
+        $xlsx = new Xlsx($spreadsheet);
+        $streamedResponse = new StreamedResponse(static function () use ($xlsx): void {
+            $xlsx->save('php://output');
         });
-        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', 'attachment; filename="informe_ejemplares.xlsx"');
-        $response->headers->set('Cache-Control', 'max-age=0');
+        $streamedResponse->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename="informe_ejemplares.xlsx"');
+        $streamedResponse->headers->set('Cache-Control', 'max-age=0');
 
-        return $response;
+        return $streamedResponse;
     }
 
     private function especiesExcel(array $especies): StreamedResponse
     {
         $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
+        $worksheet = $spreadsheet->getActiveSheet();
 
         $cabecera = ['ID', 'Nombre científico', 'Nombre común', 'Invasora', 'CITES', 'Peligroso'];
-        $sheet->fromArray($cabecera, null, 'A1');
+        $worksheet->fromArray($cabecera, null, 'A1');
 
         $fila = 2;
         foreach ($especies as $especie) {
-            $sheet->fromArray([
+            $worksheet->fromArray([
                 $especie->getId(),
                 $especie->getNombre(),
                 $especie->getComun(),
@@ -539,15 +539,15 @@ class InformeController extends AbstractController
             ++$fila;
         }
 
-        $writer = new Xlsx($spreadsheet);
-        $response = new StreamedResponse(static function () use ($writer): void {
-            $writer->save('php://output');
+        $xlsx = new Xlsx($spreadsheet);
+        $streamedResponse = new StreamedResponse(static function () use ($xlsx): void {
+            $xlsx->save('php://output');
         });
-        $response->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        $response->headers->set('Content-Disposition', 'attachment; filename="informe_especies.xlsx"');
-        $response->headers->set('Cache-Control', 'max-age=0');
+        $streamedResponse->headers->set('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        $streamedResponse->headers->set('Content-Disposition', 'attachment; filename="informe_especies.xlsx"');
+        $streamedResponse->headers->set('Cache-Control', 'max-age=0');
 
-        return $response;
+        return $streamedResponse;
     }
 
 }

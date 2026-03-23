@@ -138,15 +138,19 @@ class EspecieController extends AbstractController
                 if ($especie->getNombre()) {
                     $params['nombre'] = $especie->getNombre();
                 }
+
                 if ($especie->getComun()) {
                     $params['comun'] = $especie->getComun();
                 }
+
                 if ($especie->getInvasora() !== null) {
                     $params['invasora'] = $especie->getInvasora() ? 1 : 0;
                 }
+
                 if ($especie->getCites() !== null) {
                     $params['cites'] = $especie->getCites();
                 }
+
                 if ($especie->getPeligroso() !== null) {
                     $params['peligroso'] = $especie->getPeligroso() ? 1 : 0;
                 }

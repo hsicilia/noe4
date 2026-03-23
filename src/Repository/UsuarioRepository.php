@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use Doctrine\ORM\Query;
 use App\Entity\Usuario;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -33,7 +34,7 @@ class UsuarioRepository extends ServiceEntityRepository implements PasswordUpgra
         $this->getEntityManager()->flush();
     }
 
-    public function encontrarUsuarios(Usuario $usuario)
+    public function encontrarUsuarios(Usuario $usuario): Query
     {
         $queryBuilder = $this->createQueryBuilder('u');
 

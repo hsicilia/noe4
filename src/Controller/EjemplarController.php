@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Especie;
 use App\Entity\Ejemplar;
 use App\Form\BusquedaMapaType;
 use App\Form\EjemplarBuscarOtroIdType;
@@ -379,60 +380,79 @@ class EjemplarController extends AbstractController
                 if ($fechaInicial) {
                     $params['fechaInicial'] = $fechaInicial->format('Y-m-d');
                 }
+
                 if ($fechaFinal) {
                     $params['fechaFinal'] = $fechaFinal->format('Y-m-d');
                 }
+
                 if ($fechaBajaInicial) {
                     $params['fechaBajaInicial'] = $fechaBajaInicial->format('Y-m-d');
                 }
+
                 if ($fechaBajaFinal) {
                     $params['fechaBajaFinal'] = $fechaBajaFinal->format('Y-m-d');
                 }
+
                 if ($latitud !== null) {
                     $params['latitud'] = $latitud;
                 }
+
                 if ($longitud !== null) {
                     $params['longitud'] = $longitud;
                 }
+
                 if ($distancia !== null) {
                     $params['distancia'] = $distancia;
                 }
-                if ($ejemplar->getEspecie()) {
+
+                if ($ejemplar->getEspecie() instanceof Especie) {
                     $params['especieId'] = $ejemplar->getEspecie()->getId();
                 }
+
                 if ($ejemplar->getSexo() !== null && $ejemplar->getSexo() !== 0) {
                     $params['sexo'] = $ejemplar->getSexo();
                 }
+
                 if ($ejemplar->getRecinto() !== null && $ejemplar->getRecinto() !== '') {
                     $params['recinto'] = $ejemplar->getRecinto();
                 }
+
                 if ($ejemplar->getLugar() !== null && $ejemplar->getLugar() !== '') {
                     $params['lugar'] = $ejemplar->getLugar();
                 }
+
                 if ($ejemplar->getOrigen() !== null && $ejemplar->getOrigen() !== 0) {
                     $params['origen'] = $ejemplar->getOrigen();
                 }
+
                 if ($ejemplar->getDocumentacion() !== null && $ejemplar->getDocumentacion() !== 0) {
                     $params['documentacion'] = $ejemplar->getDocumentacion();
                 }
+
                 if ($ejemplar->getProgenitor1() !== null && $ejemplar->getProgenitor1() !== '') {
                     $params['progenitor1'] = $ejemplar->getProgenitor1();
                 }
+
                 if ($ejemplar->getDepositoNombre() !== null && $ejemplar->getDepositoNombre() !== '') {
                     $params['depositoNombre'] = $ejemplar->getDepositoNombre();
                 }
+
                 if ($ejemplar->getDepositoDNI() !== null && $ejemplar->getDepositoDNI() !== '') {
                     $params['depositoDNI'] = $ejemplar->getDepositoDNI();
                 }
+
                 if ($invasora !== null) {
                     $params['invasora'] = $invasora ? 1 : 0;
                 }
+
                 if ($peligroso !== null) {
                     $params['peligroso'] = $peligroso ? 1 : 0;
                 }
+
                 if ($cites !== null) {
                     $params['cites'] = $cites;
                 }
+
                 if ($ejemplar->getCausaBaja() !== null) {
                     $params['causaBaja'] = $ejemplar->getCausaBaja();
                 }

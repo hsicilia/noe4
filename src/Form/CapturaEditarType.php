@@ -7,6 +7,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class CapturaEditarType extends CapturaCrearType
 {
+    #[\Override]
     protected function especifico(FormBuilderInterface $formBuilder): void
     {
         $formBuilder

@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Entity\Ejemplar;
 use App\Entity\Especie;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -17,29 +18,29 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class AnalisisEspeciesCommand extends Command
 {
     public function __construct(
-        private EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager
     ) {
         parent::__construct();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $io = new SymfonyStyle($input, $output);
+        $symfonyStyle = new SymfonyStyle($input, $output);
 
-        $io->title('Análisis de campos invasora, peligroso y cites por especie');
+        $symfonyStyle->title('Análisis de campos invasora, peligroso y cites por especie');
 
         // Obtener todas las especies con sus ejemplares
         $especies = $this->entityManager->getRepository(Especie::class)->findAll();
 
-        if (empty($especies)) {
-            $io->warning('No se encontraron especies en la base de datos.');
+        if ($especies === []) {
+            $symfonyStyle->warning('No se encontraron especies en la base de datos.');
             return Command::FAILURE;
         }
 
         // Obtener valores únicos de CITES desde Ejemplar
         $citesValues = $this->entityManager->createQueryBuilder()
             ->select('DISTINCT e.cites')
-            ->from('App\Entity\Ejemplar', 'e')
+            ->from(Ejemplar::class, 'e')
             ->where('e.cites IS NOT NULL')
             ->getQuery()
             ->getSingleColumnResult();
@@ -49,10 +50,8 @@ class AnalisisEspeciesCommand extends Command
         $filepath = __DIR__ . '/../../var/' . $filename;
 
         // Crear directorio var si no existe
-        if (!is_dir(__DIR__ . '/../../var')) {
-            if (!mkdir($concurrentDirectory = __DIR__.'/../../var', 0755, true) && !is_dir($concurrentDirectory)) {
-                throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
-            }
+        if (!is_dir(__DIR__ . '/../../var') && (!mkdir($concurrentDirectory = __DIR__.'/../../var', 0755, true) && !is_dir($concurrentDirectory))) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
 
         $file = fopen($filepath, 'w');
@@ -76,12 +75,12 @@ class AnalisisEspeciesCommand extends Command
 
         // Añadir columnas para cada valor de CITES
         foreach ($citesValues as $citesValue) {
-            $headers[] = "CITES=$citesValue";
+            $headers[] = 'CITES=' . $citesValue;
         }
 
-        fputcsv($file, $headers, ';');
+        fputcsv($file, $headers, ';', escape: '\\');
 
-        $io->progressStart(count($especies));
+        $symfonyStyle->progressStart(count($especies));
 
         $especiesActualizadas = 0;
 
@@ -174,17 +173,17 @@ class AnalisisEspeciesCommand extends Command
                 $row[] = $citesCounts[$citesValue];
             }
 
-            fputcsv($file, $row, ';');
-            $io->progressAdvance();
+            fputcsv($file, $row, ';', escape: '\\');
+            $symfonyStyle->progressAdvance();
         }
 
         fclose($file);
-        $io->progressFinish();
+        $symfonyStyle->progressFinish();
 
         // Guardar todos los cambios en la base de datos
         $this->entityManager->flush();
 
-        $io->success([
+        $symfonyStyle->success([
             sprintf('Análisis completado: %d especies procesadas.', count($especies)),
             sprintf('Especies actualizadas con valores más comunes: %d', $especiesActualizadas),
             sprintf('Archivo CSV generado: %s', $filepath)

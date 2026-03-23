@@ -8,6 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 
 class UsuarioEditarType extends UsuarioCrearType
 {
+    #[\Override]
     protected function especifico(FormBuilderInterface $formBuilder): void
     {
         $formBuilder
