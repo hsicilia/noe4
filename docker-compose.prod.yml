@@ -1,0 +1,15 @@
+services:
+  nginx:
+    volumes:
+      - .:/var/www/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.${COMPOSE_PROJECT_NAME}.tls.certresolver=letsencrypt"
+    networks:
+      - default
+      - traefik
+
+networks:
+  traefik:
+    external: true
