@@ -1,4 +1,8 @@
+ARG APP_ENV=dev
+
 FROM php:8.4-fpm AS base
+
+ARG APP_ENV=dev
 
 RUN apt-get update && apt-get install -y \
         git \
@@ -36,5 +40,8 @@ ENV WKHTMLTOPDF_PATH=/usr/local/bin/wkhtmltopdf
 ENV WKHTMLTOIMAGE_PATH=/usr/local/bin/wkhtmltoimage
 
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/custom.ini
+COPY docker/php/opcache-${APP_ENV}.ini /usr/local/etc/php/conf.d/opcache.ini
 
 WORKDIR /var/www/html

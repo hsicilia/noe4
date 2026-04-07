@@ -4,6 +4,8 @@ services:
       context: .
       dockerfile: docker/php/Dockerfile
       target: base
+      args:
+        APP_ENV: ${APP_ENV:-dev}
     restart: unless-stopped
     user: "${PHP_USER}"
     volumes:
