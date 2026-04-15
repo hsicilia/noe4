@@ -32,7 +32,7 @@ class CapturaController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (!$ejemplar instanceof Ejemplar) {
+        if (! $ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -59,7 +59,7 @@ class CapturaController extends AbstractController
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if (!$captura instanceof Captura) {
+        if (! $captura instanceof Captura) {
             throw $this->createNotFoundException('No se encontró la incidencia con id ' . $id_captura);
         }
 
@@ -82,7 +82,7 @@ class CapturaController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (!$ejemplar instanceof Ejemplar) {
+        if (! $ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -143,7 +143,7 @@ class CapturaController extends AbstractController
     {
         $captura = $capturaRepository->find($id_captura);
 
-        if (!$captura instanceof Captura) {
+        if (! $captura instanceof Captura) {
             throw $this->createNotFoundException('No se encontró la incidencia con id ' . $id_captura);
         }
 

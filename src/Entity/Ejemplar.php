@@ -495,7 +495,7 @@ class Ejemplar implements \Stringable
     {
         $this->modificadoEl = new \DateTime();
 
-        if (!$this->creadoEl instanceof \DateTimeInterface) {
+        if (! $this->creadoEl instanceof \DateTimeInterface) {
             $this->creadoEl = new \DateTime();
         }
     }

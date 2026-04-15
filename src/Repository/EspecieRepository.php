@@ -2,9 +2,9 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Especie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

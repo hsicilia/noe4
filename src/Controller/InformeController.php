@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Ejemplar;
 use App\Entity\Especie;
-use App\Repository\EspecieRepository;
 use App\Repository\EjemplarRepository;
+use App\Repository\EspecieRepository;
 use App\Twig\VariosExtension;
 use Knp\Bundle\SnappyBundle\Snappy\Response\PdfResponse;
 use Knp\Snappy\Pdf;
@@ -549,5 +549,4 @@ class InformeController extends AbstractController
 
         return $streamedResponse;
     }
-
 }

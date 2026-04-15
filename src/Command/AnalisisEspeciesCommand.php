@@ -50,14 +50,14 @@ class AnalisisEspeciesCommand extends Command
         $filepath = __DIR__ . '/../../var/' . $filename;
 
         // Crear directorio var si no existe
-        if (!is_dir(__DIR__ . '/../../var') && (!mkdir($concurrentDirectory = __DIR__.'/../../var', 0755, true) && !is_dir($concurrentDirectory))) {
+        if (! is_dir(__DIR__ . '/../../var') && (! mkdir($concurrentDirectory = __DIR__ . '/../../var', 0755, true) && ! is_dir($concurrentDirectory))) {
             throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
 
         $file = fopen($filepath, 'w');
 
         // Escribir BOM para que Excel detecte UTF-8
-        fprintf($file, chr(0xEF).chr(0xBB).chr(0xBF));
+        fprintf($file, chr(0xEF) . chr(0xBB) . chr(0xBF));
 
         // Cabeceras
         $headers = [
@@ -70,7 +70,7 @@ class AnalisisEspeciesCommand extends Command
             'Invasora=null',
             'Peligroso=true',
             'Peligroso=false',
-            'Peligroso=null'
+            'Peligroso=null',
         ];
 
         // Añadir columnas para cada valor de CITES
@@ -165,7 +165,7 @@ class AnalisisEspeciesCommand extends Command
                 $invasoraNull,
                 $peligrosoTrue,
                 $peligrosoFalse,
-                $peligrosoNull
+                $peligrosoNull,
             ];
 
             // Añadir conteos de CITES
@@ -186,7 +186,7 @@ class AnalisisEspeciesCommand extends Command
         $symfonyStyle->success([
             sprintf('Análisis completado: %d especies procesadas.', count($especies)),
             sprintf('Especies actualizadas con valores más comunes: %d', $especiesActualizadas),
-            sprintf('Archivo CSV generado: %s', $filepath)
+            sprintf('Archivo CSV generado: %s', $filepath),
         ]);
 
         return Command::SUCCESS;

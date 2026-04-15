@@ -2,11 +2,11 @@
 
 namespace App\Repository;
 
-use Doctrine\ORM\Query;
 use App\Entity\Captura;
-use App\Entity\Especie;
 use App\Entity\Ejemplar;
+use App\Entity\Especie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**

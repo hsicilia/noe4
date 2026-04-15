@@ -48,7 +48,7 @@ class EspecieController extends AbstractController
     {
         $especie = $especieRepository->find($id);
 
-        if (!$especie instanceof Especie) {
+        if (! $especie instanceof Especie) {
             throw $this->createNotFoundException('No se encontró la especie con id ' . $id);
         }
 
@@ -79,7 +79,7 @@ class EspecieController extends AbstractController
     {
         $especie = $especieRepository->find($id);
 
-        if (!$especie instanceof Especie) {
+        if (! $especie instanceof Especie) {
             throw $this->createNotFoundException('No se encontró la especie con id ' . $id);
         }
 
@@ -133,7 +133,9 @@ class EspecieController extends AbstractController
                     default => 'CSV',
                 };
 
-                $params = ['salida' => $salida];
+                $params = [
+                    'salida' => $salida,
+                ];
 
                 if ($especie->getNombre()) {
                     $params['nombre'] = $especie->getNombre();

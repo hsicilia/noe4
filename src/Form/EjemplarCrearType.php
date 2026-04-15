@@ -2,11 +2,11 @@
 
 namespace App\Form;
 
-use Doctrine\ORM\QueryBuilder;
 use App\Classes\Constantes;
 use App\Entity\Ejemplar;
 use App\Entity\Especie;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -34,7 +34,7 @@ class EjemplarCrearType extends AbstractType
                 'label' => 'ejemplar.campo.especie',
                 'class' => Especie::class,
                 'choice_label' => 'nombre',
-                'query_builder' => fn(EntityRepository $entityRepository): QueryBuilder => $entityRepository->createQueryBuilder('e')
+                'query_builder' => fn (EntityRepository $entityRepository): QueryBuilder => $entityRepository->createQueryBuilder('e')
                     ->orderBy('e.nombre', 'ASC'),
             ])
             ->add('idMicrochip', TextType::class, [

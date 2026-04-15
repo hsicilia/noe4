@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
-use App\Entity\Especie;
 use App\Entity\Ejemplar;
+use App\Entity\Especie;
 use App\Form\BusquedaMapaType;
 use App\Form\EjemplarBuscarOtroIdType;
 use App\Form\EjemplarCrearType;
@@ -36,7 +36,7 @@ class EjemplarController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (!$ejemplar instanceof Ejemplar) {
+        if (! $ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -67,7 +67,7 @@ class EjemplarController extends AbstractController
     {
         $ejemplarOriginal = $ejemplarRepository->find($id);
 
-        if (!$ejemplarOriginal instanceof Ejemplar) {
+        if (! $ejemplarOriginal instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -168,7 +168,7 @@ class EjemplarController extends AbstractController
     {
         $ejemplar = $ejemplarRepository->find($id);
 
-        if (!$ejemplar instanceof Ejemplar) {
+        if (! $ejemplar instanceof Ejemplar) {
             throw $this->createNotFoundException('No se encontró el ejemplar con id ' . $id);
         }
 
@@ -375,7 +375,9 @@ class EjemplarController extends AbstractController
 
             // Si presionó "Generar informe", redirigir a la pantalla de informe
             if ($formulario->get('informe')->isClicked()) {
-                $params = ['tipoEjemplar' => $tipoEjemplar];
+                $params = [
+                    'tipoEjemplar' => $tipoEjemplar,
+                ];
 
                 if ($fechaInicial) {
                     $params['fechaInicial'] = $fechaInicial->format('Y-m-d');

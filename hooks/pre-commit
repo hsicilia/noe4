@@ -2,4 +2,6 @@
 set -e
 
 make ecs-fix EXEC_FLAGS=-T
+git add -u
+
 make test EXEC_FLAGS=-T

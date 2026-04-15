@@ -55,7 +55,7 @@ class UsuarioController extends AbstractController
     {
         $usuario = $usuarioRepository->find($id);
 
-        if (!$usuario instanceof Usuario) {
+        if (! $usuario instanceof Usuario) {
             throw $this->createNotFoundException('No se encontró el usuario con id ' . $id);
         }
 
@@ -104,7 +104,7 @@ class UsuarioController extends AbstractController
     {
         $usuario = $usuarioRepository->find($id);
 
-        if (!$usuario instanceof Usuario) {
+        if (! $usuario instanceof Usuario) {
             throw $this->createNotFoundException('No se encontró el usuario con id ' . $id);
         }
 

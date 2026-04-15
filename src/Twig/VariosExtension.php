@@ -3,6 +3,7 @@
 namespace App\Twig;
 
 use Twig\Attribute\AsTwigFilter;
+
 class VariosExtension
 {
     // Función para obtener el sexo en función del valor de la base de datos
