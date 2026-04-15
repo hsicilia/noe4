@@ -53,11 +53,8 @@ bin/console make:migration
 
 ### Calidad de Código
 ```bash
-# Verificar estilo de código con ECS
-composer ecs
-
-# Corregir estilo de código automáticamente
-composer ecs-fix
+make ecs-check  # verificar estilo de código con ECS
+make ecs-fix    # corregir estilo de código automáticamente
 
 # Ejecutar Rector para refactorización automatizada (dry-run)
 composer rector
@@ -68,11 +65,7 @@ composer rector-fix
 
 ### Testing
 ```bash
-# Ejecutar todos los tests
-vendor/bin/phpunit
-
-# Ejecutar con opciones personalizadas
-php vendor/bin/phpunit --filter TestName
+make test  # ejecuta todos los tests
 ```
 
 ### Comandos Personalizados
@@ -135,6 +128,16 @@ Variables de entorno clave en `.env`:
 - `GOOGLE_MAPS_API_KEY`: Para funcionalidad de mapa en formularios de búsqueda/captura
 - `APP_ENV`: dev/prod/test
 - `MAILER_DSN`: Configuración de email
+
+## Configuración inicial del entorno de desarrollo
+
+Al clonar el repo, ejecutar una vez:
+
+```bash
+git config core.hooksPath hooks  # activa el pre-commit hook (ECS + tests)
+make console ARGS='doctrine:database:create --env=test'
+make console ARGS='doctrine:migrations:migrate --no-interaction --env=test'
+```
 
 ## Flujo de Trabajo de Desarrollo
 

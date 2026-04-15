@@ -18,6 +18,7 @@ help:
 	@echo "  update           composer install, cache, assets y migraciones"
 	@echo "  exec             Ejecuta comando en el contenedor: make exec ARGS='ls'"
 	@echo "  console          Ejecuta bin/console: make console ARGS='cache:warmup'"
+	@echo "  test             Ejecuta los tests"
 	@echo "  ecs-check        Revisa estilo de código con ECS"
 	@echo "  ecs-fix          Corrige estilo de código con ECS"
 	@echo "  rector-check     Revisa refactorizaciones pendientes con Rector"
@@ -56,13 +57,17 @@ exec:
 console:
 	$(COMPOSE_CMD) exec php bin/console $(ARGS)
 
+.PHONY: test
+test:
+	$(COMPOSE_CMD) exec $(EXEC_FLAGS) php vendor/bin/phpunit
+
 .PHONY: ecs-check
 ecs-check:
 	$(COMPOSE_CMD) exec php vendor/bin/ecs check
 
 .PHONY: ecs-fix
 ecs-fix:
-	$(COMPOSE_CMD) exec php vendor/bin/ecs check --fix
+	$(COMPOSE_CMD) exec $(EXEC_FLAGS) php vendor/bin/ecs check --fix
 
 .PHONY: rector-check
 rector-check:
